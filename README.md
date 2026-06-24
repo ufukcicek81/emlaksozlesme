@@ -42,3 +42,11 @@ Chrome veya Edge:
 ## Not
 
 Sözleşme kayıtları cihazın tarayıcı hafızasında saklanır. Telefon değiştirirken program içindeki **Arşivi Dışa Aktar** ve yeni cihazda **Arşiv İçe Aktar** kullanılmalı.
+
+
+## Logo görünmüyorsa
+Eski PWA önbelleği kalmış olabilir. Yeni dosyaları yükledikten sonra Chrome menüsünden sayfayı yenileyin. Gerekirse site ayarlarından verileri temizleyip tekrar açın veya uygulamayı kaldırıp yeniden kurun. Bu pakette logo hem dosya olarak hem de program içine gömülü yedek olarak eklenmiştir.
+
+
+## Logo güncellemesi
+Bu paket, kullanıcının gönderdiği eski Taşdemir Gayrimenkul logosu programa gömülü olacak şekilde güncellenmiştir. PWA önbelleği için `sw.js` sürümü artırılmıştır.
