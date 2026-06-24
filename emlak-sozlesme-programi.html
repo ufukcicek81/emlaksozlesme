@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emlak Sözleşme Hazırlama Programı</title>
+<meta name="theme-color" content="#07111f" />
+<meta name="application-name" content="Taşdemir Sözleşme" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Taşdemir Sözleşme" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+
+<style>
+:root{--dark:#07111f;--dark2:#111827;--gold:#d4af37;--gold2:#f5d76e;--bg:#f3f4f6;--text:#111827;--muted:#64748b;--line:#e5e7eb;--danger:#b91c1c;--ok:#166534}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}.appbar{background:linear-gradient(135deg,#020617,#111827 64%,#3b2f11);color:#fff;border-bottom:4px solid var(--gold);padding:16px}.appbar .wrap{max-width:1260px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.brand{font-size:22px;font-weight:900;letter-spacing:.2px}.sub{font-size:12px;color:#cbd5e1;margin-top:4px}.pill{border:1px solid rgba(245,215,110,.55);background:rgba(245,215,110,.13);color:#ffeaa7;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900}.layout{max-width:1260px;margin:16px auto;padding:0 12px;display:grid;grid-template-columns:440px 1fr;gap:16px}.panel,.preview{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 30px rgba(15,23,42,.08);overflow:hidden}.panelInner{padding:14px}.preview{min-height:80vh}.quick{background:#fff8df;border-bottom:1px solid #fde68a;padding:12px 14px}.quick b{display:block;font-size:14px}.quick small{color:#6b4f00}.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}.tab{padding:12px 6px;text-align:center;cursor:pointer;font-size:12px;font-weight:900;color:#475569;border-bottom:3px solid transparent}.tab.active{border-color:var(--gold);color:#111827;background:#fffdf2}h2{font-size:15px;margin:14px 0 8px}h3{font-size:13px;margin:14px 0 8px;border-left:4px solid var(--gold);padding-left:8px;color:#1f2937}.note{font-size:12px;line-height:1.35;color:#64748b}.small{font-size:12px;color:#64748b}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}label{display:block;margin:9px 0 4px;font-size:12px;font-weight:800;color:#475569}input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:11px;padding:10px;font-size:14px;background:#fff}textarea{min-height:76px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid rgba(212,175,55,.35);border-color:var(--gold)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:0;border-radius:12px;padding:11px 12px;cursor:pointer;font-weight:900;font-size:13px}.btn.primary{background:#111827;color:#fff}.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111827}.btn.ghost{background:#f8fafc;border:1px solid #cbd5e1;color:#111827}.btn.danger{background:#fee2e2;color:#991b1b}.btn.ok{background:#dcfce7;color:#14532d}.previewTop{position:sticky;top:0;z-index:6;background:#fff;border-bottom:1px solid var(--line);padding:12px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}.status{font-size:12px;color:#475569}.missing{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:9px;border-radius:12px;font-size:12px;margin-top:8px}.ready{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;padding:9px;border-radius:12px;font-size:12px;margin-top:8px}.doc{padding:28px 32px;background:#fff;min-height:900px;font-family:"Times New Roman",Times,serif;font-size:12.8px;line-height:1.25}.doc h1{text-align:center;font-size:17px;margin:0 0 10px;text-transform:uppercase}.doc h2{font-size:13px;text-align:left;margin:10px 0 5px;font-family:Arial,Helvetica,sans-serif;border-bottom:1px solid #333;padding-bottom:2px}.doc p{margin:5px 0}.doc .meta{text-align:right;font-size:12px;margin-bottom:8px}.officeHead{border:2px solid #111;padding:7px 9px;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px}.officeName{font-family:Arial,Helvetica,sans-serif;font-weight:900;font-size:17px}.doc table{width:100%;border-collapse:collapse;margin:7px 0 12px}.doc th,.doc td{border:1px solid #444;padding:4px 6px;vertical-align:top}.doc th{width:27%;background:#f3f4f6;text-align:left;font-family:Arial,Helvetica,sans-serif;font-size:12px}.articleTitle{font-weight:bold;text-decoration:underline;margin-top:7px}.clauseList{white-space:pre-wrap;line-height:1.18}.signs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:24px;text-align:center}.signBox{border-top:1px solid #111;padding-top:6px;min-height:58px}.doc .foot{font-size:10px;color:#334155;border-top:1px dashed #999;margin-top:12px;padding-top:5px}.savedList{border:1px solid var(--line);border-radius:12px;max-height:240px;overflow:auto}.savedItem{padding:9px 10px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}.savedItem:last-child{border-bottom:0}.typeHint{font-size:12px;color:#0f172a;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:9px;margin-top:8px}.hide{display:none!important}.printHint{display:none}.printOnly{display:none}.copyStamp{font-family:Arial,Helvetica,sans-serif;text-align:right;font-size:10px;color:#475569;margin-bottom:2mm}.doc .legal{font-size:9.8px;color:#111;border-top:1px solid #777;margin-top:8px;padding-top:5px}.doc .legal b{font-family:Arial,Helvetica,sans-serif}.pageBreak{page-break-before:always;break-before:page;margin-top:44px;padding-top:20px;border-top:2px dashed #94a3b8}.taahhutBox{border:2px solid #111;padding:10px;margin-top:8px}.warning{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:12px;padding:9px;font-size:12px;line-height:1.35;margin-top:10px}
+.signPanel{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:10px;margin-top:10px}.sigGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.sigCard{border:1px solid #cbd5e1;border-radius:14px;background:#fff;padding:10px}.sigCard b{display:block;font-size:13px;margin-bottom:6px}.sigPad{width:100%;height:160px;border:2px dashed #94a3b8;border-radius:12px;background:#fff;touch-action:none;display:block}.sigTools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.sigTools .btn{padding:8px 10px;font-size:12px}.printedSig{height:54px;margin:6px 0 2px;display:flex;align-items:center;justify-content:center}.printedSig img{max-width:100%;max-height:52px;object-fit:contain}.printedSig.empty{font-size:12px;color:#64748b}.mailBox{background:#ecfeff;border:1px solid #a5f3fc;color:#164e63;border-radius:12px;padding:10px;font-size:12px;line-height:1.35;margin-top:10px}
+
+.installBtn{border:1px solid rgba(245,215,110,.65);background:rgba(245,215,110,.18);color:#ffeaa7;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer;display:none}
+.installBtn.show{display:inline-flex;align-items:center;gap:6px}
+.installTip{font-size:11px;color:#cbd5e1;margin-top:4px;text-align:right}
+@media(max-width:940px){.installTip{text-align:left}.appbar .wrap{align-items:flex-start}}
+@media(max-width:940px){.layout{grid-template-columns:1fr}.doc{padding:22px 16px}.grid2,.grid3,.sigGrid{grid-template-columns:1fr}.previewTop{position:relative}.tabs{position:relative}.signs{grid-template-columns:1fr 1fr}}
+@media print{body{background:#fff}.printOnly{display:block}.noPrint{display:none!important}.appbar,.panel,.previewTop{display:none!important}.layout{display:block;margin:0;padding:0;max-width:none}.preview{box-shadow:none;border:0;border-radius:0}.doc{padding:0;min-height:auto;font-size:8.7pt;line-height:1.08}.doc h1{font-size:12pt;margin:0 0 3mm}.doc h2{font-size:9pt;margin:2mm 0 1mm;padding-bottom:.6mm}.doc p{margin:1.4mm 0}.doc table{margin:1.2mm 0 2.2mm}.doc th,.doc td{padding:.9mm 1.25mm}.officeHead{padding:1.6mm;margin-bottom:2.1mm}.officeName{font-size:12pt}.articleTitle{margin-top:1.8mm}.clauseList{line-height:1.04}.signs{margin-top:6mm;gap:6mm}.signBox{min-height:14mm;padding-top:2mm}.printedSig{height:12mm;margin:1mm 0}.printedSig img{max-height:11mm}.doc .foot{display:none}.doc .legal{font-size:7pt;margin-top:2mm;padding-top:1mm}.taahhutBox{padding:4mm;margin-top:3mm}.pageBreak{border-top:0;margin-top:0;padding-top:0;page-break-before:always;break-before:page}.officeHead,.doc table,.signs{break-inside:avoid;page-break-inside:avoid}@page{size:A4;margin:6mm}}
+</style>
+</head>
+<body>
+<header class="appbar"><div class="wrap"><div><div class="brand">Emlak Sözleşme Hazırlama Programı</div><div class="sub">Kira • Tahliye taahhütnamesi • Alım satım • Satış vaadi • Yetki • Yer gösterme • Aracılık • Ortaklık</div></div><div><div class="pill">Taşdemir Gayrimenkul kullanımına hazır</div><button id="installAppBtn" class="installBtn" type="button">📲 Uygulama olarak kur</button><div id="installTip" class="installTip hide">Android: bu butonla kur • iPhone/iPad: Paylaş &gt; Ana Ekrana Ekle</div></div></div></header>
+<main class="layout">
+  <section class="panel">
+    <div class="tabs"><div class="tab active" data-tab="main">Sözleşme</div><div class="tab" data-tab="extra">Detaylar</div><div class="tab" data-tab="sign">İmza / Mail</div><div class="tab" data-tab="archive">Arşiv</div></div>
+    <div id="tab-main" class="panelInner tabContent">
+      <h2>Belge Tipi</h2>
+      <label>Sözleşme seç</label>
+      <select id="contractType">
+        <option value="kira">Kira Sözleşmesi</option>
+        <option value="tahliye">Tahliye Taahhütnamesi</option>
+        <option value="alimSatim">Taşınmaz Alım Satım Sözleşmesi</option>
+        <option value="satisVaadi">Taşınmaz Satış Vaadi Sözleşmesi</option>
+        <option value="yetkiSatis">Satış Yetkilendirme Sözleşmesi</option>
+        <option value="yetkiKiralama">Kiralama Yetkilendirme Sözleşmesi</option>
+        <option value="yerGosterme">Taşınmaz Gösterme Belgesi</option>
+        <option value="aracilikSatis">Alım Satıma Aracılık Sözleşmesi</option>
+        <option value="aracilikKiralama">Kiralamaya Aracılık Sözleşmesi</option>
+        <option value="ortaklik">Hizmet Ortaklığı Sözleşmesi</option>
+      </select>
+      <div id="typeHint" class="typeHint hide"></div>
+      <div class="grid2"><div><label>Sözleşme No</label><input id="sozlesmeNo" /></div><div><label>Düzenleme Tarihi</label><input id="tarih" /></div></div>
+      <label>Düzenleme Yeri</label><input id="duzenlemeYeri" placeholder="Örn: Düzce / Cumayeri" />
+      <h3>Ofis Bilgileri</h3>
+      <label>Emlak Ofisi</label><input id="ofisAdi" />
+      <div class="grid2"><div><label>Yetkili</label><input id="ofisYetkili" /></div><div><label>Telefon</label><input id="ofisTel" /></div></div>
+      <label>Adres</label><textarea id="ofisAdres"></textarea>
+      <h3>Taraf Bilgileri</h3>
+      <div class="grid2"><div><label id="party1Label">Kiraya Veren / Satıcı</label><input id="party1Name" placeholder="Ad soyad" /></div><div><label id="party2Label">Kiracı / Alıcı</label><input id="party2Name" placeholder="Ad soyad" /></div></div>
+      <div class="grid2"><div><label>T.C. / Vergi No - 1. Taraf</label><input id="party1Tc" /></div><div><label>T.C. / Vergi No - 2. Taraf</label><input id="party2Tc" /></div></div>
+      <div class="grid2"><div><label>Telefon - 1. Taraf</label><input id="party1Tel" /></div><div><label>Telefon - 2. Taraf</label><input id="party2Tel" /></div></div>
+      <div class="grid2"><div><label>Adres - 1. Taraf</label><textarea id="party1Adres"></textarea></div><div><label>Adres - 2. Taraf</label><textarea id="party2Adres"></textarea></div></div>
+      <h3>Taşınmaz Bilgileri</h3>
+      <label>Taşınmaz Adresi</label><textarea id="tasinmazAdres" placeholder="İl, ilçe, mahalle, sokak, bina, daire no"></textarea>
+      <div class="grid3"><div><label>İl / İlçe</label><input id="ilIlce" /></div><div><label>Mahalle</label><input id="mahalle" /></div><div><label>Nitelik</label><input id="nitelik" placeholder="Daire, arsa, dükkan..."></div></div>
+      <div class="grid3"><div><label>Ada</label><input id="ada" /></div><div><label>Parsel</label><input id="parsel" /></div><div><label>Bağımsız Bölüm</label><input id="bbNo" /></div></div>
+    </div>
+    <div id="tab-extra" class="panelInner tabContent hide">
+      <div id="detailNotice" class="typeHint hide"></div>
+
+      <div class="detailGroup" data-contracts="kira">
+        <h3>Kira Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>Aylık Kira Bedeli</label><input id="aylikKira" placeholder="25.000 TL" /></div><div><label>Depozito</label><input id="depozito" placeholder="25.000 TL" /></div></div>
+        <div class="grid2"><div><label>Kira Başlangıç</label><input id="kiraBaslangic" placeholder="01.07.2026" /></div><div><label>Kira Bitiş / Süre</label><input id="kiraBitis" placeholder="1 yıl / 01.07.2027" /></div></div>
+        <div class="grid2"><div><label>Ödeme Günü</label><input id="odemeGunu" placeholder="Her ayın 1-5 arası" /></div><div><label>Ödeme Şekli / IBAN</label><input id="odemeSekli" placeholder="Banka / IBAN / Elden" /></div></div>
+        <div class="grid2"><div><label>Aidat / Ortak Gider</label><input id="aidat" placeholder="Kiracıya ait" /></div><div><label>Yıllık Artış Oranı</label><input id="artisOrani" placeholder="Kanuni sınırlar içinde TÜFE" /></div></div>
+        <label>Demirbaşlar / Teslim Durumu</label><textarea id="demirbaslar" placeholder="Kombi, ankastre, dolaplar, sayaçlar, boya/badana durumu..."></textarea>
+        <label>Yetkili Mahkeme / İcra Dairesi</label><input id="yetkiliMahkeme" placeholder="Düzce Mahkemeleri ve İcra Daireleri" />
+        <input id="kiraOzel" type="hidden" />
+        <input id="kiraEkMaddeler" type="hidden" />
+      </div>
+
+      <div class="detailGroup hide" data-contracts="tahliye">
+        <h3>Tahliye Taahhütnamesi Detayları</h3>
+        <div id="tahliyeSourceBox" class="typeHint">
+          <b>Kayıtlı kira sözleşmesinden aktar</b>
+          <label style="margin-top:8px">Kayıtlı kira sözleşmesi</label>
+          <select id="tahliyeSourceSelect"></select>
+          <div class="actions"><button class="btn gold" onclick="loadTahliyeFromSelected()">Seçili Kira Sözleşmesinden Doldur</button></div>
+        </div>
+        <div class="grid2"><div><label>Kira Başlangıç Tarihi</label><input id="tahliyeKiraBaslangic" placeholder="01.07.2026" /></div><div><label>Tahliye Tarihi</label><input id="tahliyeTarihi" placeholder="01.07.2027" /></div></div>
+        <div class="grid2"><div><label>Düzenleme Tarihi</label><input id="tahliyeDuzenlemeTarihi" placeholder="... / ... / 20..." /></div><div><label>Düzenleme Yeri</label><input id="tahliyeYeri" placeholder="Düzce / Cumayeri" /></div></div>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="alimSatim">
+        <h3>Taşınmaz Alım Satım Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>Satış Bedeli</label><input id="alimSatimSatisBedeli" placeholder="2.500.000 TL" /></div><div><label>Kapora / Peşinat</label><input id="alimSatimKapora" /></div></div>
+        <div class="grid2"><div><label>Kalan Ödeme</label><input id="alimSatimKalanOdeme" /></div><div><label>Tapu Devir / Teslim Tarihi</label><input id="alimSatimDevirTarihi" /></div></div>
+        <label>Ödeme Planı</label><textarea id="alimSatimOdemePlani"></textarea>
+        <label>Masraf / Tapu Harç Paylaşımı</label><input id="alimSatimMasrafPaylasimi" placeholder="Taraflarca eşit / alıcıya ait / satıcıya ait" />
+        <label>Emlak Hizmet Bedeli</label><input id="alimSatimHizmetBedeli" />
+        <label>Alım Satım Özel Şartları</label><textarea id="alimSatimOzel" style="min-height:120px"></textarea>
+        <label>Alım Satım Ek Maddeleri</label><textarea id="alimSatimEkMaddeler" style="min-height:100px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="satisVaadi">
+        <h3>Taşınmaz Satış Vaadi Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>Satış Vaadi Bedeli</label><input id="vaadiSatisBedeli" placeholder="2.500.000 TL" /></div><div><label>Kapora / Peşinat</label><input id="vaadiKapora" /></div></div>
+        <div class="grid2"><div><label>Kalan Ödeme</label><input id="vaadiKalanOdeme" /></div><div><label>Devir / Teslim Tarihi</label><input id="vaadiDevirTarihi" /></div></div>
+        <label>Ödeme Planı</label><textarea id="vaadiOdemePlani"></textarea>
+        <label>Masraf / Harç Paylaşımı</label><input id="vaadiMasrafPaylasimi" placeholder="Taraflarca eşit / alıcıya ait / satıcıya ait" />
+        <label>Emlak Hizmet Bedeli</label><input id="vaadiHizmetBedeli" />
+        <label>Satış Vaadi Özel Şartları</label><textarea id="vaadiOzel" style="min-height:120px"></textarea>
+        <label>Satış Vaadi Ek Maddeleri</label><textarea id="vaadiEkMaddeler" style="min-height:100px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="yetkiSatis">
+        <h3>Satış Yetkilendirme Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>İlan / Satış Fiyatı</label><input id="yetkiSatisIlanFiyati" /></div><div><label>Yetki Süresi</label><input id="yetkiSatisSuresi" /></div></div>
+        <div class="grid2"><div><label>Hizmet Bedeli / Komisyon</label><input id="yetkiSatisHizmetBedeli" /></div><div><label>Komisyon Paylaşımı</label><input id="yetkiSatisKomisyon" /></div></div>
+        <label>Satış Yetki Şartları / Ek Maddeler</label><textarea id="yetkiSatisEkMaddeler" style="min-height:140px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="yetkiKiralama">
+        <h3>Kiralama Yetkilendirme Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>İlan / Kira Bedeli</label><input id="yetkiKiralamaIlanKira" /></div><div><label>Yetki Süresi</label><input id="yetkiKiralamaSuresi" /></div></div>
+        <div class="grid2"><div><label>Hizmet Bedeli / Komisyon</label><input id="yetkiKiralamaHizmetBedeli" /></div><div><label>Komisyon Paylaşımı</label><input id="yetkiKiralamaKomisyon" /></div></div>
+        <label>Kiralama Yetki Şartları / Ek Maddeler</label><textarea id="yetkiKiralamaEkMaddeler" style="min-height:140px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="yerGosterme">
+        <h3>Taşınmaz Gösterme Belgesi Detayları</h3>
+        <div class="grid2"><div><label>İlan / Satış / Kira Bedeli</label><input id="yerGostermeBedel" /></div><div><label>Hizmet Bedeli / Komisyon</label><input id="yerGostermeHizmetBedeli" /></div></div>
+        <label>Gösterim Notu</label><textarea id="yerGostermeNot" style="min-height:90px"></textarea>
+        <label>Yer Gösterme Ek Maddeleri</label><textarea id="yerGostermeEkMaddeler" style="min-height:100px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="aracilikSatis">
+        <h3>Alım Satıma Aracılık Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>Satış Bedeli</label><input id="aracilikSatisBedeli" /></div><div><label>Hizmet Bedeli / Komisyon</label><input id="aracilikSatisHizmetBedeli" /></div></div>
+        <label>Komisyon Paylaşımı</label><input id="aracilikSatisKomisyon" />
+        <label>Alım Satıma Aracılık Özel Şartları</label><textarea id="aracilikSatisEkMaddeler" style="min-height:130px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="aracilikKiralama">
+        <h3>Kiralamaya Aracılık Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>Aylık Kira Bedeli</label><input id="aracilikKiraBedeli" /></div><div><label>Hizmet Bedeli / Komisyon</label><input id="aracilikKiralamaHizmetBedeli" /></div></div>
+        <label>Komisyon Paylaşımı</label><input id="aracilikKiralamaKomisyon" />
+        <label>Kiralamaya Aracılık Özel Şartları</label><textarea id="aracilikKiralamaEkMaddeler" style="min-height:130px"></textarea>
+      </div>
+
+      <div class="detailGroup hide" data-contracts="ortaklik">
+        <h3>Hizmet Ortaklığı Sözleşmesi Detayları</h3>
+        <div class="grid2"><div><label>Hizmet Bedeli</label><input id="ortaklikHizmetBedeli" /></div><div><label>Paylaşım Oranı</label><input id="ortaklikOran" /></div></div>
+        <label>Portföy / Müşteri Notu</label><textarea id="ortaklikNot" style="min-height:90px"></textarea>
+        <label>Ortaklık Ek Maddeleri</label><textarea id="ortaklikEkMaddeler" style="min-height:130px"></textarea>
+      </div>
+
+      <div class="actions"><button class="btn primary" onclick="saveDraft()">Taslağı Kaydet</button><button class="btn ghost" onclick="newDraft()">Yeni Taslak</button></div>
+    </div>
+    <div id="tab-sign" class="panelInner tabContent hide">
+      <h3>Tablet / Telefon İmza Alanı</h3>
+      <p class="note">Müşteri ekrana parmağıyla veya tablet kalemiyle imza atabilir. İmza attıkça sözleşme çıktısına otomatik işlenir. Tahliye taahhütnamesi ayrı belge tipi olarak hazırlanır.</p>
+      <label>Müşteri E-posta Adresi</label><input id="customerEmail" type="email" placeholder="musteri@mail.com" />
+      <div class="sigGrid">
+        <div class="sigCard"><b id="sigTitleParty1">1. Taraf İmzası</b><canvas id="sigCanvasParty1" class="sigPad" data-target="sigParty1"></canvas><div class="sigTools"><button class="btn ghost" onclick="clearSignature('sigParty1')">Temizle</button></div></div>
+        <div class="sigCard"><b id="sigTitleParty2">2. Taraf İmzası</b><canvas id="sigCanvasParty2" class="sigPad" data-target="sigParty2"></canvas><div class="sigTools"><button class="btn ghost" onclick="clearSignature('sigParty2')">Temizle</button></div></div>
+        <div class="sigCard"><b id="sigTitleKefil">Şahit / 3. İmza</b><canvas id="sigCanvasKefil" class="sigPad" data-target="sigKefil"></canvas><div class="sigTools"><button class="btn ghost" onclick="clearSignature('sigKefil')">Temizle</button></div></div>
+        <div class="sigCard"><b id="sigTitleOffice">Emlak Yetkilisi İmzası</b><canvas id="sigCanvasOffice" class="sigPad" data-target="sigOffice"></canvas><div class="sigTools"><button class="btn ghost" onclick="clearSignature('sigOffice')">Temizle</button></div></div>
+      </div>
+      <textarea id="sigParty1" class="hide"></textarea><textarea id="sigParty2" class="hide"></textarea><textarea id="sigKefil" class="hide"></textarea><textarea id="sigOffice" class="hide"></textarea>
+      <div class="actions"><button class="btn danger" onclick="clearAllSignatures()">Tüm İmzaları Temizle</button><button class="btn gold" onclick="printContract()">Yazıcı / PDF</button><button class="btn ok" onclick="shareToWhatsApp()">WhatsApp Paylaş</button><button class="btn ghost" onclick="shareSignedContract()">Telefonda Paylaş / Mail</button><button class="btn ghost" onclick="downloadSignedHtml()">İmzalı Dosya İndir</button><button class="btn ghost" onclick="emailSignedContract()">Mail Aç</button></div>
+      <div class="mailBox"><b>Mail gönderme mantığı:</b> Telefonda “Paylaş / Mail” butonu desteklenirse imzalı sözleşme dosyasını doğrudan e-posta uygulamasına yollar. Desteklenmezse “İmzalı Dosya İndir” ile dosyayı indirip mail uygulamasına ek olarak ekleyebilirsin. PDF için “Yazdır / PDF” kullan.</div>
+    </div>
+    <div id="tab-archive" class="panelInner tabContent hide">
+      <h3>Kayıtlı Taslaklar</h3><div id="savedList" class="savedList"></div>
+      <div class="actions"><button class="btn ghost" onclick="exportJson()">Arşivi Dışa Aktar</button><label class="btn ghost" style="margin:0">Arşiv İçe Aktar<input id="importFile" type="file" accept="application/json" style="display:none"></label></div>
+    </div>
+  </section>
+  <section class="preview">
+    <div class="previewTop"><div><b id="previewTitle">Kira Sözleşmesi</b><div id="statusText" class="status">Hazırlanıyor</div><div id="printHint" class="printHint"></div></div><div class="actions"><button class="btn gold" onclick="printContract()">Yazıcı / PDF</button><button class="btn ok" onclick="shareToWhatsApp()">WhatsApp</button><button class="btn ghost" onclick="shareSignedContract()">Paylaş / Mail</button><button class="btn ghost" onclick="downloadSignedHtml()">İmzalı Dosya</button><button class="btn ghost" onclick="copyContract()">Metni Kopyala</button></div><div id="missingBox" style="width:100%"></div></div>
+    <article id="doc" class="doc"></article>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const fields=['contractType','sozlesmeNo','tarih','duzenlemeYeri','ofisAdi','ofisYetkili','ofisTel','ofisAdres','party1Name','party2Name','party1Tc','party2Tc','party1Tel','party2Tel','party1Adres','party2Adres','kefilName','kefilTc','kefilTel','kefilAdres','tasinmazAdres','ilIlce','mahalle','nitelik','ada','parsel','bbNo','aylikKira','depozito','kiraBaslangic','kiraBitis','odemeGunu','odemeSekli','aidat','artisOrani','demirbaslar','yetkiliMahkeme','tahliyeKiraBaslangic','tahliyeTarihi','tahliyeDuzenlemeTarihi','tahliyeYeri','kiraOzel','kiraEkMaddeler','alimSatimSatisBedeli','alimSatimKapora','alimSatimKalanOdeme','alimSatimOdemePlani','alimSatimDevirTarihi','alimSatimMasrafPaylasimi','alimSatimHizmetBedeli','alimSatimOzel','alimSatimEkMaddeler','vaadiSatisBedeli','vaadiKapora','vaadiKalanOdeme','vaadiOdemePlani','vaadiDevirTarihi','vaadiMasrafPaylasimi','vaadiHizmetBedeli','vaadiOzel','vaadiEkMaddeler','yetkiSatisIlanFiyati','yetkiSatisSuresi','yetkiSatisHizmetBedeli','yetkiSatisKomisyon','yetkiSatisEkMaddeler','yetkiKiralamaIlanKira','yetkiKiralamaSuresi','yetkiKiralamaHizmetBedeli','yetkiKiralamaKomisyon','yetkiKiralamaEkMaddeler','yerGostermeBedel','yerGostermeHizmetBedeli','yerGostermeNot','yerGostermeEkMaddeler','aracilikSatisBedeli','aracilikSatisHizmetBedeli','aracilikSatisKomisyon','aracilikSatisEkMaddeler','aracilikKiraBedeli','aracilikKiralamaHizmetBedeli','aracilikKiralamaKomisyon','aracilikKiralamaEkMaddeler','ortaklikHizmetBedeli','ortaklikOran','ortaklikNot','ortaklikEkMaddeler','customerEmail','sigParty1','sigParty2','sigKefil','sigOffice'];
+const labels={
+  kira:['Kiraya Veren','Kiracı','Kira Sözleşmesi',''],
+  tahliye:['Kiraya Veren','Kiracı','Tahliye Taahhütnamesi',''],
+  alimSatim:['Satıcı','Alıcı','Taşınmaz Alım Satım Sözleşmesi','Satıcı ve alıcı arasında satış bedeli, kapora, ödeme ve tapu devri şartlarını düzenler.'],
+  satisVaadi:['Vaad Eden Satıcı','Vaad Alan Alıcı','Taşınmaz Satış Vaadi Sözleşmesi','Satış vaadi şartları, ödeme planı ve teslim/devir hükümleri için taslak belge.'],
+  yetkiSatis:['Mülk Sahibi','Emlak İşletmesi','Satış Yetkilendirme Sözleşmesi','Taşınmazın satış pazarlaması için yetki belgesi.'],
+  yetkiKiralama:['Mülk Sahibi','Emlak İşletmesi','Kiralama Yetkilendirme Sözleşmesi','Taşınmazın kiralanması için emlak işletmesine verilen yetki belgesi.'],
+  yerGosterme:['Emlak İşletmesi','Müşteri','Taşınmaz Gösterme Belgesi','Gösterilen taşınmaz ve müşteri kaydı için imzalı belge.'],
+  aracilikSatis:['Satıcı','Alıcı','Alım Satıma Aracılık Sözleşmesi','Satıcı, alıcı ve emlak işletmesi arasındaki hizmet bedeli ve aracılık şartları.'],
+  aracilikKiralama:['Kiraya Veren','Kiracı','Kiralamaya Aracılık Sözleşmesi','Kiraya veren, kiracı ve emlak işletmesi arasındaki aracılık şartları.'],
+  ortaklik:['1. Emlak İşletmesi','2. Emlak İşletmesi','Hizmet Ortaklığı Sözleşmesi','İki emlak ofisi arasındaki portföy/müşteri ve komisyon paylaşımı.']
+};
+const kiraGenelKosullar=`1. Kiracı, kiralananı özenle kullanmak zorundadır.
+2. Kiracı, kiralananda ve çevrede oturanlara iyi niyet kuralları içinde davranmaya zorunludur.
+3. Kiracı, kiralananı kısmen veya tamamen üçüncü kişilere kiralayamaz, alt kiraya veremez; devir ve temlik edemez.
+4. Kiracı, kiralayanın yazılı izni olmadıkça, kiralananda değişiklik yapamaz; aksi halde, doğacak zararı karşılamak zorundadır.
+5. Üçüncü kişilerin kiralanan üzerinde hak iddia etmeleri halinde, kiracı, durumu derhal kiralayana haber vermek zorundadır.
+6. Kiracı, kiralananda yapılması gereken onarımları derhal kiralayana bildirmek zorundadır; aksi halde doğacak zarardan sorumludur.
+7. Kiracı, kat malikleri kurulunca kendisine tebliğ edilen hususları, kiralayana haber vermek zorundadır.
+8. Kiracı, kat malikleri kurulu kararı uyarınca yapılması gereken işlere izin vermek zorundadır.
+9. Kiracı, kiralanandaki onarımlara katlanmak ve kiralanandaki olağan kullanımdan dolayı yapılması gereken onarımları yapmak/yaptırmak ve giderlerini karşılamak zorundadır.
+10. Kiralananın mülkiyet hakkından doğan vergileri kiralayana, kullanımından doğan vergi, resim ve harçları kiracıya aittir. Uyuşmazlık halinde, yerel örf ve âdetler uygulanır.
+11. Kiracı, kira sözleşmesinin sonunda, kiralananı aldığı şekilde kiralayana teslim etmek zorundadır. Keza kiralananla birlikte teslim edilen demirbaşlar da alındığı şekilde kiralayana teslim edilmediği takdirde, oluşan hasarların bedelinin kiralayana ödenmesi veya eski hale getirilmesi zorunludur.
+12. Kiralananın iyi ve kullanılmaya elverişli halde teslim edildiği asıldır. Aksi durum kiracı tarafından ispatlanmak zorundadır. Kiralananın normal kullanımından dolayı ortaya çıkacak yıpranma ve eskiliklerden dolayı kiracı sorumlu değildir.
+13. Kiracı, kira sözleşmesinin sona ermesi veya satılığa çıkartılması halinde, kiralananın gezilmesine ve incelenmesine izin vermek zorundadır.
+14. Kiralananın boşaltılması/tahliyesi gerektiği hallerde, kiralananın boşaltılmaması durumunda ortaya çıkacak zararlardan dolayı kiracı sorumlu olacaktır.
+15. Kiracı, kendisi veya birlikte oturanların sağlığı için ciddi tehlike oluşturmayan kusurlardan dolayı, kiralananı teslim almaktan kaçınamaz, sözleşmeyi bozamaz ve kiradan indirim talebinde bulunamaz.
+16. Kiracı, kiralanana yaptığı faydalı ve lüks şeylerin bedelini kiralayandan isteyemez ve sözleşme bitiminde bunları kiralayana teslim etmek zorundadır.
+17. Kiracı, kiralayanın yazılı olurunu almak ve giderleri kendisine ait olmak üzere, genel anten, uydu anteni, kablo televizyon gibi donanımları yaptırabilir.
+18. İşbu kira sözleşmesinde yer almayan hususlar hakkında 6098 sayılı Türk Borçlar Kanunu hükümleri geçerlidir.`;
+const kiraOzelVarsayilan='';
+const NO_PREFIX='TDMG';
+function parseNo(no){const m=String(no||'').match(/^TDMG(\d+)$/);return m?parseInt(m[1],10):0}
+function formatNo(n){return NO_PREFIX+String(Math.max(1,Number(n)||1)).padStart(4,'0')}
+function nextContractNo(){let n=parseInt(localStorage.getItem('emlakSozlesmeSira')||'1',10);if(!Number.isFinite(n)||n<1)n=1;return formatNo(n)}
+function bumpSequenceAfter(no){const used=parseNo(no);let n=parseInt(localStorage.getItem('emlakSozlesmeSira')||'1',10);if(!Number.isFinite(n)||n<1)n=1;if(used>=n)localStorage.setItem('emlakSozlesmeSira',String(used+1))}
+function freshDefaults(type){return {...defaults,contractType:type||'kira',sozlesmeNo:nextContractNo(),tarih:new Date().toLocaleDateString('tr-TR'),tahliyeDuzenlemeTarihi:new Date().toLocaleDateString('tr-TR'),tahliyeYeri:'Düzce / Cumayeri'}}
+const defaults={contractType:'kira',sozlesmeNo:nextContractNo(),tarih:new Date().toLocaleDateString('tr-TR'),duzenlemeYeri:'Düzce / Cumayeri',ofisAdi:'Taşdemir Gayrimenkul',ofisYetkili:'Ufuk Çiçek',ofisTel:'0532 766 44 04',ofisAdres:'Düzce / Cumayeri',party1Name:'',party2Name:'',party1Tc:'',party2Tc:'',party1Tel:'',party2Tel:'',party1Adres:'',party2Adres:'',tasinmazAdres:'',ilIlce:'Düzce / Cumayeri',mahalle:'',nitelik:'Konut / Daire',ada:'',parsel:'',bbNo:'',aylikKira:'',depozito:'',kiraBaslangic:'',kiraBitis:'1 yıl',odemeGunu:'Her ayın 1-5 arası',odemeSekli:'Banka / IBAN',aidat:'Kiracıya ait',artisOrani:'Kanuni sınırlar içinde TÜFE oranı',demirbaslar:'',yetkiliMahkeme:'Düzce Mahkemeleri ve İcra Daireleri',tahliyeKiraBaslangic:'',tahliyeTarihi:'',tahliyeDuzenlemeTarihi:new Date().toLocaleDateString('tr-TR'),tahliyeYeri:'Düzce / Cumayeri',kiraOzel:kiraOzelVarsayilan,kiraEkMaddeler:'',alimSatimSatisBedeli:'',alimSatimKapora:'',alimSatimKalanOdeme:'',alimSatimOdemePlani:'',alimSatimDevirTarihi:'',alimSatimMasrafPaylasimi:'Taraflarca ayrıca kararlaştırılır',alimSatimHizmetBedeli:'',alimSatimOzel:`1. Satış bedeli ve ödeme şekli taraflarca kabul edilmiştir.
+2. Kapora/peşinat, satıştan vazgeçme ve masraf paylaşımı hükümleri tarafların yazılı anlaşmasına göre uygulanır.
+3. Tapu devri için gerekli evrakları taraflar süresinde hazırlamayı kabul eder.
+4. Taşınmazın teslimi, tapu devri ve ödeme şartları bu sözleşmede yazılı esaslara göre yapılır.`,alimSatimEkMaddeler:'',vaadiSatisBedeli:'',vaadiKapora:'',vaadiKalanOdeme:'',vaadiOdemePlani:'',vaadiDevirTarihi:'',vaadiMasrafPaylasimi:'Taraflarca ayrıca kararlaştırılır',vaadiHizmetBedeli:'',vaadiOzel:`1. Satış vaadi bedeli, ödeme planı ve teslim şartları taraflarca kabul edilmiştir.
+2. Taraflar, sözleşmede yazılı edimlerini belirtilen sürelerde yerine getirmeyi kabul eder.
+3. Masraf, harç ve diğer giderlerin paylaşımı bu sözleşmede belirtilen şekilde uygulanır.`,vaadiEkMaddeler:'',yetkiSatisIlanFiyati:'',yetkiSatisSuresi:'',yetkiSatisHizmetBedeli:'',yetkiSatisKomisyon:'',yetkiSatisEkMaddeler:'',yetkiKiralamaIlanKira:'',yetkiKiralamaSuresi:'',yetkiKiralamaHizmetBedeli:'',yetkiKiralamaKomisyon:'',yetkiKiralamaEkMaddeler:'',yerGostermeBedel:'',yerGostermeHizmetBedeli:'',yerGostermeNot:'',yerGostermeEkMaddeler:'',aracilikSatisBedeli:'',aracilikSatisHizmetBedeli:'',aracilikSatisKomisyon:'',aracilikSatisEkMaddeler:'',aracilikKiraBedeli:'',aracilikKiralamaHizmetBedeli:'',aracilikKiralamaKomisyon:'',aracilikKiralamaEkMaddeler:'',ortaklikHizmetBedeli:'',ortaklikOran:'',ortaklikNot:'',ortaklikEkMaddeler:'',customerEmail:'',sigParty1:'',sigParty2:'',sigKefil:'',sigOffice:''};
+function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function val(id){return $(id)?.value?.trim()||''}
+function row(a,b){return `<tr><th>${esc(a)}</th><td>${esc(b)||'&nbsp;'}</td></tr>`}
+function clause(text){return `<div class="clauseList">${esc(text)||'&nbsp;'}</div>`}
+function kiraKosulParcasi(bas,bit){const lines=kiraGenelKosullar.split(/\n(?=\d+\.\s)/);return lines.slice(bas-1,bit).join('\n')}
+function sectionIf(title,text){const clean=String(text||'').trim();return clean?`<div class="articleTitle">${esc(title)}</div>${clause(clean)}`:''}
+function commonHead(title){return `<div class="meta">Sözleşme No: ${esc(val('sozlesmeNo'))} &nbsp; | &nbsp; Tarih: ${esc(val('tarih'))} &nbsp; | &nbsp; Yer: ${esc(val('duzenlemeYeri'))}</div><div class="officeHead"><div><div class="officeName">${esc(val('ofisAdi'))}</div><div>${esc(val('ofisAdres'))}</div></div><div><b>Yetkili:</b> ${esc(val('ofisYetkili'))}<br><b>Tel:</b> ${esc(val('ofisTel'))}</div></div><h1>${esc(title)}</h1>`}
+function partiesTable(a,b){return `<h2>Taraflar</h2><table>${row(a,val('party1Name'))}${row(a+' T.C./Vergi No',val('party1Tc'))}${row(a+' Telefon',val('party1Tel'))}${row(a+' Adres',val('party1Adres'))}${row(b,val('party2Name'))}${row(b+' T.C./Vergi No',val('party2Tc'))}${row(b+' Telefon',val('party2Tel'))}${row(b+' Adres',val('party2Adres'))}</table>`}
+function propertyTable(){return `<h2>Taşınmaz Bilgileri</h2><table>${row('Adres',val('tasinmazAdres'))}${row('İl / İlçe',val('ilIlce'))}${row('Mahalle',val('mahalle'))}${row('Nitelik',val('nitelik'))}${row('Ada / Parsel / Bağımsız Bölüm',[val('ada'),val('parsel'),val('bbNo')].filter(Boolean).join(' / '))}</table>`}
+function printedSignature(id){const src=val(id);return src?`<div class="printedSig"><img src="${esc(src)}" alt="İmza"></div>`:`<div class="printedSig empty">İmza</div>`}
+function signs(a,b,c='Emlak Yetkilisi'){return `<div class="signs"><div class="signBox"><b>${esc(a)}</b><br>${esc(val('party1Name'))}${printedSignature('sigParty1')}</div><div class="signBox"><b>${esc(b)}</b><br>${esc(val('party2Name'))}${printedSignature('sigParty2')}</div><div class="signBox"><b>${esc(c)}</b><br>${esc(val('ofisYetkili'))}${printedSignature('sigOffice')}</div></div>`}
+function kiraSigns(){return `<div class="signs"><div class="signBox"><b>Kiraya Veren</b><br>${esc(val('party1Name'))}${printedSignature('sigParty1')}</div><div class="signBox"><b>Kiracı</b><br>${esc(val('party2Name'))}${printedSignature('sigParty2')}</div><div class="signBox"><b>Emlak Yetkilisi</b><br>${esc(val('ofisYetkili'))}${printedSignature('sigOffice')}</div></div>`}
+function legalWarning(t){let lines=['Taraflar, sözleşmede yazılı bilgilerin doğru olduğunu, belgeyi okuyup anladıklarını ve serbest iradeleriyle imzaladıklarını kabul eder.'];if(t==='kira'||t==='tahliye'||t==='aracilikKiralama'||t==='yetkiKiralama')lines.push('Kira ilişkilerinde dava şartı arabuluculuk, görevli mahkeme ve icra hükümleri saklıdır.');if(t==='aracilikSatis'||t==='aracilikKiralama'||t==='yetkiSatis'||t==='yetkiKiralama'||t==='yerGosterme')lines.push('Emlak aracılık hizmet bedellerinde yürürlükteki mevzuattaki üst sınırlar aşılmamalıdır.');if(t==='alimSatim'||t==='satisVaadi')lines.push('Tapu devri, ayni hak tesisi ve resmi işlemler ilgili kurumlarda tamamlanmadan mülkiyet devri gerçekleşmiş sayılmaz.');lines.push(t==='tahliye'?'Bu tahliye taahhütnamesi tek nüsha olarak hazırlanmıştır.':'Bu sözleşme iki nüsha olarak hazırlanmıştır; taraflarda birer nüsha kalır.');return `<div class="legal"><b>Yasal Uyarı / Kontrol:</b> ${esc(lines.join(' '))}</div>`}
+function foot(){return ''}
+function renderKira(){return `${commonHead('Kira Sözleşmesi')}${partiesTable('Kiraya Veren','Kiracı')}${propertyTable()}<h2>Kira Şartları</h2><table>${row('Aylık Kira Bedeli',val('aylikKira'))}${row('Depozito',val('depozito'))}${row('Kira Başlangıç Tarihi',val('kiraBaslangic'))}${row('Kira Süresi / Bitiş',val('kiraBitis'))}${row('Ödeme Günü',val('odemeGunu'))}${row('Ödeme Şekli / IBAN',val('odemeSekli'))}${row('Aidat / Ortak Gider',val('aidat'))}${row('Artış Oranı',val('artisOrani'))}${row('Demirbaşlar / Teslim Durumu',val('demirbaslar'))}${row('Uyuşmazlık / Yetki',val('yetkiliMahkeme'))}</table><p>Kiraya veren, yukarıda bilgileri yazılı taşınmazı kiracıya kullanıma elverişli şekilde teslim etmeyi; kiracı ise kira bedelini zamanında ödemeyi ve taşınmazı sözleşmeye uygun kullanmayı kabul eder.</p><div class="articleTitle">GENEL KOŞULLAR</div>${clause(kiraKosulParcasi(1,8))}<div class="pageBreak"><div class="articleTitle">GENEL KOŞULLAR DEVAMI</div>${clause(kiraKosulParcasi(9,18))}<div class="articleTitle">Yetkili Mahkeme ve İcra Dairesi</div><p>İşbu sözleşmeden doğabilecek uyuşmazlıklarda, dava şartı arabuluculuk ve görevli mahkeme kuralları saklı kalmak kaydıyla, ${esc(val('yetkiliMahkeme')||'ilgili mahkemeler ve icra daireleri')} yetkilidir.</p>${legalWarning('kira')}${kiraSigns()}</div>`}
+function renderTahliye(){return `${commonHead('Tahliye Taahhütnamesi')}${partiesTable('Kiraya Veren','Kiracı')}${propertyTable()}<div class="taahhutBox"><p><b>Taahhüt Eden Kiracı:</b> ${esc(val('party2Name'))} &nbsp; <b>T.C./Vergi No:</b> ${esc(val('party2Tc'))}</p><p><b>Kiraya Veren:</b> ${esc(val('party1Name'))} &nbsp; <b>T.C./Vergi No:</b> ${esc(val('party1Tc'))}</p><p><b>Kiralanan Taşınmaz:</b> ${esc(val('tasinmazAdres'))}</p><p><b>Kira Başlangıç Tarihi:</b> ${esc(val('tahliyeKiraBaslangic')||val('kiraBaslangic'))}</p><p><b>Tahliye Edilecek Tarih:</b> ${esc(val('tahliyeTarihi')) || '..... / ..... / 20.....'}</p><p><b>Düzenleme Tarihi ve Yeri:</b> ${esc(val('tahliyeDuzenlemeTarihi')) || '..... / ..... / 20.....'} - ${esc(val('tahliyeYeri')||val('duzenlemeYeri'))}</p><p>Yukarıda adresi yazılı kiralananı, hiçbir ihtar ve ihbara gerek kalmaksızın, yukarıda belirtilen tahliye tarihinde boş, temiz, hasarsız, anahtarları ve demirbaşlarıyla birlikte kiraya verene teslim etmeyi kabul, beyan ve taahhüt ederim.</p><p>Tahliye tarihinde kiralananı boşaltmadığım takdirde, kiraya verenin yasal yollara başvurma, icra takibi ve dava haklarını kullanabileceğini kabul ederim.</p><p>İşbu tahliye taahhütnamesi, kiracı tarafından okunarak imzalanmıştır.</p></div>${legalWarning('tahliye')}<div class="signs"><div></div><div class="signBox"><b>Taahhüt Eden Kiracı</b><br>${esc(val('party2Name'))}${printedSignature('sigParty2')}</div><div></div></div>`}
+function renderAlimSatim(){return `${commonHead('Taşınmaz Alım Satım Sözleşmesi')}${partiesTable('Satıcı','Alıcı')}${propertyTable()}<h2>Satış Şartları</h2><table>${row('Satış Bedeli',val('alimSatimSatisBedeli'))}${row('Kapora / Peşinat',val('alimSatimKapora'))}${row('Kalan Ödeme',val('alimSatimKalanOdeme'))}${row('Ödeme Planı',val('alimSatimOdemePlani'))}${row('Tapu Devir / Teslim Tarihi',val('alimSatimDevirTarihi'))}${row('Masraf / Harç Paylaşımı',val('alimSatimMasrafPaylasimi'))}${row('Emlak Hizmet Bedeli',val('alimSatimHizmetBedeli'))}</table><p>Satıcı, yukarıda bilgileri yazılı taşınmazı belirtilen bedel ve şartlarla alıcıya satmayı; alıcı ise bedeli ve ödeme planını kabul eder.</p>${sectionIf('Alım Satım Özel Şartları',val('alimSatimOzel'))}${sectionIf('Alım Satım Ek Maddeleri',val('alimSatimEkMaddeler'))}${legalWarning('alimSatim')}${signs('Satıcı','Alıcı')}`}
+function renderSatisVaadi(){return `${commonHead('Taşınmaz Satış Vaadi Sözleşmesi')}${partiesTable('Vaad Eden Satıcı','Vaad Alan Alıcı')}${propertyTable()}<h2>Satış Vaadi Şartları</h2><table>${row('Satış Bedeli',val('vaadiSatisBedeli'))}${row('Kapora / Peşinat',val('vaadiKapora'))}${row('Kalan Ödeme',val('vaadiKalanOdeme'))}${row('Ödeme Planı',val('vaadiOdemePlani'))}${row('Devir / Teslim Tarihi',val('vaadiDevirTarihi'))}${row('Masraf / Harç Paylaşımı',val('vaadiMasrafPaylasimi'))}${row('Emlak Hizmet Bedeli',val('vaadiHizmetBedeli'))}</table><p>Vaad eden satıcı, yukarıda bilgileri yazılı taşınmazı belirtilen şartlarda vaad alan alıcıya satmayı; vaad alan alıcı ise bedeli ve yükümlülükleri belirtilen şartlarda yerine getirmeyi kabul eder.</p>${sectionIf('Satış Vaadi Özel Şartları',val('vaadiOzel'))}${sectionIf('Satış Vaadi Ek Maddeleri',val('vaadiEkMaddeler'))}${legalWarning('satisVaadi')}${signs('Vaad Eden Satıcı','Vaad Alan Alıcı')}`}
+function renderYetki(kind){const sale=kind==='satis';const fiyat=sale?val('yetkiSatisIlanFiyati'):val('yetkiKiralamaIlanKira');const sure=sale?val('yetkiSatisSuresi'):val('yetkiKiralamaSuresi');const hizmet=sale?val('yetkiSatisHizmetBedeli'):val('yetkiKiralamaHizmetBedeli');const komisyon=sale?val('yetkiSatisKomisyon'):val('yetkiKiralamaKomisyon');const ek=sale?val('yetkiSatisEkMaddeler'):val('yetkiKiralamaEkMaddeler');const t=sale?'yetkiSatis':'yetkiKiralama';return `${commonHead(sale?'Satış Yetkilendirme Sözleşmesi':'Kiralama Yetkilendirme Sözleşmesi')}${partiesTable('Mülk Sahibi','Emlak İşletmesi')}${propertyTable()}<h2>Yetki ve Pazarlama Şartları</h2><table>${row(sale?'İlan / Satış Fiyatı':'İlan / Kira Bedeli',fiyat)}${row('Yetki Süresi',sure)}${row('Hizmet Bedeli',hizmet)}${row('Komisyon Paylaşımı',komisyon)}</table><p>Mülk sahibi, taşınmazın ${sale?'satışı':'kiralanması'} için emlak işletmesini yetkilendirir. Emlak işletmesi tanıtım, müşteri bulunması, randevu ve belge hazırlık süreçlerinde aracılık hizmeti verir.</p>${sectionIf(sale?'Satış Yetki Şartları':'Kiralama Yetki Şartları',ek)}${legalWarning(t)}${signs('Mülk Sahibi','Emlak İşletmesi')}`}
+function renderYerGosterme(){return `${commonHead('Taşınmaz Gösterme Belgesi')}${partiesTable('Emlak İşletmesi','Müşteri / Aday Alıcı-Kiracı')}${propertyTable()}<h2>Gösterim Bilgileri</h2><table>${row('Gösterim Tarihi',val('tarih'))}${row('İlan / Satış / Kira Bedeli',val('yerGostermeBedel'))}${row('Gösterim Notu',val('yerGostermeNot'))}${row('Hizmet Bedeli',val('yerGostermeHizmetBedeli'))}</table><p>Müşteri, yukarıda bilgileri yazılı taşınmazın kendisine emlak işletmesi tarafından gösterildiğini ve taşınmazı bu işletme aracılığıyla öğrendiğini kabul eder.</p>${sectionIf('Yer Gösterme Ek Maddeleri',val('yerGostermeEkMaddeler'))}${legalWarning('yerGosterme')}${signs('Emlak İşletmesi','Müşteri')}`}
+function renderAracilik(kind){const sale=kind==='satis';const bedel=sale?val('aracilikSatisBedeli'):val('aracilikKiraBedeli');const hizmet=sale?val('aracilikSatisHizmetBedeli'):val('aracilikKiralamaHizmetBedeli');const komisyon=sale?val('aracilikSatisKomisyon'):val('aracilikKiralamaKomisyon');const ek=sale?val('aracilikSatisEkMaddeler'):val('aracilikKiralamaEkMaddeler');const t=sale?'aracilikSatis':'aracilikKiralama';return `${commonHead(sale?'Alım Satıma Aracılık Sözleşmesi':'Kiralamaya Aracılık Sözleşmesi')}${partiesTable(sale?'Satıcı':'Kiraya Veren',sale?'Alıcı':'Kiracı')}${propertyTable()}<h2>Aracılık Şartları</h2><table>${row(sale?'Satış Bedeli':'Aylık Kira Bedeli',bedel)}${row('Hizmet Bedeli / Komisyon',hizmet)}${row('Komisyon Paylaşımı',komisyon)}${row('Ödeme Zamanı',sale?'Satış/devir işlemi aşamasında':'Kira sözleşmesinin kurulması aşamasında')}</table><p>Emlak işletmesi, tarafların ${sale?'alım satım':'kiralama'} işleminde bir araya gelmesine aracılık etmiş olup taraflar hizmet bedeli ve ödeme şartlarını kabul eder.</p>${sectionIf(sale?'Alım Satıma Aracılık Özel Şartları':'Kiralamaya Aracılık Özel Şartları',ek)}${legalWarning(t)}${signs(sale?'Satıcı':'Kiraya Veren',sale?'Alıcı':'Kiracı')}`}
+function renderOrtaklik(){return `${commonHead('Hizmet Ortaklığı Sözleşmesi')}${partiesTable('1. Emlak İşletmesi','2. Emlak İşletmesi')}${propertyTable()}<h2>Ortaklık Şartları</h2><table>${row('Hizmet Bedeli',val('ortaklikHizmetBedeli'))}${row('Paylaşım Oranı',val('ortaklikOran'))}${row('Portföy / Müşteri Notu',val('ortaklikNot'))}</table><p>Taraf emlak işletmeleri, yukarıda bilgileri yazılı taşınmaz veya müşteriyle ilgili ortak çalışma yürütmeyi ve doğacak hizmet bedelini belirtilen oranlarda paylaşmayı kabul eder.</p>${sectionIf('Ortaklık Ek Maddeleri',val('ortaklikEkMaddeler'))}${legalWarning('ortaklik')}${signs('1. Emlak İşletmesi','2. Emlak İşletmesi','Yetkili')}`}
+function renderCopies(html,t){if(t==='tahliye')return `<div class="copyStamp">Tek nüsha</div>${html}`;return `<div class="copyStamp">1. Nüsha</div>${html}<div class="pageBreak printOnly"><div class="copyStamp">2. Nüsha</div>${html}</div>`}
+function updateDetailGroups(t){document.querySelectorAll('.detailGroup').forEach(g=>{const list=(g.dataset.contracts||'').split(/\s+/).filter(Boolean);g.classList.toggle('hide',!list.includes(t));});if($('detailNotice'))$('detailNotice').textContent=''}
+function render(){const t=val('contractType')||'kira';const info=labels[t]||labels.kira;$('party1Label').textContent=info[0];$('party2Label').textContent=info[1];$('previewTitle').textContent=info[2];$('typeHint').textContent='';if($('printHint'))$('printHint').textContent='';updateDetailGroups(t);updateSignatureLabels(t);let html='';if(t==='kira')html=renderKira();else if(t==='tahliye')html=renderTahliye();else if(t==='alimSatim')html=renderAlimSatim();else if(t==='satisVaadi')html=renderSatisVaadi();else if(t==='yetkiSatis')html=renderYetki('satis');else if(t==='yetkiKiralama')html=renderYetki('kiralama');else if(t==='yerGosterme')html=renderYerGosterme();else if(t==='aracilikSatis')html=renderAracilik('satis');else if(t==='aracilikKiralama')html=renderAracilik('kiralama');else html=renderOrtaklik();$('doc').innerHTML=renderCopies(html,t);checkMissing(t)}
+function checkMissing(t){let req=['tarih','party1Name','party2Name','tasinmazAdres'];if(t==='kira')req.push('aylikKira','kiraBaslangic','yetkiliMahkeme');if(t==='tahliye')req.push('tahliyeKiraBaslangic','tahliyeTarihi');if(t==='alimSatim')req.push('alimSatimSatisBedeli');if(t==='satisVaadi')req.push('vaadiSatisBedeli');if(t==='aracilikSatis')req.push('aracilikSatisBedeli');if(t==='aracilikKiralama')req.push('aracilikKiraBedeli');const miss=req.filter(id=>!val(id));if(miss.length){$('missingBox').innerHTML=`<div class="missing">Eksik önemli alan var: ${miss.map(fieldName).join(', ')}</div>`;$('statusText').textContent='Eksik bilgiler var'}else{$('missingBox').innerHTML='<div class="ready">Çıktı almaya hazır.</div>';$('statusText').textContent='Hazır'}}
+function fieldName(id){return({tarih:'Tarih',party1Name:'1. Taraf',party2Name:'2. Taraf',tasinmazAdres:'Taşınmaz adresi',aylikKira:'Aylık kira',kiraBaslangic:'Kira başlangıç',tahliyeKiraBaslangic:'Kira başlangıç',tahliyeTarihi:'Tahliye tarihi',yetkiliMahkeme:'Yetkili mahkeme',alimSatimSatisBedeli:'Satış bedeli',vaadiSatisBedeli:'Satış vaadi bedeli',aracilikSatisBedeli:'Satış bedeli',aracilikKiraBedeli:'Aylık kira bedeli'}[id]||id)}
+function getData(){const o={};fields.forEach(id=>o[id]=val(id));return o}
+function extractKiraOzel(text){const raw=String(text||'').trim();if(!raw)return '';if(raw.includes('GENEL KOŞULLAR')){const m=raw.match(/ÖZEL ŞARTLAR VE EK HÜKÜMLER\s*([\s\S]*)/);return extractKiraOzel((m&&m[1])?m[1]:'')}const oldDefault=(raw.includes('Kiraya veren, kiralananı sözleşme başlangıç tarihinde')&&raw.includes('Depozito, kiralananın tahliye')&&raw.includes('dava şartı arabuluculuk'));if(oldDefault)return '';return raw}
+function migrateData(o){o=o||{};const c=o.contractType||'kira';if(c==='kira')o.kiraOzel=extractKiraOzel(o.kiraOzel);const cp=(to,from)=>{if((o[to]===undefined||o[to]==='')&&o[from])o[to]=o[from]};if(c==='kira'){cp('kiraEkMaddeler','ekMaddeler')}if(c==='tahliye'){cp('tahliyeKiraBaslangic','kiraBaslangic')}if(c==='alimSatim'){cp('alimSatimSatisBedeli','satisBedeli');cp('alimSatimKapora','kapora');cp('alimSatimKalanOdeme','kalanOdeme');cp('alimSatimOdemePlani','odemePlani');cp('alimSatimDevirTarihi','devirTarihi');cp('alimSatimMasrafPaylasimi','masrafPaylasimi');cp('alimSatimHizmetBedeli','hizmetBedeli');cp('alimSatimOzel','satisOzel');cp('alimSatimEkMaddeler','ekMaddeler')}if(c==='satisVaadi'){cp('vaadiSatisBedeli','satisBedeli');cp('vaadiKapora','kapora');cp('vaadiKalanOdeme','kalanOdeme');cp('vaadiOdemePlani','odemePlani');cp('vaadiDevirTarihi','devirTarihi');cp('vaadiMasrafPaylasimi','masrafPaylasimi');cp('vaadiHizmetBedeli','hizmetBedeli');cp('vaadiOzel','satisOzel');cp('vaadiEkMaddeler','ekMaddeler')}if(c==='yetkiSatis'){cp('yetkiSatisIlanFiyati','ilanFiyati');cp('yetkiSatisSuresi','yetkiSuresi');cp('yetkiSatisHizmetBedeli','hizmetBedeli');cp('yetkiSatisKomisyon','komisyonPaylasimi');cp('yetkiSatisEkMaddeler','ekMaddeler')}if(c==='yetkiKiralama'){cp('yetkiKiralamaIlanKira','ilanFiyati');cp('yetkiKiralamaSuresi','yetkiSuresi');cp('yetkiKiralamaHizmetBedeli','hizmetBedeli');cp('yetkiKiralamaKomisyon','komisyonPaylasimi');cp('yetkiKiralamaEkMaddeler','ekMaddeler')}if(c==='yerGosterme'){cp('yerGostermeBedel','ilanFiyati');cp('yerGostermeBedel','satisBedeli');cp('yerGostermeBedel','aylikKira');cp('yerGostermeHizmetBedeli','hizmetBedeli');cp('yerGostermeEkMaddeler','ekMaddeler')}if(c==='aracilikSatis'){cp('aracilikSatisBedeli','satisBedeli');cp('aracilikSatisHizmetBedeli','hizmetBedeli');cp('aracilikSatisKomisyon','komisyonPaylasimi');cp('aracilikSatisEkMaddeler','ekMaddeler')}if(c==='aracilikKiralama'){cp('aracilikKiraBedeli','aylikKira');cp('aracilikKiralamaHizmetBedeli','hizmetBedeli');cp('aracilikKiralamaKomisyon','komisyonPaylasimi');cp('aracilikKiralamaEkMaddeler','ekMaddeler')}if(c==='ortaklik'){cp('ortaklikHizmetBedeli','hizmetBedeli');cp('ortaklikNot','yerGostermeNot');cp('ortaklikEkMaddeler','ekMaddeler')}return o}
+function setData(o){o=migrateData({...o});fields.forEach(id=>{if($(id)&&o[id]!==undefined)$(id).value=o[id]});render();loadSignaturesToCanvas()}
+function setContract(t){if(t==='tahliye'){const rents=getRentDrafts();if(rents.length===1){setData(buildTahliyeFromKira(rents[0].data));activateTab('extra');window.scrollTo({top:0,behavior:'smooth'});return}}setData(freshDefaults(t));window.scrollTo({top:0,behavior:'smooth'})}
+function getDrafts(){try{return JSON.parse(localStorage.getItem('emlakSozlesmeTaslaklari')||'[]')}catch(e){return []}}
+function getRentDrafts(){return getDrafts().map((x,i)=>({data:x,index:i})).filter(o=>o.data&&o.data.contractType==='kira')}
+function lastDateFromText(text){const matches=String(text||'').match(/\b\d{1,2}[\.\/-]\d{1,2}[\.\/-]\d{2,4}\b/g);return matches&&matches.length?matches[matches.length-1]:''}
+function buildTahliyeFromKira(kira){const base=freshDefaults('tahliye');return {...base,contractType:'tahliye',sozlesmeNo:nextContractNo(),tarih:new Date().toLocaleDateString('tr-TR'),duzenlemeYeri:kira.duzenlemeYeri||base.duzenlemeYeri,ofisAdi:kira.ofisAdi||base.ofisAdi,ofisYetkili:kira.ofisYetkili||base.ofisYetkili,ofisTel:kira.ofisTel||base.ofisTel,ofisAdres:kira.ofisAdres||base.ofisAdres,party1Name:kira.party1Name||'',party1Tc:kira.party1Tc||'',party1Tel:kira.party1Tel||'',party1Adres:kira.party1Adres||'',party2Name:kira.party2Name||'',party2Tc:kira.party2Tc||'',party2Tel:kira.party2Tel||'',party2Adres:kira.party2Adres||'',tasinmazAdres:kira.tasinmazAdres||'',ilIlce:kira.ilIlce||base.ilIlce,mahalle:kira.mahalle||'',nitelik:kira.nitelik||base.nitelik,ada:kira.ada||'',parsel:kira.parsel||'',bbNo:kira.bbNo||'',tahliyeKiraBaslangic:kira.kiraBaslangic||kira.tahliyeKiraBaslangic||'',tahliyeTarihi:kira.tahliyeTarihi||lastDateFromText(kira.kiraBitis)||'',tahliyeDuzenlemeTarihi:new Date().toLocaleDateString('tr-TR'),tahliyeYeri:kira.duzenlemeYeri||kira.tahliyeYeri||base.tahliyeYeri,customerEmail:kira.customerEmail||''}}
+function fillTahliyeSourceOptions(){const sel=$('tahliyeSourceSelect');if(!sel)return;const rents=getRentDrafts();if(!rents.length){sel.innerHTML='<option value="">Kayıtlı kira sözleşmesi yok</option>';sel.disabled=true;return}sel.disabled=false;sel.innerHTML=rents.map(o=>`<option value="${o.index}">${esc(o.data.sozlesmeNo||'-')} • ${esc(o.data.party1Name||'-')} / ${esc(o.data.party2Name||'-')} • ${esc(o.data.tasinmazAdres||o.data.ilIlce||'')}</option>`).join('')}
+function loadTahliyeFromSelected(){const sel=$('tahliyeSourceSelect');if(!sel||sel.value===''){alert('Kayıtlı kira sözleşmesi seç.');return}createTahliyeFromDraft(Number(sel.value))}
+function activateTab(name){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));document.querySelectorAll('.tabContent').forEach(x=>x.classList.add('hide'));$('tab-'+name)?.classList.remove('hide');if(name==='sign')setTimeout(loadSignaturesToCanvas,60);renderSaved()}
+function createTahliyeFromDraft(i){const arr=getDrafts();const kira=arr[i];if(!kira||kira.contractType!=='kira'){alert('Kayıtlı kira sözleşmesi bulunamadı.');return}setData(buildTahliyeFromKira(kira));activateTab('extra');window.scrollTo({top:0,behavior:'smooth'});alert('Tahliye taahhütnamesi kayıtlı kira sözleşmesinden dolduruldu. Tahliye tarihini kontrol edip yazdırabilirsin.')}
+function saveDraft(){const data=getData();if(!data.sozlesmeNo||!/^TDMG\d{4,}$/.test(data.sozlesmeNo))data.sozlesmeNo=nextContractNo();const arr=JSON.parse(localStorage.getItem('emlakSozlesmeTaslaklari')||'[]');const key=data.sozlesmeNo;const idx=arr.findIndex(x=>x.sozlesmeNo===key);data.updatedAt=new Date().toLocaleString('tr-TR');if(idx>=0){arr[idx]=data}else{arr.unshift(data);bumpSequenceAfter(data.sozlesmeNo)}localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(arr.slice(0,100)));renderSaved();if(idx>=0){alert('Taslak güncellendi.')}else{const next=nextContractNo();alert('Taslak kaydedildi. Yeni boş sözleşme açıldı: '+next);setData(freshDefaults(data.contractType||'kira'))}}
+function renderSaved(){fillTahliyeSourceOptions();const arr=getDrafts();if(!$('savedList'))return;if(!arr.length){$('savedList').innerHTML='<div class="savedItem small">Henüz kayıt yok.</div>';return}$('savedList').innerHTML=arr.map((x,i)=>{const tahliyeBtn=x.contractType==='kira'?` <button class="btn gold" onclick="createTahliyeFromDraft(${i})">Tahliye</button>`:'';return `<div class="savedItem"><div><b>${esc(labels[x.contractType]?.[2]||'Sözleşme')}</b><div class="small">${esc(x.sozlesmeNo||'-')} • ${esc(x.party1Name||'-')} / ${esc(x.party2Name||'-')} • ${esc(x.updatedAt||'')}</div></div><div><button class="btn ghost" onclick="loadDraft(${i})">Aç</button>${tahliyeBtn} <button class="btn danger" onclick="deleteDraft(${i})">Sil</button></div></div>`}).join('')}
+function loadDraft(i){const arr=getDrafts();if(arr[i])setData(arr[i])}
+function deleteDraft(i){const arr=getDrafts();arr.splice(i,1);localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(arr));renderSaved()}
+function newDraft(){if(!confirm('Form temizlensin mi?'))return;setData({...defaults,sozlesmeNo:nextContractNo(),tarih:new Date().toLocaleDateString('tr-TR'),tahliyeDuzenlemeTarihi:new Date().toLocaleDateString('tr-TR')})}
+function exportJson(){const blob=new Blob([JSON.stringify(JSON.parse(localStorage.getItem('emlakSozlesmeTaslaklari')||'[]'),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='emlak-sozlesme-arsiv.json';a.click();URL.revokeObjectURL(a.href)}
+$('importFile').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const arr=JSON.parse(r.result);if(!Array.isArray(arr))throw new Error('Liste değil');localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(arr));renderSaved();alert('Arşiv içe aktarıldı.')}catch(err){alert('JSON okunamadı.')}};r.readAsText(file)});
+function copyContract(){const text=$('doc').innerText;navigator.clipboard?.writeText(text).then(()=>alert('Sözleşme metni kopyalandı.')).catch(()=>alert('Kopyalama desteklenmedi.'))}
+function printContract(){window.print()}
+async function shareToWhatsApp(){const title=labels[val('contractType')]?.[2]||'Sözleşme';const text=`${title}\nSözleşme No: ${val('sozlesmeNo')||'-'}\nTaraflar: ${val('party1Name')||'-'} / ${val('party2Name')||'-'}\n${val('ofisAdi')||''} - ${val('ofisYetkili')||''} ${val('ofisTel')||''}`;try{const blob=new Blob([buildSignedHtml()],{type:'text/html;charset=utf-8'});const file=new File([blob],signedFilename(),{type:'text/html'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title,text});return}if(navigator.share){await navigator.share({title,text});return}}catch(e){}window.open('https://wa.me/?text='+encodeURIComponent(text+'\n\nNot: Dosyayı ek olarak göndermek için İmzalı Dosya butonuyla indirip WhatsApp’a ekleyebilirsin.'),'_blank')}
+
+function updateSignatureLabels(t){const info=labels[t]||labels.kira;if($('sigTitleParty1'))$('sigTitleParty1').textContent=info[0]+' İmzası';if($('sigTitleParty2'))$('sigTitleParty2').textContent=info[1]+' İmzası';if($('sigTitleKefil'))$('sigTitleKefil').textContent='Şahit / 3. İmza';if($('sigTitleOffice'))$('sigTitleOffice').textContent='Emlak Yetkilisi İmzası'}
+const signaturePads=[{canvas:'sigCanvasParty1',input:'sigParty1'},{canvas:'sigCanvasParty2',input:'sigParty2'},{canvas:'sigCanvasKefil',input:'sigKefil'},{canvas:'sigCanvasOffice',input:'sigOffice'}];
+function resizeOneSignaturePad(item){const c=$(item.canvas);if(!c)return;const ctx=c.getContext('2d');const src=val(item.input);const rect=c.getBoundingClientRect();const w=Math.max(280,Math.floor(rect.width||360));const h=160;const ratio=window.devicePixelRatio||1;c.width=w*ratio;c.height=h*ratio;c.style.height=h+'px';ctx.setTransform(ratio,0,0,ratio,0,0);ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#111827';ctx.clearRect(0,0,w,h);if(src){const img=new Image();img.onload=()=>{ctx.clearRect(0,0,w,h);ctx.drawImage(img,0,0,w,h)};img.src=src}}
+function loadSignaturesToCanvas(){signaturePads.forEach(resizeOneSignaturePad)}
+function initSignaturePads(){signaturePads.forEach(item=>{const c=$(item.canvas);if(!c)return;resizeOneSignaturePad(item);const ctx=c.getContext('2d');let drawing=false,last=null;const point=e=>{const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}};const save=()=>{try{$(item.input).value=c.toDataURL('image/png');render()}catch(e){}};c.addEventListener('pointerdown',e=>{e.preventDefault();drawing=true;c.setPointerCapture?.(e.pointerId);last=point(e)});c.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const p=point(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p});['pointerup','pointercancel','pointerleave'].forEach(ev=>c.addEventListener(ev,e=>{if(!drawing)return;drawing=false;save()}));});let tm;window.addEventListener('resize',()=>{clearTimeout(tm);tm=setTimeout(loadSignaturesToCanvas,250)})}
+function clearSignature(inputId){if(!$(inputId))return;$(inputId).value='';const item=signaturePads.find(x=>x.input===inputId);if(item)resizeOneSignaturePad(item);render()}
+function clearAllSignatures(){if(!confirm('Tüm imzalar temizlensin mi?'))return;['sigParty1','sigParty2','sigKefil','sigOffice'].forEach(id=>{if($(id))$(id).value=''});loadSignaturesToCanvas();render()}
+function signedFilename(){const title=(labels[val('contractType')]?.[2]||'Sozlesme').replace(/[ğ]/g,'g').replace(/[ü]/g,'u').replace(/[ş]/g,'s').replace(/[ı]/g,'i').replace(/[ö]/g,'o').replace(/[ç]/g,'c').replace(/[Ğ]/g,'G').replace(/[Ü]/g,'U').replace(/[Ş]/g,'S').replace(/[İ]/g,'I').replace(/[Ö]/g,'O').replace(/[Ç]/g,'C').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-|-$/g,'');return `${title||'sozlesme'}-${(val('sozlesmeNo')||Date.now()).replace(/[^a-zA-Z0-9-]+/g,'-')}.html`}
+function buildSignedHtml(){const style=document.querySelector('style')?.innerHTML||'';const title=labels[val('contractType')]?.[2]||'Sözleşme';return `<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${style}\nbody{background:#fff}.doc{max-width:900px;margin:auto;min-height:auto}.appbar,.panel,.previewTop{display:none!important}</style></head><body><article class="doc">${$('doc').innerHTML}</article></body></html>`}
+function downloadSignedHtml(){const blob=new Blob([buildSignedHtml()],{type:'text/html;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=signedFilename();a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function emailSignedContract(){const to=val('customerEmail');const title=labels[val('contractType')]?.[2]||'Sözleşme';const subject=`${title} - ${val('sozlesmeNo')||''}`;const body=`Merhaba,\n\nHazırlanan sözleşme ektedir.\n\n${val('ofisAdi')||''}\n${val('ofisYetkili')||''}\n${val('ofisTel')||''}\n\nNot: Ek dosyayı ayrıca eklemeyi unutmayın.`;window.location.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`}
+async function shareSignedContract(){try{const blob=new Blob([buildSignedHtml()],{type:'text/html'});const file=new File([blob],signedFilename(),{type:'text/html'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:labels[val('contractType')]?.[2]||'Sözleşme',text:'İmzalı sözleşme dosyası'});return}}catch(e){}downloadSignedHtml();setTimeout(emailSignedContract,500)}
+function fillSampleRent(){setData({...getData(),contractType:'kira',party1Name:'Mülk Sahibi Ad Soyad',party1Tc:'',party1Tel:'',party1Adres:'',party2Name:'Kiracı Ad Soyad',party2Tc:'',party2Tel:'',party2Adres:'',tasinmazAdres:'Düzce / Cumayeri ... Mah. ... Sok. No: ... Daire: ...',ilIlce:'Düzce / Cumayeri',mahalle:'Merkez',nitelik:'Konut / Daire',aylikKira:'25.000 TL',depozito:'25.000 TL',kiraBaslangic:'01.07.2026',tahliyeKiraBaslangic:'01.07.2026',kiraBitis:'1 yıl / 01.07.2027',aidat:'Kiracıya ait',demirbaslar:'Kombi, duşakabin, ankastre set, dolaplar, sayaçlar sağlam teslim edildi.',yetkiliMahkeme:'Düzce Mahkemeleri ve İcra Daireleri',tahliyeTarihi:'01.07.2027',tahliyeYeri:'Düzce / Cumayeri'})}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>activateTab(t.dataset.tab)));
+fields.filter(id=>id!=='contractType').forEach(id=>$(id)?.addEventListener('input',render));fields.filter(id=>id!=='contractType').forEach(id=>$(id)?.addEventListener('change',render));$('contractType')?.addEventListener('change',()=>setContract(val('contractType')||'kira'));
+(function init(){initSignaturePads();let data=freshDefaults('kira');try{const last=localStorage.getItem('emlakSozlesmeSonForm');if(last)data={...freshDefaults('kira'),...JSON.parse(last)}}catch(e){}if(!/^TDMG\d{4,}$/.test(String(data.sozlesmeNo||'')))data.sozlesmeNo=nextContractNo();data.kiraOzel=extractKiraOzel(data.kiraOzel);setData(data);renderSaved();setInterval(()=>localStorage.setItem('emlakSozlesmeSonForm',JSON.stringify(getData())),1500)})();
+
+
+// PWA / GitHub Pages kurulum desteği
+let deferredInstallPrompt=null;
+function updateInstallUi(showTip=false){
+  const btn=document.getElementById('installAppBtn');
+  const tip=document.getElementById('installTip');
+  if(btn && deferredInstallPrompt) btn.classList.add('show');
+  if(tip && showTip) tip.classList.remove('hide');
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  updateInstallUi(true);
+});
+document.getElementById('installAppBtn')?.addEventListener('click',async()=>{
+  if(!deferredInstallPrompt){
+    document.getElementById('installTip')?.classList.remove('hide');
+    alert('Kurulum seçeneği görünmüyorsa Chrome/Edge menüsünden “Ana ekrana ekle” veya “Uygulamayı yükle” seçeneğini kullan.');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice.catch(()=>null);
+  deferredInstallPrompt=null;
+  document.getElementById('installAppBtn')?.classList.remove('show');
+});
+if('serviceWorker' in navigator && location.protocol !== 'file:'){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+if(/iPad|iPhone|iPod/.test(navigator.userAgent)){updateInstallUi(true);}
+</script>
+</body>
+</html>
