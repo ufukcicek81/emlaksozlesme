@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#07111f" />
-<link rel="manifest" href="manifest.webmanifest?v=paylasim-hata-fix2" />
+<link rel="manifest" href="manifest.webmanifest?v=paylasim-iptal-fix" />
 <title>Emlak Sözleşmem</title>
 <style>
 :root{--dark:#07111f;--dark2:#111827;--gold:#d4af37;--gold2:#f6d76b;--bg:#f3f4f6;--text:#111827;--muted:#64748b;--line:#e5e7eb;--danger:#991b1b;--ok:#166534}
@@ -364,6 +364,14 @@ function scrollToPreview(){document.querySelector('.preview')?.scrollIntoView({b
 
 
 
+
+
+function isShareCancelError(e){
+  const name = String(e && e.name || '').toLowerCase();
+  const msg = String(e && e.message || '').toLowerCase();
+  return name.includes('abort') || msg.includes('abort') || msg.includes('cancel') || msg.includes('canceled') || msg.includes('cancelled') || msg.includes('iptal');
+}
+
 async function sharePdfSystem(){
   try{
     const title = labels[val('contractType')]?.[2] || 'Sözleşme';
@@ -371,6 +379,16 @@ async function sharePdfSystem(){
     const text = title + ' - Sözleşme No: ' + sozNo;
     const blob = await buildPdfBlob();
     const file = new File([blob], signedPdfFilename(), {type:'application/pdf'});
+
+    if(!window.isSecureContext || location.protocol !== 'https:'){
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = signedPdfFilename();
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1500);
+      alert('PDF indirildi. Sistem paylaşım ekranı sadece canlı HTTPS linkinde / ana ekrana eklenen uygulamada açılır. Şu an dosya indirilen HTML olarak açılmış görünüyor. GitHub Pages linkinden açıp tekrar PDF Paylaş deyin.');
+      return;
+    }
 
     if(!navigator.share){
       throw new Error('Bu tarayıcı sistem paylaşım ekranını desteklemiyor');
@@ -382,6 +400,10 @@ async function sharePdfSystem(){
 
     await navigator.share({files:[file], title:title, text:text});
   }catch(e){
+    if(isShareCancelError(e)){
+      console.info('Paylaşım kullanıcı tarafından iptal edildi.');
+      return;
+    }
     try{
       const blob = await buildPdfBlob();
       const a = document.createElement('a');
@@ -397,6 +419,7 @@ async function sharePdfSystem(){
 }
 
 async function shareToWhatsApp(){ return sharePdfSystem(); }
+
  function updateSignatureLabels(t){const info=labels[t]||labels.kira;$('sigTitleParty1').textContent=info[0]+' İmzası';$('sigTitleParty2').textContent=info[1]+' İmzası';$('sigTitleWitness').textContent='Şahit / 3. İmza';$('sigTitleOffice').textContent='Emlak Yetkilisi İmzası'}
 const pads=[{canvas:'sigCanvasParty1',input:'sigParty1'},{canvas:'sigCanvasParty2',input:'sigParty2'},{canvas:'sigCanvasWitness',input:'sigWitness'},{canvas:'sigCanvasOffice',input:'sigOffice'}];
 function resizeOneSignaturePad(item){const c=$(item.canvas);if(!c)return;const ctx=c.getContext('2d');const src=val(item.input);const rect=c.getBoundingClientRect();const w=Math.max(280,Math.floor(rect.width||360));const h=160;const ratio=window.devicePixelRatio||1;c.width=w*ratio;c.height=h*ratio;c.style.height=h+'px';ctx.setTransform(ratio,0,0,ratio,0,0);ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#0057B8';ctx.clearRect(0,0,w,h);if(src){const img=new Image();img.onload=()=>{ctx.clearRect(0,0,w,h);ctx.drawImage(img,0,0,w,h)};img.src=src}}
