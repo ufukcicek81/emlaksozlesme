@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#07111f" />
-<link rel="manifest" href="manifest.webmanifest?v=quick-preview-kesin-kapat" />
+<link rel="manifest" href="manifest.webmanifest?v=firebase-bulut-yenile" />
 <title>Emlak Sözleşmem</title>
 <style>
 :root{--dark:#07111f;--dark2:#111827;--gold:#d4af37;--gold2:#f6d76b;--bg:#f3f4f6;--text:#111827;--muted:#64748b;--line:#e5e7eb;--danger:#991b1b;--ok:#166534}
@@ -66,6 +66,49 @@
 <style id="quick-preview-force-hide">
 body[data-active-tab="quick"] .preview{display:none!important}
 .layout:has(#tab-quick:not(.hide)) .preview{display:none!important}
+</style>
+
+
+<style id="print-min-page-force">
+@media print{
+  body{background:#fff!important}
+  .appbar,.panel,.previewTop{display:none!important}
+  .layout{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+  .preview{box-shadow:none!important;border:0!important;border-radius:0!important}
+  .doc{padding:0!important;min-height:auto!important;font-size:7.1pt!important;line-height:0.98!important;color:#111!important}
+  .doc h1{font-size:10.6pt!important;margin:0 0 1.2mm!important;line-height:1.02!important}
+  .doc h2{font-size:7.9pt!important;margin:1mm 0 .45mm!important;padding-bottom:.35mm!important;line-height:1.02!important}
+  .doc p{margin:.7mm 0!important}
+  .doc table{margin:.45mm 0 .9mm!important;border-collapse:collapse!important}
+  .doc th,.doc td{padding:.28mm .6mm!important;font-size:6.85pt!important;line-height:0.98!important}
+  .officeHead{padding:.7mm 1mm!important;margin-bottom:.8mm!important;border-width:1.2px!important;gap:1.5mm!important}
+  .officeName{font-size:8.9pt!important;line-height:1!important}
+  .officeSub{font-size:6.8pt!important}
+  .officeRight{font-size:6.8pt!important;line-height:1!important}
+  .docLogo{width:12mm!important;height:7mm!important}
+  .meta{font-size:6.8pt!important;margin-bottom:.8mm!important}
+  .copyStamp{font-size:6.2pt!important;margin-bottom:.4mm!important}
+  .articleTitle{margin-top:.7mm!important}
+  .initials{margin:.9mm 0!important;padding:.7mm 0!important;gap:1.2mm!important}
+  .initialBox{font-size:5.7pt!important;line-height:1!important}
+  .initialBox .line{height:2.4mm!important;margin:0 1mm .25mm!important}
+  .initialBox .nm,.initialBox .hint{font-size:5.3pt!important;min-height:auto!important}
+  .clauseList{font-size:6.4pt!important;line-height:.96!important;margin:.4mm 0 .7mm!important;padding-left:3.2mm!important}
+  .clauseList li{margin:0!important;padding:0!important}
+  .finalSignBlock{margin-top:.8mm!important;padding-top:.5mm!important;break-inside:auto!important;page-break-inside:auto!important}
+  .signs{margin-top:.8mm!important;gap:1.5mm!important;break-inside:auto!important;page-break-inside:auto!important}
+  .signBox{min-height:9.5mm!important;padding-top:.2mm!important}
+  .signBox b{font-size:6.4pt!important;line-height:1!important}
+  .signName{font-size:6.2pt!important;min-height:1.5mm!important;margin-top:0!important;line-height:1!important}
+  .signHint{font-size:5.3pt!important;margin-top:0!important;line-height:1!important}
+  .printedSig{height:8.5mm!important;margin:0!important;overflow:visible!important}
+  .printedSig img{max-height:8mm!important;max-width:100%!important;transform:none!important}
+  .printedSig.empty{font-size:6pt!important}
+  .doc .legal{font-size:5.5pt!important;line-height:.95!important;margin-top:.55mm!important;padding-top:.45mm!important}
+  .officeHead,.doc table,.signs,.finalSignBlock{break-inside:auto!important;page-break-inside:auto!important}
+  .pageBreak{border-top:0!important;margin-top:0!important;padding-top:0!important;page-break-before:always!important;break-before:page!important}
+  @page{size:A4;margin:3mm}
+}
 </style>
 
 </head>
@@ -198,8 +241,8 @@ body[data-active-tab="quick"] .preview{display:none!important}
       <div class="actions"><button class="btn danger" onclick="clearAllSignatures()">Tüm İmzaları Temizle</button><button class="btn ghost" onclick="scrollToPreview()">Sözleşme Önizlemeye Git</button></div>       <div class="mailBox"><b>Not:</b> İmzalar sözleşmeye otomatik işlenir. PDF Paylaş butonu iOS/Android paylaşım ekranını açar; WhatsApp, Mail, Drive veya istediğin uygulamayı oradan seçebilirsin.</div>
     </div>
     <div id="tab-archive" class="panelInner tabContent hide">
-      <h3>Kayıtlı Sözleşmeler</h3><div id="savedList" class="savedList"></div><div class="actions"><button class="btn ghost" onclick="exportJson()">Arşivi Dışa Aktar</button><label class="btn ghost" for="importFile">Arşivi İçe Aktar</label><input type="file" id="importFile" accept=".json" class="hide"></div><p class="note">Kaydet ve Sil işlemleri otomatik olarak hem cihazda hem Firebase’de yapılır.</p>
-      <p id="firebaseStatus" class="note">Kayıt ve silme işlemleri Firebase ile otomatik eşitlenir.</p>
+      <h3>Kayıtlı Sözleşmeler</h3><div id="savedList" class="savedList"></div><div class="actions"><button class="btn gold" onclick="syncFirebaseToLocal(false)">Buluttan Yenile</button><button class="btn ghost" onclick="exportJson()">Arşivi Dışa Aktar</button><label class="btn ghost" for="importFile">Arşivi İçe Aktar</label><input type="file" id="importFile" accept=".json" class="hide"></div><p class="note">Kaydet ve Sil işlemleri otomatik olarak hem cihazda hem Firebase’de yapılır.</p>
+      <p id="firebaseStatus" class="note">Kayıtlar cihazlar arasında Firebase ile otomatik eşitlenir. Arşiv sekmesine girince buluttaki kayıtlar da çekilir.</p>
     </div>
   </section>
   <section class="preview"><div class="previewTop"><div><h2 id="previewTitle" style="margin:0">Kira Sözleşmesi</h2><div id="statusText" class="status">Hazır</div></div><div class="actions" style="margin:0"><button class="btn primary" onclick="saveDraft()">Kaydet</button><button class="btn gold" onclick="printContract()">Yazıcı / PDF</button><button class="btn ok" onclick="sharePdfSystem()">PDF Paylaş</button></div><div id="missingBox" style="width:100%"></div></div><article id="doc" class="doc"></article></section>
@@ -248,7 +291,7 @@ function activateTab(name){
   const preview=document.querySelector('.preview');
   if(preview) preview.style.display = (name==='quick') ? 'none' : '';
   if(name==='sign')setTimeout(loadSignaturesToCanvas,80);
-  if(name==='archive'){renderSaved();loadFirebaseSettings()}
+  if(name==='archive'){renderSaved();loadFirebaseSettings();syncFirebaseToLocal(true)}
   if(name==='quick')renderQuickList()
 }
 
@@ -344,7 +387,7 @@ function renderCopies(html,t){const copies=t==='tahliye'?1:2;let out='';for(let 
 function render(){const t=normalizeType(val('contractType'));if(val('contractType')!==t && $('contractType'))$('contractType').value=t;const info=labels[t]||labels.kira;$('party1Label').textContent=info[0];$('party2Label').textContent=info[1];$('previewTitle').textContent=info[2];updateDetailGroups(t);updateSignatureLabels(t);let html='';if(t==='kira')html=renderKira();else if(t==='tahliye')html=renderTahliye();else if(t==='alimSatim')html=renderAlimSatim();else if(t==='yetkiSatis'||t==='yetkiKiralama')html=renderYetki(t);else if(t==='yerGosterme')html=renderYerGosterme();else html=renderOrtaklik();$('doc').innerHTML=renderCopies(html,t);checkMissing(t)}
 function checkMissing(t){let req=['tarih','party1Name','party2Name','tasinmazAdres'];if(t==='kira')req.push('aylikKira','kiraBaslangic');if(t==='tahliye')req.push('tahliyeKiraBaslangic','tahliyeTarihi');if(t==='alimSatim')req.push('alimSatimSatisBedeli');if(t==='yetkiSatis'||t==='yetkiKiralama')req.push('yetkiIlanBedeli');if(t==='yerGosterme')req.push('yerGostermeTarihi');if(t==='ortaklik')req.push('ortaklikOran');const miss=req.filter(id=>!val(id));if(miss.length){$('missingBox').innerHTML=`<div class="missing">Eksik önemli alan var: ${miss.map(fieldName).join(', ')}</div>`;$('statusText').textContent='Eksik bilgiler var'}else{$('missingBox').innerHTML='<div class="ready">Çıktı almaya hazır.</div>';$('statusText').textContent='Hazır'}}
 function migrateData(o){o=o||{};o.contractType=normalizeType(o.contractType);const cp=(to,from)=>{if((o[to]===undefined||o[to]==='')&&o[from])o[to]=o[from]};if(o.contractType==='alimSatim'){cp('alimSatimSatisBedeli','satisBedeli');cp('alimSatimKapora','kapora');cp('alimSatimCaymaBedeli','vaadiCaymaBedeli');cp('alimSatimCezaiSart','vaadiCezaiSart');cp('alimSatimEkMaddeler','ekMaddeler')}if(o.contractType==='yetkiSatis'){cp('yetkiIlanBedeli','yetkiSatisIlanFiyati');cp('yetkiSuresi','yetkiSatisSuresi');cp('yetkiHizmetBedeli','yetkiSatisHizmetBedeli');cp('yetkiCaymaBedeli','yetkiSatisCaymaBedeli');cp('yetkiCezaiSart','yetkiSatisCezaiSart');cp('yetkiEkMaddeler','yetkiSatisEkMaddeler')}if(o.contractType==='yetkiKiralama'){cp('yetkiIlanBedeli','yetkiKiralamaIlanKira');cp('yetkiSuresi','yetkiKiralamaSuresi');cp('yetkiHizmetBedeli','yetkiKiralamaHizmetBedeli');cp('yetkiCaymaBedeli','yetkiKiralamaCaymaBedeli');cp('yetkiCezaiSart','yetkiKiralamaCezaiSart');cp('yetkiEkMaddeler','yetkiKiralamaEkMaddeler')}return o}
-async function saveDraft(){let data=migrateData(getData());const t=normalizeType(data.contractType||'kira');data.contractType=t;const isUpdate=!!(editingExistingNo&&editingExistingNo===data.sozlesmeNo);if(!isUpdate){await refreshFirebaseCacheSilent();data.sozlesmeNo=nextContractNo(t);if($('sozlesmeNo'))$('sozlesmeNo').value=data.sozlesmeNo}else if(!data.sozlesmeNo||!isValidContractNoForType(data.sozlesmeNo,t)){data.sozlesmeNo=nextContractNo(t)}let arr=getDrafts().map(migrateData);let idx=arr.findIndex(x=>x.sozlesmeNo===data.sozlesmeNo);data.updatedAt=new Date().toLocaleString('tr-TR');if(idx>=0)arr[idx]=data;else arr.unshift(data);firebaseCache=(Array.isArray(firebaseCache)?firebaseCache:[]).filter(x=>x.sozlesmeNo!==data.sozlesmeNo);firebaseCache.unshift(data);const savedNum=contractNoNumber(data.sozlesmeNo,t);if(savedNum)localStorage.setItem(seqKey(t),String(savedNum+1));bumpSequenceAfter(data.sozlesmeNo,t);localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(arr.slice(0,120)));renderSaved();await saveContractToFirebase(data,true);if(isUpdate||idx>=0){editingExistingNo=data.sozlesmeNo;alert('Sözleşme kaydı güncellendi.')}else{editingExistingNo='';const next=nextContractNo(t);alert('Sözleşme kaydedildi. Yeni boş sözleşme açıldı: '+next);const fresh=defaultData(t);fresh.sozlesmeNo=next;setData(fresh)}}
+async function saveDraft(){let data=migrateData(getData());const t=normalizeType(data.contractType||'kira');data.contractType=t;const isUpdate=!!(editingExistingNo&&editingExistingNo===data.sozlesmeNo);if(!isUpdate){await refreshFirebaseCacheSilent();data.sozlesmeNo=nextContractNo(t);if($('sozlesmeNo'))$('sozlesmeNo').value=data.sozlesmeNo}else if(!data.sozlesmeNo||!isValidContractNoForType(data.sozlesmeNo,t)){data.sozlesmeNo=nextContractNo(t)}let arr=getDrafts().map(migrateData);let idx=arr.findIndex(x=>x.sozlesmeNo===data.sozlesmeNo);data.updatedAt=new Date().toLocaleString('tr-TR');if(idx>=0)arr[idx]=data;else arr.unshift(data);firebaseCache=(Array.isArray(firebaseCache)?firebaseCache:[]).filter(x=>x.sozlesmeNo!==data.sozlesmeNo);firebaseCache.unshift(data);const savedNum=contractNoNumber(data.sozlesmeNo,t);if(savedNum)localStorage.setItem(seqKey(t),String(savedNum+1));bumpSequenceAfter(data.sozlesmeNo,t);localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(arr.slice(0,120)));renderSaved();await saveContractToFirebase(data,true);firebaseCache=[...(Array.isArray(firebaseCache)?firebaseCache:[]).filter(x=>x.sozlesmeNo!==data.sozlesmeNo),data];if(isUpdate||idx>=0){editingExistingNo=data.sozlesmeNo;alert('Sözleşme kaydı güncellendi.')}else{editingExistingNo='';const next=nextContractNo(t);alert('Sözleşme kaydedildi. Yeni boş sözleşme açıldı: '+next);const fresh=defaultData(t);fresh.sozlesmeNo=next;setData(fresh)}}
 function quickFields(){return ['qbDate','qbType','qbOwner','qbOwnerTel','qbOwnerAdres','qbAdres','qbIlIlce','qbMahalle','qbNitelik','qbM2OdaKat','qbAdaParsel','qbTapuDurumu','qbBedel','qbPazarlik','qbAidat','qbDepozito','qbDemirbas','qbKullanimTeslim','qbImarIskan','qbAnahtar','qbIlanIzin','qbNot']}
 function getQuickInfo(){const q={};for(const id of quickFields())q[id]=val(id);return q}
 function setQuickInfo(q){q=q||{};for(const id of quickFields())if($(id))$(id).value=q[id]||''}
@@ -356,9 +399,9 @@ function saveQuickInfo(){const q=getQuickInfo();q.updatedAt=new Date().toLocaleS
 function renderQuickList(){const el=$('quickList');if(!el)return;const arr=getQuickList();if(!arr.length){el.innerHTML='<div class="savedItem small">Henüz hızlı bilgi kaydı yok.</div>';return}el.innerHTML=arr.map((q,i)=>`<div class="savedItem"><div><b>${esc(q.qbOwner||'Portföy')}</b><div class="small">${esc(q.qbType||'-')} • ${esc(q.qbBedel||'-')} • ${esc(q.qbAdres||'-')} • ${esc(q.updatedAt||'')}</div></div><div><button class="btn ghost" onclick="loadQuickInfo(${i})">Aç</button><button class="btn gold" onclick="loadQuickInfo(${i});applyQuickInfoToContract()">Aktar</button><button class="btn danger" onclick="deleteQuickInfo(${i})">Sil</button></div></div>`).join('')}
 function loadQuickInfo(i){const q=getQuickList()[i];if(q){setQuickInfo(q);activateTab('quick')}}
 function deleteQuickInfo(i){const arr=getQuickList();arr.splice(i,1);localStorage.setItem('emlakHizliBilgiKayitlari',JSON.stringify(arr));renderQuickList()}
-const DEFAULT_FIREBASE_SETTINGS={apiKey:'AIzaSyDvuNdOrDEt4oRZb1OeyzyIoDNmms2RXV0',authDomain:'emlak-sozlesmem.firebaseapp.com',projectId:'emlak-sozlesmem',appId:'1:1023226700306:web:a3367ca2409d7d9bcf6ecb',collection:'sozlesmeler',auto:true}; function getFirebaseSettings(){try{const saved=JSON.parse(localStorage.getItem('emlakFirebaseSettings')||'{}')||{};const clean={};Object.keys(saved).forEach(k=>{if(saved[k]!==''&&saved[k]!==null&&saved[k]!==undefined)clean[k]=saved[k]});return {...DEFAULT_FIREBASE_SETTINGS,...clean}}catch(e){return {...DEFAULT_FIREBASE_SETTINGS}}}
+const DEFAULT_FIREBASE_SETTINGS={apiKey:'AIzaSyDvuNdOrDEt4oRZb1OeyzyIoDNmms2RXV0',authDomain:'emlak-sozlesmem.firebaseapp.com',projectId:'emlak-sozlesmem',appId:'1:1023226700306:web:a3367ca2409d7d9bcf6ecb',collection:'sozlesmeler',auto:true}; function getFirebaseSettings(){return {...DEFAULT_FIREBASE_SETTINGS}}
 function loadFirebaseSettings(){const s=getFirebaseSettings();if($('fbApiKey'))$('fbApiKey').value=s.apiKey||'';if($('fbAuthDomain'))$('fbAuthDomain').value=s.authDomain||'';if($('fbProjectId'))$('fbProjectId').value=s.projectId||'';if($('fbAppId'))$('fbAppId').value=s.appId||'';if($('fbCollection'))$('fbCollection').value=s.collection||'sozlesmeler';if($('fbAutoSync'))$('fbAutoSync').checked=!!s.auto}
-function saveFirebaseSettings(){const s={apiKey:val('fbApiKey'),authDomain:val('fbAuthDomain'),projectId:val('fbProjectId'),appId:val('fbAppId'),collection:val('fbCollection')||'sozlesmeler',auto:true};localStorage.setItem('emlakFirebaseSettings',JSON.stringify(s));if($('firebaseStatus'))$('firebaseStatus').textContent='Firebase ayarları kaydedildi.'}
+function saveFirebaseSettings(){localStorage.setItem('emlakFirebaseSettings',JSON.stringify(DEFAULT_FIREBASE_SETTINGS));if($('firebaseStatus'))$('firebaseStatus').textContent='Firebase ayarları hazır.'}
 
 async function firebaseTest(){try{saveFirebaseSettings();const {db,fs,collection}=await firebaseDb();await fs.setDoc(fs.doc(db,collection,'baglanti_testi'),{ok:true,updatedAtIso:new Date().toISOString(),source:'Emlak Sözleşmem test kaydı'},{merge:true});if($('firebaseStatus'))$('firebaseStatus').textContent='Firebase bağlantısı başarılı. Test kaydı gönderildi.'}catch(e){alert('Firebase bağlantı testi başarısız: '+e.message)}}
 
@@ -381,7 +424,94 @@ async function deleteContractFromFirebaseByNo(sozlesmeNo,silent=true){
     else console.warn('Firebase silme hatası',e);
   }
 }
- function renderSaved(){fillTahliyeSourceOptions();const arr=getDrafts().map(migrateData);if(!$('savedList'))return;if(!arr.length){$('savedList').innerHTML='<div class="savedItem small">Henüz kayıt yok.</div>';return}$('savedList').innerHTML=arr.map((x,i)=>{const tah=x.contractType==='kira'?` <button class="btn gold" onclick="createTahliyeFromDraft(${i})">Tahliye</button>`:'';return `<div class="savedItem"><div><b>${esc(labels[x.contractType]?.[2]||'Sözleşme')}</b><div class="small">${esc(x.sozlesmeNo||'-')} • ${esc(x.party1Name||'-')} / ${esc(x.party2Name||'-')} • ${esc(x.updatedAt||'')}</div></div><div><button class="btn ghost" onclick="loadDraft(${i})">Aç</button>${tah} <button class="btn danger" onclick="deleteDraft(${i})">Sil</button></div></div>`}).join('')}
+ 
+
+function contractTypeFromNo(no){
+  no=String(no||'').toUpperCase();
+  if(no.startsWith('KIRA'))return 'kira';
+  if(no.startsWith('TAH'))return 'tahliye';
+  if(no.startsWith('SAT'))return 'alimSatim';
+  if(no.startsWith('SYT'))return 'yetkiSatis';
+  if(no.startsWith('KYT'))return 'yetkiKiralama';
+  if(no.startsWith('YGB'))return 'yerGosterme';
+  if(no.startsWith('ORT'))return 'ortaklik';
+  return '';
+}
+
+function parseSyncTime(d){
+  const iso = d && d.updatedAtIso;
+  if(iso){
+    const t = Date.parse(iso);
+    if(!Number.isNaN(t)) return t;
+  }
+  const tr = d && d.updatedAt;
+  if(tr){
+    const m = String(tr).match(/(\d{1,2})\.(\d{1,2})\.(\d{4})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+    if(m){
+      return new Date(+m[3], +m[2]-1, +m[1], +(m[4]||0), +(m[5]||0), +(m[6]||0)).getTime();
+    }
+  }
+  return 0;
+}
+
+function isRealContractRecord(d){
+  if(!d) return false;
+  const no = String(d.sozlesmeNo || d.id || '');
+  if(!no || no === 'baglanti_testi') return false;
+  let type = normalizeType(d.contractType || '');
+  if(!labels[type]) type = contractTypeFromNo(no);
+  return !!(labels[type] && /[A-ZÇĞİÖŞÜ]{2,}\d{3,}/i.test(no));
+}
+
+async function syncFirebaseToLocal(silent=true){
+  try{
+    const {db,fs,collection}=await firebaseDb();
+    const snap=await fs.getDocs(fs.collection(db,collection));
+    const remote=[];
+    snap.forEach(docSnap=>{
+      const raw=docSnap.data()||{};
+      const data=migrateData({...raw,id:docSnap.id,sozlesmeNo:raw.sozlesmeNo||docSnap.id});
+      if(!labels[data.contractType]) data.contractType=contractTypeFromNo(data.sozlesmeNo)||'kira';
+      if(isRealContractRecord(data)) remote.push(data);
+    });
+
+    firebaseCache=remote;
+
+    const map=new Map();
+    getDrafts().map(migrateData).forEach(d=>{
+      if(isRealContractRecord(d)) map.set(d.sozlesmeNo,d);
+    });
+
+    let added=0, updated=0;
+    remote.forEach(r=>{
+      const old=map.get(r.sozlesmeNo);
+      if(!old){map.set(r.sozlesmeNo,r);added++;return;}
+      if(parseSyncTime(r) >= parseSyncTime(old)){
+        map.set(r.sozlesmeNo,{...old,...r});
+        updated++;
+      }
+    });
+
+    const merged=[...map.values()].sort((a,b)=>parseSyncTime(b)-parseSyncTime(a) || String(b.sozlesmeNo||'').localeCompare(String(a.sozlesmeNo||'')));
+    localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(merged.slice(0,300)));
+    recalibrateAllSequences();
+    renderSaved();
+    fillTahliyeSourceOptions();
+    if($('firebaseStatus')){
+      $('firebaseStatus').textContent = remote.length
+        ? `Bulut senkronizasyonu tamamlandı. ${remote.length} kayıt alındı. Koleksiyon: sozlesmeler`
+        : 'Firebase bağlantısı tamam; bulutta sözleşme kaydı bulunamadı.';
+    }
+    return true;
+  }catch(e){
+    console.warn('Firebase senkronizasyon hatası', e);
+    if($('firebaseStatus')) $('firebaseStatus').textContent='Firebase senkronizasyonu yapılamadı: '+e.message;
+    if(!silent) alert('Firebase senkronizasyonu yapılamadı: '+e.message);
+    return false;
+  }
+}
+
+function renderSaved(){fillTahliyeSourceOptions();const arr=getDrafts().map(migrateData);if(!$('savedList'))return;if(!arr.length){$('savedList').innerHTML='<div class="savedItem small">Henüz kayıt yok.</div>';return}$('savedList').innerHTML=arr.map((x,i)=>{const tah=x.contractType==='kira'?` <button class="btn gold" onclick="createTahliyeFromDraft(${i})">Tahliye</button>`:'';return `<div class="savedItem"><div><b>${esc(labels[x.contractType]?.[2]||'Sözleşme')}</b><div class="small">${esc(x.sozlesmeNo||'-')} • ${esc(x.party1Name||'-')} / ${esc(x.party2Name||'-')} • ${esc(x.updatedAt||'')}</div></div><div><button class="btn ghost" onclick="loadDraft(${i})">Aç</button>${tah} <button class="btn danger" onclick="deleteDraft(${i})">Sil</button></div></div>`}).join('')}
 function loadDraft(i){const arr=getDrafts().map(migrateData);if(arr[i]){setData(arr[i]);editingExistingNo=arr[i].sozlesmeNo||''}}
 async function deleteDraft(i){const arr=getDrafts().map(migrateData);const item=arr[i];if(!item)return;if(!confirm((item.sozlesmeNo||'Kayıt')+' silinsin mi?\n\nBu kayıt hem cihazdan hem Firebase’den silinir.'))return;arr.splice(i,1);localStorage.setItem('emlakSozlesmeTaslaklari',JSON.stringify(arr));await deleteContractFromFirebaseByNo(item.sozlesmeNo,true);firebaseCache=(Array.isArray(firebaseCache)?firebaseCache:[]).filter(x=>x.sozlesmeNo!==item.sozlesmeNo);recalibrateSequence(item.contractType);renderSaved();if(editingExistingNo===item.sozlesmeNo)editingExistingNo='';if(val('sozlesmeNo')===item.sozlesmeNo)setData(defaultData(item.contractType));else render();alert((item.sozlesmeNo||'Kayıt')+' silindi.');}
 function newDraft(){if(confirm('Form temizlensin mi?')){editingExistingNo='';setData(defaultData(val('contractType')||'kira'))}}
@@ -515,7 +645,52 @@ body[data-active-tab="quick"] .preview{display:none!important}
 .layout:has(#tab-quick:not(.hide)) .preview{display:none!important}
 </style>
 
-</head><body><article class="doc">${$('doc').innerHTML}</article></body></html>`}
+
+<style id="print-min-page-force">
+@media print{
+  body{background:#fff!important}
+  .appbar,.panel,.previewTop{display:none!important}
+  .layout{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+  .preview{box-shadow:none!important;border:0!important;border-radius:0!important}
+  .doc{padding:0!important;min-height:auto!important;font-size:7.1pt!important;line-height:0.98!important;color:#111!important}
+  .doc h1{font-size:10.6pt!important;margin:0 0 1.2mm!important;line-height:1.02!important}
+  .doc h2{font-size:7.9pt!important;margin:1mm 0 .45mm!important;padding-bottom:.35mm!important;line-height:1.02!important}
+  .doc p{margin:.7mm 0!important}
+  .doc table{margin:.45mm 0 .9mm!important;border-collapse:collapse!important}
+  .doc th,.doc td{padding:.28mm .6mm!important;font-size:6.85pt!important;line-height:0.98!important}
+  .officeHead{padding:.7mm 1mm!important;margin-bottom:.8mm!important;border-width:1.2px!important;gap:1.5mm!important}
+  .officeName{font-size:8.9pt!important;line-height:1!important}
+  .officeSub{font-size:6.8pt!important}
+  .officeRight{font-size:6.8pt!important;line-height:1!important}
+  .docLogo{width:12mm!important;height:7mm!important}
+  .meta{font-size:6.8pt!important;margin-bottom:.8mm!important}
+  .copyStamp{font-size:6.2pt!important;margin-bottom:.4mm!important}
+  .articleTitle{margin-top:.7mm!important}
+  .initials{margin:.9mm 0!important;padding:.7mm 0!important;gap:1.2mm!important}
+  .initialBox{font-size:5.7pt!important;line-height:1!important}
+  .initialBox .line{height:2.4mm!important;margin:0 1mm .25mm!important}
+  .initialBox .nm,.initialBox .hint{font-size:5.3pt!important;min-height:auto!important}
+  .clauseList{font-size:6.4pt!important;line-height:.96!important;margin:.4mm 0 .7mm!important;padding-left:3.2mm!important}
+  .clauseList li{margin:0!important;padding:0!important}
+  .finalSignBlock{margin-top:.8mm!important;padding-top:.5mm!important;break-inside:auto!important;page-break-inside:auto!important}
+  .signs{margin-top:.8mm!important;gap:1.5mm!important;break-inside:auto!important;page-break-inside:auto!important}
+  .signBox{min-height:9.5mm!important;padding-top:.2mm!important}
+  .signBox b{font-size:6.4pt!important;line-height:1!important}
+  .signName{font-size:6.2pt!important;min-height:1.5mm!important;margin-top:0!important;line-height:1!important}
+  .signHint{font-size:5.3pt!important;margin-top:0!important;line-height:1!important}
+  .printedSig{height:8.5mm!important;margin:0!important;overflow:visible!important}
+  .printedSig img{max-height:8mm!important;max-width:100%!important;transform:none!important}
+  .printedSig.empty{font-size:6pt!important}
+  .doc .legal{font-size:5.5pt!important;line-height:.95!important;margin-top:.55mm!important;padding-top:.45mm!important}
+  .officeHead,.doc table,.signs,.finalSignBlock{break-inside:auto!important;page-break-inside:auto!important}
+  .pageBreak{border-top:0!important;margin-top:0!important;padding-top:0!important;page-break-before:always!important;break-before:page!important}
+  @page{size:A4;margin:3mm}
+}
+</style>
+
+</head><body><article class="doc">${$('doc').innerHTML}</article>
+
+</body></html>`}
 
 function signedPdfFilename(){return signedFilename().replace(/\.html$/i,'.pdf')}
 
@@ -554,6 +729,37 @@ async function buildPdfBlob(){
     .copy{display:block;background:#fff;margin:0!important;padding:0!important;border:0!important}
     .copy+.copy{margin-top:0!important}
     .copyStamp{margin-top:0!important}
+
+    .doc{font-size:8px!important;line-height:0.98!important;padding:10px 12px!important;min-height:auto!important;color:#111!important}
+    .doc h1{font-size:13px!important;margin:0 0 4px!important;line-height:1.02!important}
+    .doc h2{font-size:9px!important;margin:4px 0 2px!important;padding-bottom:1px!important;line-height:1.02!important}
+    .doc p{margin:2px 0!important}
+    .doc table{margin:2px 0 4px!important;border-collapse:collapse!important}
+    .doc th,.doc td{padding:1px 3px!important;font-size:8px!important;line-height:0.98!important}
+    .officeHead{padding:4px 5px!important;margin-bottom:4px!important;border-width:1px!important;gap:6px!important}
+    .officeName{font-size:14px!important;line-height:1!important}
+    .officeSub,.officeRight{font-size:8px!important;line-height:1!important}
+    .docLogo{width:42px!important;height:24px!important}
+    .meta{font-size:8px!important;margin-bottom:3px!important}
+    .copyStamp{font-size:7px!important;margin-bottom:1px!important}
+    .articleTitle{margin-top:2px!important}
+    .initials{margin:3px 0!important;padding:3px 0!important;gap:4px!important}
+    .initialBox{font-size:6.5px!important;line-height:1!important}
+    .initialBox .line{height:8px!important;margin:0 3px 1px!important}
+    .initialBox .nm,.initialBox .hint{font-size:6px!important;min-height:auto!important}
+    .clauseList{font-size:7.3px!important;line-height:.96!important;margin:2px 0 3px!important;padding-left:12px!important}
+    .clauseList li{margin:0!important;padding:0!important}
+    .finalSignBlock{margin-top:3px!important;padding-top:2px!important;break-inside:auto!important;page-break-inside:auto!important}
+    .signs{margin-top:3px!important;gap:6px!important;break-inside:auto!important;page-break-inside:auto!important}
+    .signBox{min-height:36px!important;padding-top:1px!important}
+    .signBox b{font-size:7.2px!important;line-height:1!important}
+    .signName{font-size:7px!important;min-height:6px!important;margin-top:0!important;line-height:1!important}
+    .signHint{font-size:6px!important;margin-top:0!important;line-height:1!important}
+    .printedSig{height:32px!important;margin:0!important;overflow:visible!important}
+    .printedSig img{max-height:30px!important;max-width:100%!important;transform:none!important}
+    .printedSig.empty{font-size:7px!important}
+    .doc .legal{font-size:6.4px!important;line-height:.94!important;margin-top:2px!important;padding-top:2px!important}
+    .officeHead,.doc table,.signs,.finalSignBlock{break-inside:auto!important;page-break-inside:auto!important}
   `;
   wrap.prepend(style);
   document.body.appendChild(wrap);
@@ -677,7 +883,16 @@ async function sendContractByMail(){
 function fillSampleRent(){setData({...getData(),contractType:'kira',party1Name:'Mülk Sahibi Ad Soyad',party2Name:'Kiracı Ad Soyad',tasinmazAdres:'Düzce / Cumayeri ... Mah. ... Sok. No: ... Daire: ...',ilIlce:'Düzce / Cumayeri',mahalle:'Merkez',nitelik:'Konut / Daire',aylikKira:'25.000 TL',depozito:'25.000 TL',kiraBaslangic:'01.07.2026',tahliyeKiraBaslangic:'01.07.2026',kiraBitis:'1 yıl / 01.07.2027',aidat:'Kiracıya ait',demirbaslar:'Kombi, duşakabin, ankastre set, dolaplar, sayaçlar sağlam teslim edildi.',yetkiliMahkeme:'Düzce Mahkemeleri ve İcra Daireleri',tahliyeTarihi:'01.07.2027',tahliyeYeri:'Düzce / Cumayeri'})}
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>activateTab(t.dataset.tab)));
 document.addEventListener('input',e=>{if(e.target.matches('input,select,textarea')&&e.target.id!=='contractType')render()});document.addEventListener('change',e=>{if(e.target.id==='contractType')setContract(e.target.value);else if(e.target.matches('input,select,textarea'))render()});
-(function init(){initSignaturePads();setupMoneyFields();try{localStorage.removeItem('emlakSozlesmeSonForm')}catch(e){}const data=defaultData('kira');setData(data);setQuickInfo({qbDate:trDate(),qbIlIlce:'Düzce / Cumayeri',qbNitelik:'Konut / Daire'});renderSaved();renderQuickList();loadFirebaseSettings();refreshFirebaseCacheSilent().then(()=>{if(!editingExistingNo){const t=normalizeType(val('contractType')||'kira');setData(defaultData(t));}forceQuickPreviewState();});})();
+(function init(){try{localStorage.removeItem('emlakFirebaseSettings')}catch(e){};initSignaturePads();setupMoneyFields();try{localStorage.removeItem('emlakSozlesmeSonForm')}catch(e){}const data=defaultData('kira');setData(data);setQuickInfo({qbDate:trDate(),qbIlIlce:'Düzce / Cumayeri',qbNitelik:'Konut / Daire'});renderSaved();renderQuickList();loadFirebaseSettings();syncFirebaseToLocal(true).then(()=>{if(!editingExistingNo){const t=normalizeType(val('contractType')||'kira');setData(defaultData(t));}forceQuickPreviewState();});})();
 </script>
+
+<script id="cache-clear-helper">
+(function(){
+  if('caches' in window){
+    caches.keys().then(function(keys){ return Promise.all(keys.map(function(k){ return caches.delete(k); })); }).catch(function(){});
+  }
+})();
+</script>
+
 </body>
 </html>
