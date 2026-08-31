@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#07111f" />
 <link rel="manifest" href="manifest.webmanifest?v=sidebar-imza-guncel" />
 <title>Emlak Sözleşmem</title>
@@ -306,6 +306,277 @@ body[data-active-tab="sign"] .layout{
 .adminOnly.hide{display:none!important}
 .userRowChip{font-size:11px;color:#64748b;font-weight:800;margin-left:4px}
 @media(max-width:940px){.userBar{position:static;justify-content:flex-end;margin-top:12px}.authCard{padding:24px 20px}}
+</style>
+<style id="mobile-premium-v3">
+/* 2026-08-31: Mobil arayüz düzenlemesi. Masaüstü ve sözleşme mantığı değiştirilmez. */
+@media (max-width: 940px){
+  html{background:#eef2f7;scroll-behavior:smooth}
+  body{
+    min-width:0!important;
+    min-height:100vh;
+    overflow-x:hidden!important;
+    background:
+      radial-gradient(circle at 90% -40px,rgba(212,175,55,.14),transparent 210px),
+      linear-gradient(180deg,#07111f 0,#0a1526 142px,#eef2f7 142px,#f6f8fb 100%)!important;
+  }
+
+  /* Üst alan: telefonda tek bakışta okunabilen kompakt kimlik kartı */
+  .appbar{
+    padding:10px 10px 18px!important;
+    border-bottom:1px solid rgba(245,215,110,.22)!important;
+    box-shadow:0 14px 34px rgba(2,6,23,.24)!important;
+    background:
+      radial-gradient(circle at 92% 0,rgba(212,175,55,.17),transparent 38%),
+      linear-gradient(145deg,#050b16 0%,#0a1424 62%,#18150d 100%)!important;
+  }
+  .appbar .wrap{width:100%!important;max-width:none!important;margin:0!important}
+  .brandCard{
+    width:100%!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:58px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    align-items:center!important;
+    gap:9px 12px!important;
+    padding:12px!important;
+    border-radius:20px!important;
+    background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))!important;
+    border:1px solid rgba(245,215,110,.24)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 26px rgba(0,0,0,.17)!important;
+    backdrop-filter:blur(12px)!important;
+    -webkit-backdrop-filter:blur(12px)!important;
+  }
+  .brandLogoWrap{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:58px!important;
+    height:58px!important;
+    border-radius:16px!important;
+    border-color:rgba(245,215,110,.60)!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.16)!important;
+  }
+  .brandLogo{width:46px!important;height:46px!important}
+  .brandText{
+    grid-column:2!important;
+    grid-row:1!important;
+    min-width:0!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+  .brandKicker{
+    padding:4px 8px!important;
+    font-size:8.5px!important;
+    line-height:1!important;
+    letter-spacing:.8px!important;
+    white-space:nowrap!important;
+  }
+  .brand{
+    margin-top:6px!important;
+    font-size:21px!important;
+    line-height:1.03!important;
+    letter-spacing:-.45px!important;
+    white-space:normal!important;
+    text-wrap:balance!important;
+  }
+  .brandSubtitle,.sub{display:none!important}
+
+  /* Kullanıcı/çıkış bilgisi başlığın altında ayrı satır */
+  .userBar{
+    grid-column:1 / -1!important;
+    grid-row:2!important;
+    position:static!important;
+    width:100%!important;
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+    margin:1px 0 0!important;
+    padding:9px 0 0!important;
+    border-top:1px solid rgba(255,255,255,.08)!important;
+  }
+  .userBar.hide{display:none!important}
+  .userChip{
+    min-width:0!important;
+    flex:1 1 auto!important;
+    height:34px!important;
+    padding:5px 7px 5px 11px!important;
+    border-radius:11px!important;
+    background:rgba(255,255,255,.065)!important;
+    border-color:rgba(245,215,110,.22)!important;
+    justify-content:space-between!important;
+    overflow:hidden!important;
+  }
+  #userBarName{
+    min-width:0!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:11.5px!important;
+    letter-spacing:.1px!important;
+  }
+  .roleTag{font-size:9px!important;padding:4px 8px!important;flex:0 0 auto!important}
+  .userBar>.btn{
+    flex:0 0 auto!important;
+    height:34px!important;
+    padding:0 12px!important;
+    border-radius:11px!important;
+    border:1px solid rgba(255,255,255,.14)!important;
+    background:rgba(255,255,255,.94)!important;
+    font-size:11px!important;
+    box-shadow:0 5px 14px rgba(0,0,0,.12)!important;
+  }
+
+  /* Ana çalışma alanı */
+  .layout{
+    width:100%!important;
+    max-width:none!important;
+    margin:-8px auto 18px!important;
+    padding:0 10px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:12px!important;
+  }
+  .panel{
+    min-width:0!important;
+    display:block!important;
+    overflow:hidden!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    color:#0f172a!important;
+    border:1px solid rgba(148,163,184,.24)!important;
+    box-shadow:0 12px 28px rgba(15,23,42,.09)!important;
+  }
+  .panel h2{color:#0f172a!important;font-size:17px!important;letter-spacing:-.15px!important}
+  .panel h3{color:#1e293b!important;font-size:14px!important}
+  .panel label{color:#475569!important}
+  .panel .note,.panel .small{color:#64748b!important}
+
+  /* Modül menüsü: mobilde yatay, temiz ve dokunması kolay */
+  .tabsHeader{display:none!important}
+  .tabs{
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    align-items:center!important;
+    gap:7px!important;
+    width:100%!important;
+    min-height:54px!important;
+    padding:9px 9px!important;
+    position:sticky!important;
+    top:0!important;
+    z-index:30!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-snap-type:x proximity!important;
+    scroll-padding-inline:9px!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+    background:rgba(255,255,255,.97)!important;
+    border:0!important;
+    border-bottom:1px solid #e8edf3!important;
+    border-radius:0!important;
+    box-shadow:0 5px 16px rgba(15,23,42,.045)!important;
+  }
+  .tabs::-webkit-scrollbar{display:none!important}
+  .tab{
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:0!important;
+    scroll-snap-align:center!important;
+    padding:9px 13px!important;
+    border-radius:999px!important;
+    font-size:11.5px!important;
+    font-weight:850!important;
+    line-height:1.15!important;
+    white-space:nowrap!important;
+    color:#475569!important;
+    background:#f8fafc!important;
+    border:1px solid #e2e8f0!important;
+    box-shadow:none!important;
+    transform:none!important;
+  }
+  .tab::before{display:none!important}
+  .tab.active{
+    color:#111827!important;
+    background:linear-gradient(135deg,#f3d35f,#e5b92e)!important;
+    border-color:#d7ae35!important;
+    box-shadow:0 5px 13px rgba(212,175,55,.23)!important;
+  }
+
+  .panelInner{
+    grid-column:auto!important;
+    min-width:0!important;
+    padding:16px 14px 20px!important;
+    background:#fff!important;
+  }
+  .panelInner>h2:first-child,.panelInner>h3:first-child{margin-top:2px!important}
+
+  input,select,textarea{
+    min-height:44px!important;
+    padding:11px 12px!important;
+    border-radius:12px!important;
+    border-color:#d6dee8!important;
+    background:#fff!important;
+    color:#0f172a!important;
+    font-size:14px!important;
+    box-shadow:inset 0 1px 1px rgba(15,23,42,.025)!important;
+  }
+  textarea{min-height:88px!important}
+  input:focus,select:focus,textarea:focus{
+    outline:3px solid rgba(212,175,55,.16)!important;
+    border-color:#d4af37!important;
+  }
+  label{margin-top:11px!important;margin-bottom:5px!important;font-size:11.5px!important}
+  .grid2,.grid3,.sigGrid{grid-template-columns:1fr!important;gap:3px!important}
+
+  .actions{gap:8px!important}
+  .actions .btn{
+    min-height:42px!important;
+    border-radius:12px!important;
+    font-size:12px!important;
+    padding:10px 12px!important;
+  }
+  .previewTop .actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .previewTop .actions .btn{min-width:0!important;white-space:normal!important;line-height:1.15!important}
+
+  .savedList,.cariForm,.sigCard,.signPanel{
+    border-radius:14px!important;
+    box-shadow:none!important;
+  }
+  .savedItem{padding:11px!important}
+  .cariSummary{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .cariCard{padding:11px!important;border-radius:14px!important}
+  .cariCard b{font-size:16px!important}
+
+  .preview{
+    min-width:0!important;
+    min-height:0!important;
+    border-radius:18px!important;
+    border-color:#e2e8f0!important;
+    box-shadow:0 12px 28px rgba(15,23,42,.08)!important;
+  }
+  .previewTop{position:relative!important;padding:10px!important}
+  .doc{padding:18px 12px!important;min-height:auto!important}
+
+  .authOverlay{padding:14px!important}
+  .authCard{max-width:360px!important;border-radius:22px!important;padding:24px 18px!important}
+  .authLogoWrap{width:68px!important;height:68px!important;border-radius:18px!important}
+  .authLogo{width:54px!important;height:54px!important}
+  .authTitle{font-size:23px!important}
+}
+
+@media (max-width: 380px){
+  .appbar{padding-left:8px!important;padding-right:8px!important}
+  .brandCard{grid-template-columns:52px minmax(0,1fr)!important;padding:10px!important;gap:8px 10px!important}
+  .brandLogoWrap{width:52px!important;height:52px!important;border-radius:15px!important}
+  .brandLogo{width:41px!important;height:41px!important}
+  .brand{font-size:19px!important}
+  .brandKicker{font-size:8px!important;padding:4px 7px!important}
+  .layout{padding:0 8px!important}
+  .tab{padding:8px 11px!important;font-size:11px!important}
+  .panelInner{padding:14px 12px 18px!important}
+}
 </style>
 </head>
 <body data-active-tab="quick">
@@ -1634,5 +1905,26 @@ initAuthGate();
 })();
 </script>
 
+<script id="mobile-premium-tab-ux">
+(function(){
+  function centerActiveTab(){
+    if(window.innerWidth>940) return;
+    var tabs=document.querySelector('.tabs');
+    var active=document.querySelector('.tab.active');
+    if(!tabs||!active) return;
+    try{active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(e){}
+  }
+  document.addEventListener('click',function(e){
+    var tab=e.target.closest&&e.target.closest('.tab');
+    if(tab) setTimeout(centerActiveTab,0);
+  });
+  window.addEventListener('resize',centerActiveTab);
+  window.addEventListener('load',function(){setTimeout(function(){
+    var tabs=document.querySelector('.tabs');
+    if(tabs) tabs.scrollLeft=0;
+    centerActiveTab();
+  },120);});
+})();
+</script>
 </body>
 </html>
