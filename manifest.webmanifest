@@ -1,11 +1,11 @@
 {
   "name": "Taşdemir Emlak Sözleşme Programı",
   "short_name": "Emlak Sözleşme",
-  "start_url": "./index.html?v=imza-duzeltme",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f4f6",
-  "theme_color": "#07111f",
+  "background_color": "#0b1324",
+  "theme_color": "#0b1324",
   "description": "Taşdemir Gayrimenkul için kira, tahliye, alım satım, yetki, yer gösterme ve ortaklık sözleşme hazırlama uygulaması.",
   "icons": [
     {
@@ -22,7 +22,9 @@
       "src": "icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "id": "./",
+  "lang": "tr"
 }
