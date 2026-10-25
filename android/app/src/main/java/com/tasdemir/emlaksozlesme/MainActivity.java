@@ -29,9 +29,11 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 public class MainActivity extends Activity {
-    // Uygulama dosyaları https://appassets.androidplatform.net/www/ altından sunulur
-    // (https kökeni: Firebase modülleri ve localStorage normal çalışır).
-    private static final String START_URL = "https://appassets.androidplatform.net/www/index.html";
+    // Uygulama dosyaları APK içinden, sitenin kendi adresiyle sunulur. Böylece Firebase API anahtarındaki
+    // "yalnızca bu siteden" kısıtlaması APK'da da sağlanır; internet olmasa da uygulama açılır.
+    private static final String APP_HOST = "ufukcicek81.github.io";
+    private static final String APP_PATH = "/emlaksozlesme/";
+    private static final String START_URL = "https://" + APP_HOST + APP_PATH + "index.html";
     private static final int FILE_CHOOSER_REQUEST = 41;
 
     private WebView webView;
@@ -52,8 +54,10 @@ public class MainActivity extends Activity {
         s.setMediaPlaybackRequiresUserGesture(true);
         s.setTextZoom(100);
 
+        final WebViewAssetLoader.AssetsPathHandler assets = new WebViewAssetLoader.AssetsPathHandler(this);
         final WebViewAssetLoader loader = new WebViewAssetLoader.Builder()
-                .addPathHandler("/", new WebViewAssetLoader.AssetsPathHandler(this))
+                .setDomain(APP_HOST)
+                .addPathHandler(APP_PATH, path -> assets.handle("www/" + path))
                 .build();
 
         webView.setWebViewClient(new WebViewClientCompat() {
@@ -65,7 +69,7 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
-                if ("appassets.androidplatform.net".equals(uri.getHost())) return false;
+                if (APP_HOST.equals(uri.getHost())) return false;
                 // Dış bağlantılar (tel:, mailto:, web) sistem uygulamalarında açılır.
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, uri));

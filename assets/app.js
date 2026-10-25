@@ -1244,10 +1244,26 @@ function authErrorMessage(e) {
     "auth/user-not-found": "Bu e-posta ile kayıtlı kullanıcı bulunamadı.", "auth/too-many-requests": "Çok fazla deneme yapıldı, lütfen biraz sonra tekrar deneyin.",
     "auth/invalid-email": "Geçersiz e-posta adresi.", "auth/user-disabled": "Bu hesap devre dışı bırakılmış.",
     "auth/network-request-failed": "İnternet bağlantısı kurulamadı.",
+    "auth/missing-email": "E-posta adresini girin.",
   };
+  if (String(e?.code || "").startsWith("auth/requests-from-referer")) return "Bu adresten giriş Firebase ayarlarında engellenmiş. Uygulamanın güncel sürümünü kurun.";
   return map[e?.code] || "Giriş başarısız: " + (e?.message || e?.code || "bilinmeyen hata");
 }
-function showAuthError(msg) { const b = $("authError"); if (!b) return; b.textContent = msg || ""; b.classList.toggle("hide", !msg); }
+function showAuthError(msg) { const b = $("authError"); if (!b) return; b.textContent = msg || ""; b.classList.toggle("hide", !msg); if (msg) showAuthInfo(""); }
+function showAuthInfo(msg) { const b = $("authInfo"); if (!b) return; b.textContent = msg || ""; b.classList.toggle("hide", !msg); }
+async function forgotPassword() {
+  const email = val("authEmail").trim();
+  showAuthError("");
+  if (!email) { showAuthError("Şifre sıfırlama bağlantısı için önce e-posta adresinizi yazın."); $("authEmail").focus(); return; }
+  await withBusy($("forgotBtn"), async () => {
+    try {
+      const { auth, authMod } = await firebaseAuth();
+      auth.languageCode = "tr";
+      await authMod.sendPasswordResetEmail(auth, email);
+      showAuthInfo(email + " adresine şifre sıfırlama bağlantısı gönderildi. E-postanızı (gereksiz/spam klasörü dahil) kontrol edin, yeni şifreyi belirleyip buradan giriş yapın.");
+    } catch (e) { showAuthError(authErrorMessage(e)); }
+  });
+}
 async function doLogin(ev) {
   ev?.preventDefault?.();
   const email = val("authEmail").trim(), pass = val("authPass");

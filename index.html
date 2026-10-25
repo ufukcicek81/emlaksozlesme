@@ -44,12 +44,14 @@
     <h1 class="authTitle">Emlak Sözleşmem</h1>
     <p class="authSub">Devam etmek için danışman veya yönetici hesabınızla giriş yapın.</p>
     <div id="authError" class="alert danger hide"></div>
+    <div id="authInfo" class="alert info hide"></div>
     <form id="authForm" autocomplete="on">
       <label for="authEmail">E-posta</label>
       <input id="authEmail" type="email" autocomplete="username" placeholder="ornek@tasdemir.com" required />
       <label for="authPass">Şifre</label>
       <input id="authPass" type="password" autocomplete="current-password" placeholder="••••••••" required />
       <button id="authSubmit" class="btn primary block" type="submit">Giriş Yap</button>
+      <div class="authLinks"><button type="button" class="linkBtn" id="forgotBtn" onclick="forgotPassword()">Şifremi unuttum</button></div>
     </form>
     <p class="authNote">Hesabınız yoksa ofis yöneticinizden hesap açılmasını isteyin.</p>
   </div>

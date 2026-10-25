@@ -72,6 +72,7 @@ select.auto{width:auto}
 .fold[open]{padding-bottom:4px}
 .alert{border-radius:var(--radiusSm);padding:9px 12px;font-size:13px;margin-bottom:10px}
 .alert.danger{background:var(--dangerSoft);color:var(--danger);border:1px solid #fecdca}
+.alert.info{background:var(--okSoft);color:var(--ok);border:1px solid #abefc6}
 
 /* ---------- Uygulama iskeleti ---------- */
 .app{min-height:100vh}
@@ -201,6 +202,7 @@ select.auto{width:auto}
 .authSub{text-align:center;color:var(--muted);margin:0 0 18px;font-size:13.5px}
 .authCard label{margin-top:10px}
 .authCard .btn{margin-top:18px;padding:11px}
+.authLinks{text-align:center;margin-top:10px}
 .authNote{font-size:12px;color:var(--muted);text-align:center;margin:16px 0 0}
 
 /* ---------- Bildirim ---------- */
