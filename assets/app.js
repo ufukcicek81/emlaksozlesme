@@ -38,6 +38,8 @@ const QUICK_KEY = "emlakHizliBilgiKayitlari";
 const CARI_KEY = "emlakCariKayitlari";
 
 const $ = (id) => document.getElementById(id);
+// Android uygulaması (APK) içinde çalışırken yerel köprü: paylaşma, kaydetme, yazdırma.
+const NATIVE = window.AndroidBridge || null;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[m]);
 const val = (id) => ($(id) ? $(id).value : "");
 const setVal = (id, v) => { if ($(id)) $(id).value = v ?? ""; };
@@ -634,11 +636,7 @@ function applyTahliyeSource() {
 }
 function exportJson() {
   const blob = new Blob([JSON.stringify(getDrafts(), null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "emlak-sozlesme-yedek-" + new Date().toISOString().slice(0, 10) + ".json";
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  downloadBlob(blob, "emlak-sozlesme-yedek-" + new Date().toISOString().slice(0, 10) + ".json");
 }
 function importJsonFile(file) {
   const r = new FileReader();
@@ -1014,6 +1012,7 @@ function pdfFilename() {
 function printContract() {
   render();
   togglePreview(false);
+  if (NATIVE) { setTimeout(() => NATIVE.print(labels[val("contractType")]?.[2] || "Sözleşme"), 50); return; }
   setTimeout(() => window.print(), 50);
 }
 function loadScriptOnce(src, id) {
@@ -1083,7 +1082,16 @@ async function buildPdfBlob() {
     return pdf.output("blob");
   } finally { wrap.remove(); }
 }
-function downloadBlob(blob, name) {
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result).split(",")[1] || "");
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(blob);
+  });
+}
+async function downloadBlob(blob, name) {
+  if (NATIVE) { NATIVE.saveFile(await blobToBase64(blob), name, blob.type || "application/octet-stream"); return; }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = name;
@@ -1095,7 +1103,7 @@ function downloadBlob(blob, name) {
 async function downloadPdf(ev) {
   const btn = ev?.target?.closest?.("button");
   await withBusy(btn, async () => {
-    try { toast("PDF hazırlanıyor…", "info", 1800); downloadBlob(await buildPdfBlob(), pdfFilename()); }
+    try { toast("PDF hazırlanıyor…", "info", 1800); await downloadBlob(await buildPdfBlob(), pdfFilename()); }
     catch (e) { toast("PDF oluşturulamadı: " + e.message + ". Yazdır > PDF olarak kaydet seçeneğini kullanabilirsiniz.", "error", 6000); }
   });
 }
@@ -1110,12 +1118,13 @@ async function sharePdfSystem(ev) {
     try { toast("PDF hazırlanıyor…", "info", 1800); blob = await buildPdfBlob(); }
     catch (e) { toast("PDF oluşturulamadı: " + e.message, "error", 6000); return; }
     const title = labels[val("contractType")]?.[2] || "Sözleşme";
+    if (NATIVE) { NATIVE.shareFile(await blobToBase64(blob), pdfFilename(), "application/pdf", `${title} - Sözleşme No: ${val("sozlesmeNo") || "-"}`); return; }
     const file = new File([blob], pdfFilename(), { type: "application/pdf" });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try { await navigator.share({ files: [file], title, text: `${title} - Sözleşme No: ${val("sozlesmeNo") || "-"}` }); return; }
       catch (e) { if (isShareCancelError(e)) return; console.warn("Paylaşım başarısız", e); }
     }
-    downloadBlob(blob, pdfFilename());
+    await downloadBlob(blob, pdfFilename());
     toast("Bu cihaz doğrudan paylaşımı desteklemiyor; PDF indirildi. WhatsApp veya e-postaya dosya olarak ekleyebilirsiniz.", "info", 6000);
   });
 }
@@ -1391,8 +1400,17 @@ function bindEvents() {
   window.addEventListener("beforeprint", render);
 }
 
+// Android geri tuşu: true dönerse uygulama içinde işlendi, false ise uygulama kapanır.
+window.appBack = function () {
+  if (document.body.classList.contains("previewOpen")) { togglePreview(false); return true; }
+  const view = document.body.dataset.view;
+  if (view === "contract" && document.body.dataset.step !== "form") { activateTab(document.body.dataset.step === "sign" ? "details" : "form"); return true; }
+  if (view && view !== "quick") { activateTab("quick"); return true; }
+  return false;
+};
+
 function registerServiceWorker() {
-  if ("serviceWorker" in navigator && location.protocol === "https:") {
+  if (!NATIVE && "serviceWorker" in navigator && location.protocol === "https:") {
     navigator.serviceWorker.register("sw.js").catch((e) => console.warn("Service worker kaydedilemedi", e));
   }
 }

@@ -1,0 +1,61 @@
+plugins {
+    id "com.android.application"
+}
+
+// Web uygulaması (index.html, assets/, logo, ikonlar) derlemede APK içine kopyalanır.
+def webOut = layout.buildDirectory.dir("generated/webassets")
+def copyWeb = tasks.register("copyWeb", Sync) {
+    from(rootProject.file("..")) {
+        include "index.html", "assets/**", "manifest.webmanifest", "tasdemir-sozlesme-logo.jpg", "icon-192.png", "icon-512.png"
+    }
+    into webOut.map { it.dir("www") }
+}
+
+def ksFile = System.getenv("ANDROID_KEYSTORE_FILE")
+
+android {
+    namespace "com.tasdemir.emlaksozlesme"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.tasdemir.emlaksozlesme"
+        minSdk 24
+        targetSdk 34
+        versionCode((System.getenv("GITHUB_RUN_NUMBER") ?: "1") as Integer)
+        versionName "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+    }
+
+    signingConfigs {
+        if (ksFile) {
+            release {
+                storeFile file(ksFile)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig ksFile ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    sourceSets {
+        main.assets.srcDirs += webOut
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+tasks.named("preBuild") { dependsOn copyWeb }
+
+dependencies {
+    implementation "androidx.webkit:webkit:1.11.0"
+    implementation "androidx.core:core:1.13.1"
+}
