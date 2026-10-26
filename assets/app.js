@@ -1251,6 +1251,45 @@ function authErrorMessage(e) {
 }
 function showAuthError(msg) { const b = $("authError"); if (!b) return; b.textContent = msg || ""; b.classList.toggle("hide", !msg); if (msg) showAuthInfo(""); }
 function showAuthInfo(msg) { const b = $("authInfo"); if (!b) return; b.textContent = msg || ""; b.classList.toggle("hide", !msg); }
+// Firebase'in kendi sıfırlama sayfası (firebaseapp.com) API anahtarı site kısıtlamasına takılabildiği için
+// e-postadaki bağlantının kodu burada, izinli adresten kullanılır.
+function toggleResetBox(open) {
+  $("resetBox").classList.toggle("hide", !open);
+  $("authForm").classList.toggle("hide", !!open);
+  showAuthError("");
+  if (open) setTimeout(() => $("resetLink").focus(), 50);
+}
+function extractOobCode(text) {
+  const m = String(text || "").match(/oobCode(?:=|%3D)([A-Za-z0-9_\-%.]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+  const t = String(text || "").trim();
+  return /^[A-Za-z0-9_\-]{20,}$/.test(t) ? t : "";
+}
+async function confirmResetFromLink() {
+  const code = extractOobCode(val("resetLink"));
+  const p1 = val("resetPass"), p2 = val("resetPass2");
+  showAuthError("");
+  if (!code) { showAuthError("Bağlantı tanınmadı. E-postadaki sıfırlama bağlantısının tamamını yapıştırın."); return; }
+  if (p1.length < 6) { showAuthError("Yeni şifre en az 6 karakter olmalı."); return; }
+  if (p1 !== p2) { showAuthError("Şifreler aynı değil."); return; }
+  await withBusy($("resetSubmit"), async () => {
+    try {
+      const { auth, authMod } = await firebaseAuth();
+      const email = await authMod.verifyPasswordResetCode(auth, code);
+      await authMod.confirmPasswordReset(auth, code, p1);
+      ["resetLink", "resetPass", "resetPass2"].forEach((id) => setVal(id, ""));
+      toggleResetBox(false);
+      setVal("authEmail", email);
+      showAuthInfo("Şifreniz değiştirildi. Giriş yapılıyor…");
+      await authMod.signInWithEmailAndPassword(auth, email, p1);
+    } catch (e) {
+      const c = e?.code || "";
+      showAuthError(c === "auth/invalid-action-code" || c === "auth/expired-action-code"
+        ? "Bu bağlantının süresi dolmuş veya kullanılmış. \"Şifremi unuttum\" ile yeni bağlantı isteyin ve en yeni maildekini yapıştırın."
+        : c === "auth/weak-password" ? "Şifre çok zayıf; en az 6 karakter kullanın." : authErrorMessage(e));
+    }
+  });
+}
 async function forgotPassword() {
   const email = val("authEmail").trim();
   showAuthError("");
@@ -1260,7 +1299,8 @@ async function forgotPassword() {
       const { auth, authMod } = await firebaseAuth();
       auth.languageCode = "tr";
       await authMod.sendPasswordResetEmail(auth, email);
-      showAuthInfo(email + " adresine şifre sıfırlama bağlantısı gönderildi. E-postanızı (gereksiz/spam klasörü dahil) kontrol edin, yeni şifreyi belirleyip buradan giriş yapın.");
+      toggleResetBox(true);
+      showAuthInfo(email + " adresine şifre sıfırlama maili gönderildi (gereksiz/spam klasörüne de bakın). Maildeki bağlantıyı kopyalayıp aşağıdaki alana yapıştırın.");
     } catch (e) { showAuthError(authErrorMessage(e)); }
   });
 }
@@ -1447,4 +1487,8 @@ function registerServiceWorker() {
   activateTab("quick");
   initAuthGate();
   registerServiceWorker();
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get("mode") === "resetPassword" && q.get("oobCode")) { toggleResetBox(true); setVal("resetLink", location.href); }
+  } catch (e) {}
 })();

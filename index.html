@@ -51,8 +51,20 @@
       <label for="authPass">Şifre</label>
       <input id="authPass" type="password" autocomplete="current-password" placeholder="••••••••" required />
       <button id="authSubmit" class="btn primary block" type="submit">Giriş Yap</button>
-      <div class="authLinks"><button type="button" class="linkBtn" id="forgotBtn" onclick="forgotPassword()">Şifremi unuttum</button></div>
+      <div class="authLinks"><button type="button" class="linkBtn" id="forgotBtn" onclick="forgotPassword()">Şifremi unuttum</button><button type="button" class="linkBtn" onclick="toggleResetBox(true)">Sıfırlama bağlantım var</button></div>
     </form>
+    <div id="resetBox" class="resetBox hide">
+      <div class="resetTitle">Yeni şifre belirle</div>
+      <p class="resetNote">E-postadaki <b>"Şifrenizi sıfırlayın"</b> bağlantısına basılı tutup <b>Bağlantıyı kopyala</b> deyin ve aşağıya yapıştırın.</p>
+      <label for="resetLink">Sıfırlama bağlantısı</label>
+      <textarea id="resetLink" rows="3" placeholder="https://emlak-sozlesmem.firebaseapp.com/__/auth/action?mode=resetPassword&amp;oobCode=..."></textarea>
+      <label for="resetPass">Yeni şifre</label>
+      <input id="resetPass" type="password" autocomplete="new-password" placeholder="En az 6 karakter" />
+      <label for="resetPass2">Yeni şifre (tekrar)</label>
+      <input id="resetPass2" type="password" autocomplete="new-password" />
+      <button id="resetSubmit" type="button" class="btn accent block" onclick="confirmResetFromLink()">Şifreyi Değiştir ve Giriş Yap</button>
+      <div class="authLinks"><button type="button" class="linkBtn" onclick="toggleResetBox(false)">Vazgeç</button></div>
+    </div>
     <p class="authNote">Hesabınız yoksa ofis yöneticinizden hesap açılmasını isteyin.</p>
   </div>
 </div>
