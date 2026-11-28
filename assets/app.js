@@ -129,6 +129,9 @@ function defaultData(type = "kira") {
     alimSatimPesinat: "", alimSatimTakasKonusu: "", alimSatimTakasBedeli: "", alimSatimTakasTeslim: "", alimSatimTaksitler: "",
     alimSatimMuacceliyet: "Kalan borcun tamamı muaccel olur", alimSatimIhtarSuresi: "15 gün", alimSatimFaiz: "Vadesinde ödenmeyen tutara ödeme tarihine kadar yasal temerrüt faizi uygulanır",
     alimSatimTeminat: "", alimSatimDevirSekli: "Bedelin tamamı ödendikten sonra tapu devri yapılır", alimSatimTeslimTarihi: "",
+    alimSatimYerlesik: "Taraflar Türkiye'de yerleşik (yalnızca TL / ürün)", alimSatimSenet: "Senet düzenlenmez",
+    altinCinsi: "24 ayar has gram altın", altinHesapFiyati: "",
+    altinTlKarsiligi: "Ödeme günündeki Borsa İstanbul Kıymetli Madenler Piyasası has altın gram satış fiyatı; bu fiyat yoksa İstanbul Kuyumcular Odası ilan ettiği gram altın satış fiyatı",
     ayniUrun: "Kabuklu fındık", ayniRandiman: "50", ayniHesapFiyati: "", ayniTeslimYeri: "satıcının Düzce / Cumayeri'de göstereceği depo veya tüccar",
     ayniKalite: "Kuru, sağlam, küf ve yabancı madde içermeyen, ticari kalitede ve nem oranı TMO alım standartlarına uygun",
     ayniEksik: "Satıcı seçer: eksik kısım TL olarak ödenir veya son vadeye eklenir",
@@ -184,7 +187,7 @@ function setDrafts(arr) { writeJson(DRAFTS_KEY, arr.slice(0, 500)); }
 /* ---------- Tutar alanları ---------- */
 const MONEY_FIELDS = [
   "aylikKira", "depozito", "aidat", "qbBedel", "qbPazarlik", "qbAidat", "qbDepozito",
-  "alimSatimSatisBedeli", "alimSatimKapora", "alimSatimPesinat", "alimSatimTakasBedeli", "kefilAzami", "ayniHesapFiyati", "alimSatimCaymaBedeli", "alimSatimCezaiSart", "alimSatimKalanOdeme", "alimSatimHizmetBedeli",
+  "alimSatimSatisBedeli", "alimSatimKapora", "alimSatimPesinat", "alimSatimTakasBedeli", "kefilAzami", "ayniHesapFiyati", "altinHesapFiyati", "alimSatimCaymaBedeli", "alimSatimCezaiSart", "alimSatimKalanOdeme", "alimSatimHizmetBedeli",
   "yetkiIlanBedeli", "yetkiHizmetBedeli", "yetkiCaymaBedeli", "yetkiCezaiSart",
   "yerGostermeBedel", "yerGostermeHizmetBedeli", "ortaklikHizmetBedeli", "ortaklikCaymaBedeli", "ortaklikCezaiSart", "cariTutar",
 ];
@@ -358,22 +361,52 @@ function formatKg(v) {
 }
 function kgText(n) { return formatKg(String(Math.round(n))) + (n >= 1000 && n % 1000 === 0 ? ` (${n / 1000} ton)` : ""); }
 function isUrunRow(x) { return x && x.tur === "Urun"; }
+const DOVIZ = { USD: "ABD Doları", EUR: "Avro" };
+function isDovizRow(x) { return x && !!DOVIZ[x.tur]; }
+function isAltinRow(x) { return x && x.tur === "Altin"; }
+function isMiktarRow(x) { return isUrunRow(x) || isAltinRow(x); }
+function formatGr(v) {
+  const s = String(v ?? "");
+  if (!/^[\d.\s]*(gr|g|gram)?\s*$/i.test(s.trim())) return s;
+  const d = digitsOnly(s).replace(/^0+(?=\d)/, "");
+  return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " gr" : "";
+}
+function grOf(v) { return /^[\d.\s]*(gr|g|gram)?\s*$/i.test(String(v || "").trim()) ? parseInt(digitsOnly(v) || "0", 10) || 0 : 0; }
+function altinAdi() { return trLower(val("altinCinsi").trim() || "24 ayar has gram altın"); }
+function rowCur(x) { return isDovizRow(x) ? x.tur : "TL"; }
+function dovizSerbest() { return /yerleşik değil/.test(val("alimSatimYerlesik")); }
+function curAmount(v) { return /^[\d.\s]*(tl|₺|usd|\$|eur|€)?\s*$/i.test(String(v || "").trim()) ? parseInt(digitsOnly(v) || "0", 10) || 0 : 0; }
+function formatCur(v, cur) {
+  if (cur === "TL") return formatTL(v);
+  const s = String(v ?? "");
+  if (!/^[\d.\s]*(usd|\$|eur|€)?\s*$/i.test(s.trim())) return s;
+  const d = digitsOnly(s).replace(/^0+(?=\d)/, "");
+  return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + cur : "";
+}
+function fmtCur(n, cur) { return cur === "TL" ? money(n) : Math.round(n).toLocaleString("tr-TR") + " " + cur; }
 function urunAdi() { return trLower(val("ayniUrun").trim() || "kabuklu fındık"); }
 function odemeHesap() {
   const bedel = amountOf(val("alimSatimSatisBedeli")), kapora = amountOf(val("alimSatimKapora")), pesinat = amountOf(val("alimSatimPesinat"));
   const takas = val("alimSatimTakasKonusu").trim() ? amountOf(val("alimSatimTakasBedeli")) : 0;
   const taksitler = getTaksitler().filter((x) => x && (x.tarih || x.tutar || x.miktar));
-  const vadeli = taksitler.filter((x) => !isUrunRow(x)).reduce((t, x) => t + amountOf(x.tutar), 0);
+  const vadeli = taksitler.filter((x) => !isUrunRow(x) && !isDovizRow(x)).reduce((t, x) => t + amountOf(x.tutar), 0);
+  const doviz = {};
+  taksitler.filter(isDovizRow).forEach((x) => { doviz[x.tur] = (doviz[x.tur] || 0) + curAmount(x.tutar); });
+  const dovizVar = Object.keys(doviz).length > 0;
+  const altinGr = taksitler.filter(isAltinRow).reduce((t, x) => t + grOf(x.miktar), 0);
+  const altinVar = taksitler.some(isAltinRow);
+  const altinFiyat = amountOf(val("altinHesapFiyati"));
+  const altinTL = altinGr * altinFiyat;
   const urunKg = taksitler.filter(isUrunRow).reduce((t, x) => t + kgOf(x.miktar), 0);
   const urunVar = taksitler.some(isUrunRow);
   const fiyat = amountOf(val("ayniHesapFiyati"));
   const urunTL = urunKg * fiyat;
   const kalanVade = bedel - kapora - pesinat - takas;
-  return { bedel, kapora, pesinat, takas, vadeli, urunKg, urunVar, fiyat, urunTL, taksitler, kalanVade, farkBilinmiyor: urunVar && !fiyat, fark: bedel - (kapora + pesinat + takas + vadeli + urunTL) };
+  return { bedel, kapora, pesinat, takas, vadeli, urunKg, urunVar, fiyat, urunTL, taksitler, kalanVade, doviz, dovizVar, altinGr, altinVar, altinFiyat, altinTL, farkBilinmiyor: (urunVar && !fiyat) || (altinVar && !altinFiyat) || dovizVar, fark: bedel - (kapora + pesinat + takas + vadeli + urunTL + altinTL) };
 }
 function isTarim() { return /Tarım/.test(val("alimSatimTasinmazTuru")); }
 function vadeliOzetText(h) {
-  return [h.vadeli ? money(h.vadeli) : "", h.urunKg ? `${kgText(h.urunKg)} ${urunAdi()}` : ""].filter(Boolean).join(" + ") || "0 TL";
+  return [h.vadeli ? money(h.vadeli) : "", ...Object.keys(h.doviz).map((c) => fmtCur(h.doviz[c], c)), h.urunKg ? `${kgText(h.urunKg)} ${urunAdi()}` : "", h.altinGr ? `${formatGr(String(h.altinGr))} ${altinAdi()}` : ""].filter(Boolean).join(" + ") || "0 TL";
 }
 function satisOdemeHtml() {
   const h = odemeHesap();
@@ -381,7 +414,8 @@ function satisOdemeHtml() {
   const takas = val("alimSatimTakasKonusu").trim() ? val("alimSatimTakasKonusu").trim() + (val("alimSatimTakasBedeli") ? " — takas değeri " + val("alimSatimTakasBedeli") : "") : "";
   let html = `<h2>Satış Bedeli ve Ödeme</h2><table>${row("Satış Bedeli", val("alimSatimSatisBedeli"))}${row("Kapora / Bağlanma Parası", kapora)}${val("alimSatimPesinat") ? row("Peşinat", val("alimSatimPesinat")) : ""}${takas ? row("Takas", takas) : ""}${h.taksitler.length ? row("Vadeli Ödemeler", `${vadeliOzetText(h)} (${h.taksitler.length} vade, aşağıdaki plana göre)`) : val("alimSatimKalanOdeme") ? row("Kalan Ödeme", val("alimSatimKalanOdeme")) : ""}${val("alimSatimOdemePlani") ? row("Ödeme Açıklaması", val("alimSatimOdemePlani")) : ""}</table>`;
   if (h.taksitler.length) {
-    html += `<table class="planTable"><tr><th>No</th><th>Vade Tarihi</th><th>Ödeme</th><th>Not</th></tr>${h.taksitler.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.tarih || "")}</td><td>${isUrunRow(x) ? esc(`${kgText(kgOf(x.miktar))} ${urunAdi()} (%${val("ayniRandiman") || "50"} randıman)`) : esc(x.tutar || "")}</td><td>${esc(x.not || "")}</td></tr>`).join("")}<tr><td></td><td><b>Toplam</b></td><td><b>${esc(vadeliOzetText(h))}</b></td><td></td></tr></table>`;
+    html += `<table class="planTable"><tr><th>No</th><th>Vade Tarihi</th><th>Ödeme</th><th>Not</th></tr>${h.taksitler.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.tarih || "")}</td><td>${isAltinRow(x) ? esc(`${formatGr(x.miktar || "")} ${altinAdi()}`) : isUrunRow(x) ? esc(`${kgText(kgOf(x.miktar))} ${urunAdi()} (%${val("ayniRandiman") || "50"} randıman)`) : esc(x.tutar || "")}</td><td>${esc(x.not || "")}</td></tr>`).join("")}<tr><td></td><td><b>Toplam</b></td><td><b>${esc(vadeliOzetText(h))}</b></td><td></td></tr></table>`;
+    if (h.altinVar) html += `<table>${row("Altınla Ödeme", val("altinCinsi") || "24 ayar has gram altın")}${h.altinFiyat ? row("Hesap Fiyatı", `${money(h.altinFiyat)}/gram (altınla ödenen kısmın hesap değeri ${money(h.altinTL)})`) : ""}${row("TL Ödemede Esas Fiyat", val("altinTlKarsiligi"))}</table>`;
     if (h.urunVar) html += `<table>${row("Ürünle Ödeme", `${val("ayniUrun") || "Kabuklu fındık"}, %${val("ayniRandiman") || "50"} randıman esaslı`)}${h.fiyat ? row("Hesap Fiyatı", `${money(h.fiyat)}/kg (ürünle ödenen kısmın hesap değeri ${money(h.urunTL)})`) : ""}${row("Teslim Yeri", val("ayniTeslimYeri"))}${row("Kalite", val("ayniKalite"))}${row("Eksik Teslimde", val("ayniEksik"))}${row("TL'ye Çevirme Fiyatı", val("ayniFiyatKaynagi"))}</table>`;
   }
   if (h.taksitler.length || val("alimSatimTeminat")) {
@@ -417,6 +451,12 @@ function satisOzelHukumler() {
   if (h.taksitler.length) {
     L.push("Vadeli ödemeler, ödeme planında yazılı vade tarihlerinde, tutar ve miktarlarda satıcıya yapılır. Vade tarihi resmi tatile denk gelirse izleyen ilk iş günü vade sayılır.");
     if (h.urunVar) ayniHukumler(h, ihtar).forEach((x) => L.push(x));
+    if (h.altinVar) {
+      L.push(`Ödeme planında altın olarak gösterilen vadeler ${altinAdi()} olarak ödenir. Bu borç gram cinsinden belirlenmiştir${h.altinFiyat ? `; ${money(h.altinFiyat)}/gram hesap fiyatı yalnızca bedelin hesaplanmasına esas alınmıştır` : ""}. Altın fiyatlarındaki değişim ödenecek gram miktarını değiştirmez.`);
+      L.push(`Alıcı, altını aynen (darphane veya rafineri ambalajlı ya da kuyumcu ekspertiz belgeli olarak) teslim edebileceği gibi, vade tarihindeki şu fiyat üzerinden hesaplanan TL karşılığını da ödeyebilir: ${sentence(val("altinTlKarsiligi") || "ödeme günündeki gram altın satış fiyatı")} Vadesinde ödenmeyen altın borcunda satıcı, vade veya ödeme günündeki fiyattan birini seçebilir.`);
+    }
+    if (h.dovizVar) L.push(`Ödeme planındaki döviz cinsinden vadeler, taraflardan birinin Türkiye'de yerleşik olmaması nedeniyle döviz olarak kararlaştırılmıştır. Döviz borcu aynı döviz cinsinden ödenir; alıcı, ödeme günündeki T.C. Merkez Bankası döviz satış kuru üzerinden Türk lirası olarak da ödeyebilir. Vadesinde ödenmeyen döviz borcunda satıcı, vade veya ödeme günündeki kurdan birini seçebilir (TBK 99).`);
+    if (senetVar()) L.push(`Alıcı, ödeme planındaki para ile ödenecek her vade için satıcı lehine, vade tarihli ve vade tutarında birer senet (bono) düzenleyip imzalayarak bu sözleşmeyle birlikte satıcıya teslim eder${h.urunVar || h.altinVar ? "; fındık ve altınla ödenecek vadeler için senet düzenlenmez" : ""}. Senetler satış bedelinin ödenmesi için verilmiştir; her senet ödendiğinde alıcıya iade edilir ve satış bedeli borcu o tutarda sona erer. Senet verilmesi bu sözleşmedeki muacceliyet, faiz ve teminat hükümlerini ortadan kaldırmaz; satıcı aynı alacağı birden fazla tahsil edemez.`);
     if (/tamamı muaccel/.test(val("alimSatimMuacceliyet"))) L.push(`Herhangi bir taksit${h.urunVar ? " (TL'ye çevrilen ürün bedelleri dahil)" : ""} vadesinde ödenmez ve satıcının yazılı ihtarına rağmen ${ihtar} içinde ödenmezse, kalan taksitlerin tamamı muaccel olur ve satıcı kalan bedelin tamamını isteyebilir.`);
     else L.push(`Vadesinde ödenmeyen taksit için satıcı yazılı ihtar gönderir; alıcı geciken taksiti ihtardan itibaren ${ihtar} içinde öder. Diğer taksitlerin vadesi değişmez.`);
     if (val("alimSatimFaiz").trim()) L.push(sentence(val("alimSatimFaiz")));
@@ -562,12 +602,43 @@ const ortaklikMaddeleri = `1. Taraflar, yukarıda bilgileri yazılı taşınmaz/
 function renderOrtaklik() {
   return `${commonHead("Hizmet Ortaklığı / Komisyon Paylaşım Sözleşmesi")}${partiesTable("1. Emlak Ofisi", "2. Emlak Ofisi")}${propertyTable()}<h2>Ortaklık Şartları</h2><table>${row("Hizmet Bedeli", val("ortaklikHizmetBedeli"))}${row("Paylaşım Oranı", val("ortaklikOran"))}${row("Cayma Bedeli", val("ortaklikCaymaBedeli"))}${row("Cezai Şart", val("ortaklikCezaiSart"))}${row("Görev Paylaşımı", val("ortaklikGorevPaylasimi"))}${row("Portföy / Müşteri Notu", val("ortaklikNot"))}</table>${initials2("1. Emlak Ofisi", "2. Emlak Ofisi")}<div class="articleTitle">HİZMET ORTAKLIĞI MADDELERİ</div><div class="clauseList">${clauseHtml(ortaklikMaddeleri)}</div>${sectionIf("Ortaklık Ek Maddeleri", val("ortaklikEkMaddeler"))}${legalWarning("ortaklik")}${signs2("1. Emlak Ofisi", "2. Emlak Ofisi")}`;
 }
+function senetVar() { return /ayrı senet/.test(val("alimSatimSenet")); }
+function sayiYazi(n) {
+  n = Math.floor(Number(n) || 0);
+  if (!n) return "sıfır";
+  const b = ["", "bir", "iki", "üç", "dört", "beş", "altı", "yedi", "sekiz", "dokuz"], o = ["", "on", "yirmi", "otuz", "kırk", "elli", "altmış", "yetmiş", "seksen", "doksan"];
+  const grp = ["", "bin", "milyon", "milyar", "trilyon"];
+  const uc = (x) => { const y = Math.floor(x / 100), z = Math.floor((x % 100) / 10), t = x % 10; return [y ? (y === 1 ? "yüz" : b[y] + " yüz") : "", o[z], b[t]].filter(Boolean).join(" "); };
+  const parts = [];
+  for (let i = 0; n > 0; i++, n = Math.floor(n / 1000)) {
+    const k = n % 1000;
+    if (k) parts.unshift([i === 1 && k === 1 ? "" : uc(k), grp[i]].filter(Boolean).join(" "));
+  }
+  return parts.join(" ");
+}
+function senetlerHtml() {
+  const rows = getTaksitler().filter((x) => x && !isMiktarRow(x) && curAmount(x.tutar));
+  if (!rows.length) return "";
+  const borclu = val("party2Name") || "……………………", lehtar = val("party1Name") || "……………………";
+  const yer = val("duzenlemeYeri") || "……………", tarih = val("tarih") || "……/……/………";
+  return `<div class="senetBaslik">SENETLER — ${esc(val("sozlesmeNo"))} (${rows.length} adet; her biri ayrı kesilip borçlu tarafından imzalanır)</div>` + rows.map((x, i) => {
+    const cur = rowCur(x), n = curAmount(x.tutar), curName = cur === "TL" ? "Türk Lirası" : DOVIZ[cur];
+    return `<div class="bono"><div class="bonoTop"><b>BONO</b><span>No: ${i + 1}/${rows.length}</span><span>Vade: <b>${esc(x.tarih || "……/……/………")}</b></span><span class="bonoTutar">#${esc(n.toLocaleString("tr-TR"))},00 ${cur}#</span></div>`
+      + `<div class="bonoText">İşbu bononun karşılığında <b>${esc(x.tarih || "……/……/………")}</b> tarihinde, lehtar <b>${esc(lehtar)}</b> veya emrühavalesine yukarıda yazılı <b>${esc(n.toLocaleString("tr-TR"))} ${curName}</b> (yazıyla: <b>${esc(sayiYazi(n))} ${curName}</b>) ödeyeceğim. Bedeli malen ahzolunmuştur.</div>`
+      + `<div class="bonoGrid"><div><b>Ödeme yeri:</b> ${esc(yer)}</div><div><b>Düzenleme yeri / tarihi:</b> ${esc(yer)} / ${esc(tarih)}</div><div><b>Borçlu (düzenleyen):</b> ${esc(borclu)}</div><div><b>T.C. / Vergi No:</b> ${esc(val("party2Tc"))}</div><div class="span2"><b>Adres:</b> ${esc(val("party2Adres"))}</div></div>`
+      + `<div class="bonoSign"><div>Borçlu imza</div><div>Kefil (aval) ad soyad / imza</div></div></div>`;
+  }).join("");
+}
 function renderCopies(html, t) {
   const copies = t === "tahliye" ? 1 : 2;
   let out = "";
   for (let i = 1; i <= copies; i++) {
     out += `<section class="copy"><div class="copyStamp">${copies === 1 ? "Tek nüsha" : i + ". nüsha"}</div>${html}</section>`;
     if (i < copies) out += '<div class="pageBreak"></div>';
+  }
+  if ((t === "alimSatim" || t === "satisVaadi") && senetVar()) {
+    const sh = senetlerHtml();
+    if (sh) out += `<div class="pageBreak"></div><section class="copy senetCopy">${sh}</section>`;
   }
   return out;
 }
@@ -597,7 +668,11 @@ function render() {
   if ($("kiraImzaDanismanField")) $("kiraImzaDanismanField").classList.toggle("hide", val("yetkiKiraImza") === "Verilmez");
   if ($("tarimFields")) $("tarimFields").classList.toggle("hide", !isTarim());
   if ($("ayniFields")) $("ayniFields").classList.toggle("hide", !getTaksitler().some(isUrunRow));
-  if ($("tgMiktar")) $("tgMiktar").classList.toggle("hide", val("tgTur") !== "Urun");
+  if ($("altinFields")) $("altinFields").classList.toggle("hide", !getTaksitler().some(isAltinRow));
+  if ($("tgMiktar")) {
+    $("tgMiktar").classList.toggle("hide", val("tgTur") === "TL");
+    $("tgMiktar").placeholder = val("tgTur") === "Urun" ? "Vade başına kg (örn 20000)" : val("tgTur") === "Altin" ? "Vade başına gram (örn 250)" : `Vade başına ${val("tgTur")} tutarı`;
+  }
   updateOdemeOzet();
 }
 let renderQueued = false;
@@ -624,7 +699,7 @@ function checkMissing(t) {
   if (t === "ortaklik") req.push("ortaklikOran");
   const info = labels[t] || labels.kira;
   const miss = req.filter((id) => !val(id).trim()).map((id) => (id === "party1Name" ? info[0] : id === "party2Name" ? info[1] : FIELD_NAMES[id] || id));
-  const warns = [];
+  const warns = [], errs = [];
   for (const [id, who] of [["party1Tc", info[0]], ["party2Tc", info[1]]]) {
     const v = digitsOnly(val(id));
     if (v.length === 11 && !isValidTC(v)) warns.push(`${who} T.C. kimlik numarası geçersiz görünüyor`);
@@ -636,7 +711,9 @@ function checkMissing(t) {
   }
   if (t === "alimSatim" || t === "satisVaadi") {
     const h = odemeHesap();
-    if (h.farkBilinmiyor) warns.push("Ürünle ödemede hesap fiyatı (TL/kg) girilmedi; toplamın satış bedeline eşitliği kontrol edilemiyor");
+    if (h.dovizVar && !dovizSerbest()) errs.push("Türkiye'de yerleşik kişiler arasında taşınmaz satış bedeli döviz cinsinden veya dövize endeksli kararlaştırılamaz (32 sayılı Karar Tebliği md. 8). Dövizli vadeleri TL'ye çevirin");
+    if (h.altinVar && !dovizSerbest()) warns.push("Altın cinsinden taşınmaz bedelinin yerleşikler arasında 32 sayılı Karar'a uygunluğu tartışmalı; kullanmadan önce avukata danışın");
+    if (h.dovizVar) {} else if (h.farkBilinmiyor) warns.push("Fındık/altın için hesap fiyatı girilmedi; toplamın satış bedeline eşitliği kontrol edilemiyor");
     else if (h.bedel && h.taksitler.length && h.fark !== 0) warns.push(`Ödemeler toplamı satış bedeline eşit değil (${h.fark > 0 ? money(h.fark) + " eksik" : money(-h.fark) + " fazla"})`);
     if (val("alimSatimTakasKonusu").trim() && !amountOf(val("alimSatimTakasBedeli"))) warns.push("Takas malının değeri yazılmamış");
     if (isTarim() && /Hisseli/.test(val("tarimHisse")) && !val("tarimHisseOrani").trim()) warns.push("Satılan hisse oranı yazılmamış");
@@ -650,13 +727,14 @@ function checkMissing(t) {
     if (kv.length === 11 && !isValidTC(kv)) warns.push("Kefil T.C. kimlik numarası geçersiz görünüyor");
   }
   let html = "";
+  if (errs.length) html += `<div class="issues err"><b>Hukuki engel:</b> ${esc(errs.join(" • "))}</div>`;
   if (miss.length) html += `<div class="issues err"><b>Eksik:</b> ${esc(miss.join(", "))}</div>`;
   if (warns.length) html += `<div class="issues warn"><b>Kontrol:</b> ${esc(warns.join(" • "))}</div>`;
   $("missingBox").innerHTML = html;
   const st = $("statusText").parentElement;
-  st.classList.toggle("ok", !miss.length && !warns.length);
-  st.classList.toggle("warn", !!(miss.length || warns.length));
-  $("statusText").textContent = miss.length ? `${miss.length} eksik alan` : warns.length ? "Kontrol önerilir" : "Çıktı almaya hazır";
+  st.classList.toggle("ok", !miss.length && !warns.length && !errs.length);
+  st.classList.toggle("warn", !!(miss.length || warns.length || errs.length));
+  $("statusText").textContent = errs.length ? "Hukuki engel var" : miss.length ? `${miss.length} eksik alan` : warns.length ? "Kontrol önerilir" : "Çıktı almaya hazır";
 }
 // Taşınmaz Ticareti Hakkında Yönetmelik: satışta toplam %4, kiralamada bir aylık kira (KDV hariç) üst sınır;
 // aksi yazılı kararlaştırılmadıkça taraflar arasında eşit paylaşılır.
@@ -684,14 +762,28 @@ function updateFeeHints(t) {
 }
 
 /* ---------- Vadeli ödeme planı düzenleyicisi ---------- */
+function turOptions(cur) {
+  const opts = [["TL", "TL"], ["Urun", "Fındık"], ["Altin", "Altın"]];
+  if (dovizSerbest() || DOVIZ[cur]) opts.push(["USD", "USD"], ["EUR", "EUR"]);
+  return opts.map(([v, t]) => `<option value="${v}"${v === cur ? " selected" : ""}>${t}</option>`).join("");
+}
+function refreshTurOptions() {
+  const tg = $("tgTur");
+  if (tg) {
+    const cur = tg.value;
+    tg.innerHTML = '<option value="TL">TL olarak</option><option value="Urun">Fındık olarak</option><option value="Altin">Altın olarak</option>' + (dovizSerbest() ? '<option value="USD">USD olarak</option><option value="EUR">EUR olarak</option>' : "");
+    tg.value = [...tg.options].some((o) => o.value === cur) ? cur : "TL";
+  }
+}
 function renderTaksitEditor() {
+  refreshTurOptions();
   const box = $("taksitEditor");
   if (!box) return;
   const arr = getTaksitler();
   box.innerHTML = (arr.length ? '<div class="taksitHead"><span>Vade tarihi</span><span>Tür</span><span>Tutar / miktar</span><span>Not</span><span></span></div>' : '<div class="hint">Vadeli ödeme yok. Satır ekleyin veya kalan tutarı aşağıdan otomatik taksitlendirin.</div>')
     + arr.map((x, i) => {
-      const u = isUrunRow(x);
-      return `<div class="taksitRow"><input class="trDate" data-ti="${i}" data-tk="tarih" value="${esc(x.tarih || "")}" placeholder="GG.AA.YYYY" /><select class="trTur" data-ti="${i}" data-tk="tur"><option value="TL"${u ? "" : " selected"}>TL</option><option value="Urun"${u ? " selected" : ""}>Fındık</option></select><input class="trVal moneyInputReady" data-ti="${i}" data-tk="${u ? "miktar" : "tutar"}" value="${esc(u ? x.miktar || "" : x.tutar || "")}" placeholder="${u ? "Miktar (kg)" : "Tutar (TL)"}" inputmode="numeric" /><input class="trNot" data-ti="${i}" data-tk="not" value="${esc(x.not || "")}" placeholder="Örn: Banka / hasat sonrası" /><button type="button" class="iconBtn trDel" title="Satırı sil" data-tdel="${i}">✕</button></div>`;
+      const u = isMiktarRow(x), g = isAltinRow(x);
+      return `<div class="taksitRow"><input class="trDate" data-ti="${i}" data-tk="tarih" value="${esc(x.tarih || "")}" placeholder="GG.AA.YYYY" /><select class="trTur" data-ti="${i}" data-tk="tur">${turOptions(x.tur || "TL")}</select><input class="trVal moneyInputReady" data-ti="${i}" data-tk="${u ? "miktar" : "tutar"}" value="${esc(u ? x.miktar || "" : x.tutar || "")}" placeholder="${g ? "Gram" : u ? "Miktar (kg)" : "Tutar (" + rowCur(x) + ")"}" inputmode="numeric" /><input class="trNot" data-ti="${i}" data-tk="not" value="${esc(x.not || "")}" placeholder="Örn: Banka / hasat sonrası" /><button type="button" class="iconBtn trDel" title="Satırı sil" data-tdel="${i}">✕</button></div>`;
     }).join("")
     + '<button type="button" class="linkBtn" onclick="addTaksit()">+ Vade satırı ekle</button>';
   updateOdemeOzet();
@@ -703,8 +795,10 @@ function updateOdemeOzet() {
   if (!h.bedel) { el.innerHTML = ""; return; }
   const part = (k, v) => (v ? `<span>${k}: <b>${money(v)}</b></span>` : "");
   const urun = h.urunKg ? `<span>Fındık: <b>${esc(kgText(h.urunKg))}</b>${h.fiyat ? " ≈ " + money(h.urunTL) : ""}</span>` : "";
-  const durum = h.farkBilinmiyor ? "Fındığın TL karşılığı için hesap fiyatı girin" : h.fark === 0 ? "Toplam satış bedeline eşit ✓" : h.fark > 0 ? `Planlanmamış kalan: <b>${money(h.fark)}</b>` : `Fazla planlanan: <b>${money(-h.fark)}</b>`;
-  el.innerHTML = `${part("Kapora", h.kapora)}${part("Peşinat", h.pesinat)}${part("Takas", h.takas)}${part("Vadeli TL", h.vadeli)}${urun}<span class="${h.fark === 0 && !h.farkBilinmiyor ? "ok" : "bad"}">${durum}</span>`;
+  const dvz = Object.keys(h.doviz).map((c) => `<span>${c}: <b>${fmtCur(h.doviz[c], c)}</b></span>`).join("");
+  const alt = h.altinGr ? `<span>Altın: <b>${formatGr(String(h.altinGr))}</b>${h.altinFiyat ? " ≈ " + money(h.altinTL) : ""}</span>` : "";
+  const durum = h.dovizVar ? "Dövizli vadeler TL toplamına katılmadı" : h.farkBilinmiyor ? (h.altinVar && !h.altinFiyat ? "Altının TL karşılığı için hesap fiyatı (TL/gram) girin" : "Fındığın TL karşılığı için hesap fiyatı girin") : h.fark === 0 ? "Toplam satış bedeline eşit ✓" : h.fark > 0 ? `Planlanmamış kalan: <b>${money(h.fark)}</b>` : `Fazla planlanan: <b>${money(-h.fark)}</b>`;
+  el.innerHTML = `${part("Kapora", h.kapora)}${part("Peşinat", h.pesinat)}${part("Takas", h.takas)}${part("Vadeli TL", h.vadeli)}${dvz}${urun}${alt}<span class="${h.fark === 0 && !h.farkBilinmiyor ? "ok" : "bad"}">${durum}</span>`;
 }
 function addTaksit() { const a = getTaksitler(); const last = a[a.length - 1]; a.push({ tarih: "", tur: last && last.tur === "Urun" ? "Urun" : "TL", tutar: "", miktar: "", not: "" }); setTaksitler(a); renderTaksitEditor(); render(); }
 function removeTaksit(i) { const a = getTaksitler(); a.splice(i, 1); setTaksitler(a); renderTaksitEditor(); render(); }
@@ -714,12 +808,20 @@ function addMonths(d, n) {
   return r;
 }
 function generateTaksitler() {
-  const n = parseInt(val("tgAdet"), 10), ilk = parseTrDate(val("tgIlk")), step = parseInt(val("tgAralik"), 10) || 1, urun = val("tgTur") === "Urun";
+  const n = parseInt(val("tgAdet"), 10), ilk = parseTrDate(val("tgIlk")), step = parseInt(val("tgAralik"), 10) || 1, urun = val("tgTur") === "Urun", altin = val("tgTur") === "Altin", dvz = DOVIZ[val("tgTur")] ? val("tgTur") : "";
   const h = odemeHesap();
   if (!n || n < 1 || n > 120) { toast("Vade sayısını girin (1-120).", "warn"); return; }
   if (!ilk) { toast("İlk vade tarihini GG.AA.YYYY olarak girin.", "warn"); return; }
-  let perKg = 0, lastKg = 0;
-  if (urun) {
+  let perKg = 0, lastKg = 0, perDvz = 0, perGr = 0, lastGr = 0;
+  if (altin) {
+    perGr = grOf(val("tgMiktar"));
+    if (perGr) lastGr = perGr;
+    else if (h.altinFiyat && h.kalanVade > 0) { const totalGr = Math.round(h.kalanVade / h.altinFiyat); perGr = Math.floor(totalGr / n); lastGr = totalGr - perGr * (n - 1); }
+    else { toast("Vade başına gram yazın veya önce altın hesap fiyatını (TL/gram) girin.", "warn"); return; }
+  } else if (dvz) {
+    perDvz = curAmount(val("tgMiktar"));
+    if (!perDvz) { toast(`Vade başına ${dvz} tutarını yazın.`, "warn"); return; }
+  } else if (urun) {
     perKg = kgOf(val("tgMiktar"));
     if (perKg) lastKg = perKg;
     else if (h.fiyat && h.kalanVade > 0) { const totalKg = Math.round(h.kalanVade / h.fiyat); perKg = Math.floor(totalKg / n); lastKg = totalKg - perKg * (n - 1); }
@@ -732,7 +834,9 @@ function generateTaksitler() {
   const base = Math.floor(h.kalanVade / n), a = [];
   for (let i = 0; i < n; i++) {
     const tarih = addMonths(ilk, i * step).toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
-    if (urun) a.push({ tarih, tur: "Urun", miktar: formatKg(String(i === n - 1 ? lastKg : perKg)), tutar: "", not: "Hasat sonrası teslim" });
+    if (altin) a.push({ tarih, tur: "Altin", miktar: formatGr(String(i === n - 1 ? lastGr : perGr)), tutar: "", not: "Altın veya TL karşılığı" });
+    else if (dvz) a.push({ tarih, tur: dvz, tutar: formatCur(String(perDvz), dvz), miktar: "", not: "Senetle ödeme" });
+    else if (urun) a.push({ tarih, tur: "Urun", miktar: formatKg(String(i === n - 1 ? lastKg : perKg)), tutar: "", not: "Hasat sonrası teslim" });
     else a.push({ tarih, tur: "TL", tutar: formatTL(String(i === n - 1 ? h.kalanVade - base * (n - 1) : base)), miktar: "", not: "Banka havalesi" });
   }
   setTaksitler(a);
@@ -1337,7 +1441,7 @@ async function buildPdfBlob() {
     for (const el of wrap.querySelectorAll(".copy")) {
       const top = el.getBoundingClientRect().top;
       const totalH = el.getBoundingClientRect().height;
-      const cuts = [...new Set([...el.querySelectorAll("tr,.cl,.gap,h1,h2,.articleTitle,.initials,.legal,.handLine,.docSub,.signs,.officeHead,.meta,table,.clauseList")].map((n) => Math.round(n.getBoundingClientRect().bottom - top)))].sort((a, b) => a - b);
+      const cuts = [...new Set([...el.querySelectorAll("tr,.cl,.gap,h1,h2,.articleTitle,.initials,.legal,.handLine,.docSub,.bono,.senetBaslik,.signs,.officeHead,.meta,table,.clauseList")].map((n) => Math.round(n.getBoundingClientRect().bottom - top)))].sort((a, b) => a - b);
       const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: 1000, logging: false });
       const k = canvas.width / el.getBoundingClientRect().width;
       let start = 0;
@@ -1702,7 +1806,7 @@ function bindEvents() {
     else if (id === "cariSearch") renderCariList();
     else if (e.target.dataset && e.target.dataset.ti !== undefined) {
       const a = getTaksitler(), i = +e.target.dataset.ti, k = e.target.dataset.tk;
-      if (k === "tutar") reformatMoneyInput(e.target);
+      if (k === "tutar" && rowCur(a[i]) === "TL") reformatMoneyInput(e.target);
       if (a[i] && k !== "tur") { a[i][k] = e.target.value; setTaksitler(a); scheduleRender(); }
     }
     else if (CONTRACT_FIELD_SET.has(id) && id !== "contractType") scheduleRender();
@@ -1717,13 +1821,15 @@ function bindEvents() {
     else if (e.target.dataset && e.target.dataset.ti !== undefined) {
       const a = getTaksitler(), i = +e.target.dataset.ti, k = e.target.dataset.tk;
       if (!a[i]) return;
-      if (k === "miktar") e.target.value = formatKg(e.target.value);
+      if (k === "miktar") e.target.value = isAltinRow(a[i]) ? formatGr(e.target.value) : formatKg(e.target.value);
+      if (k === "tutar") e.target.value = formatCur(e.target.value, rowCur(a[i]));
       a[i][k] = e.target.value;
       setTaksitler(a);
-      if (k === "tur") renderTaksitEditor();
+      if (k === "tur") { if (isDovizRow(a[i]) || a[i].tur === "TL") a[i].tutar = formatCur(a[i].tutar || "", rowCur(a[i])); setTaksitler(a); renderTaksitEditor(); }
       render();
     }
     else if (id === "tgTur") render();
+    else if (id === "alimSatimYerlesik") { renderTaksitEditor(); render(); }
     else if (id === "archiveType") renderSaved();
     else if (id === "cariTypeFilter" || id === "cariAgentFilter") renderCariList();
     else if (id === "importFile") { const f = e.target.files[0]; if (f) importJsonFile(f); e.target.value = ""; }

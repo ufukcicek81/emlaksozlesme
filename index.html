@@ -360,6 +360,7 @@
 
               <div class="subBox">
                 <div class="subTitle">Vadeli ödemeler</div>
+                <div class="field"><label for="alimSatimYerlesik">Tarafların yerleşim durumu</label><select id="alimSatimYerlesik"><option>Taraflar Türkiye'de yerleşik (yalnızca TL / ürün)</option><option>Taraflardan biri Türkiye'de yerleşik değil (döviz kullanılabilir)</option></select></div>
                 <div id="taksitEditor"></div>
                 <div class="taksitGen">
                   <input id="tgAdet" type="number" min="1" max="120" placeholder="Vade sayısı" />
@@ -387,6 +388,16 @@
                 <div class="field"><label for="ayniEksik">Hasat yetmez, fındık eksik teslim edilirse</label><select id="ayniEksik"><option>Satıcı seçer: eksik kısım TL olarak ödenir veya son vadeye eklenir</option><option>Eksik kısım TL olarak ödenir</option><option>Eksik kısım son vadeye eklenir</option><option>Alıcı seçer: eksik kısım TL olarak ödenir veya son vadeye eklenir</option></select></div>
                 <div class="field"><label for="ayniFiyatKaynagi">TL'ye çevirmede kullanılacak fiyat</label><textarea id="ayniFiyatKaynagi" rows="2"></textarea></div>
               </div>
+
+              <div id="altinFields" class="subBox hide">
+                <div class="subTitle">Altınla ödeme şartları</div>
+                <div class="grid2">
+                  <div class="field"><label for="altinCinsi">Altın cinsi</label><input id="altinCinsi" /></div>
+                  <div class="field"><label for="altinHesapFiyati">Hesap fiyatı (TL/gram)</label><input id="altinHesapFiyati" placeholder="Örn: 4.500 TL" /></div>
+                </div>
+                <div class="field"><label for="altinTlKarsiligi">TL olarak ödenirse kullanılacak fiyat</label><textarea id="altinTlKarsiligi" rows="2"></textarea></div>
+                <p class="hint">Altın cinsinden taşınmaz bedeli, Türkiye'de yerleşik taraflar arasında 32 sayılı Karar kapsamında tartışmalıdır; bazı kaynaklar döviz yasağına aykırı sayıyor. Kullanmadan önce avukata danışın.</p>
+              </div>
               <div id="odemeOzet" class="payBox"></div>
               <div class="field"><label for="alimSatimOdemePlani">Ödeme ile ilgili ek açıklama</label><textarea id="alimSatimOdemePlani" rows="2" placeholder="Örn: Peşinat tapu devrinde, vadeli ödemeler satıcının ... IBAN'ına"></textarea></div>
               <input id="alimSatimKalanOdeme" class="hide" />
@@ -398,8 +409,9 @@
               </div>
               <div class="grid2">
                 <div class="field"><label for="alimSatimFaiz">Gecikme faizi</label><input id="alimSatimFaiz" /></div>
-                <div class="field"><label for="alimSatimTeminat">Teminat</label><input id="alimSatimTeminat" placeholder="Örn: Vadeli tutarlar kadar senet / satıcı lehine ipotek" /></div>
+                <div class="field"><label for="alimSatimTeminat">Teminat</label><input id="alimSatimTeminat" placeholder="Örn: Satıcı lehine 1. derece ipotek" /></div>
               </div>
+              <div class="field"><label for="alimSatimSenet">Senet (bono)</label><select id="alimSatimSenet"><option>Senet düzenlenmez</option><option>Her para vadesi için ayrı senet (bono) düzenlenir</option></select></div>
               <div class="grid2">
                 <div class="field"><label for="alimSatimCaymaBedeli">Cayma Bedeli</label><input id="alimSatimCaymaBedeli" placeholder="Cayan tarafın ödeyeceği bedel" /></div>
                 <div class="field"><label for="alimSatimCezaiSart">Cezai Şart</label><input id="alimSatimCezaiSart" placeholder="Sözleşmeye aykırılık halinde" /></div>
