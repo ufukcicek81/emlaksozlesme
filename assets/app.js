@@ -129,6 +129,10 @@ function defaultData(type = "kira") {
     alimSatimPesinat: "", alimSatimTakasKonusu: "", alimSatimTakasBedeli: "", alimSatimTakasTeslim: "", alimSatimTaksitler: "",
     alimSatimMuacceliyet: "Kalan borcun tamamı muaccel olur", alimSatimIhtarSuresi: "15 gün", alimSatimFaiz: "Vadesinde ödenmeyen tutara ödeme tarihine kadar yasal temerrüt faizi uygulanır",
     alimSatimTeminat: "", alimSatimDevirSekli: "Bedelin tamamı ödendikten sonra tapu devri yapılır", alimSatimTeslimTarihi: "",
+    ayniUrun: "Kabuklu fındık", ayniRandiman: "50", ayniHesapFiyati: "", ayniTeslimYeri: "satıcının Düzce / Cumayeri'de göstereceği depo veya tüccar",
+    ayniKalite: "Kuru, sağlam, küf ve yabancı madde içermeyen, ticari kalitede ve nem oranı TMO alım standartlarına uygun",
+    ayniEksik: "Satıcı seçer: eksik kısım TL olarak ödenir veya son vadeye eklenir",
+    ayniFiyatKaynagi: "Vade tarihindeki Toprak Mahsulleri Ofisi (TMO) fındık alım fiyatı ile bölgedeki tüccar alım fiyatının (ticaret borsası kayıtları esas alınarak) aritmetik ortalaması; esas randımana göre",
     alimSatimKomisyonPaylasimi: "Taraflarca aksi kararlaştırılmadıkça eşit paylaşılır.", alimSatimEkMaddeler: "",
     satisVaadiResmiSekil: "Noterde düzenleme şeklinde yapılacak", satisVaadiSerhDurumu: "Taraf talep ederse şerh verilecek",
     satisVaadiNoterTarihi: "", satisVaadiMasrafPaylasimi: "Taraflarca ayrıca kararlaştırılır",
@@ -180,7 +184,7 @@ function setDrafts(arr) { writeJson(DRAFTS_KEY, arr.slice(0, 500)); }
 /* ---------- Tutar alanları ---------- */
 const MONEY_FIELDS = [
   "aylikKira", "depozito", "aidat", "qbBedel", "qbPazarlik", "qbAidat", "qbDepozito",
-  "alimSatimSatisBedeli", "alimSatimKapora", "alimSatimPesinat", "alimSatimTakasBedeli", "kefilAzami", "alimSatimCaymaBedeli", "alimSatimCezaiSart", "alimSatimKalanOdeme", "alimSatimHizmetBedeli",
+  "alimSatimSatisBedeli", "alimSatimKapora", "alimSatimPesinat", "alimSatimTakasBedeli", "kefilAzami", "ayniHesapFiyati", "alimSatimCaymaBedeli", "alimSatimCezaiSart", "alimSatimKalanOdeme", "alimSatimHizmetBedeli",
   "yetkiIlanBedeli", "yetkiHizmetBedeli", "yetkiCaymaBedeli", "yetkiCezaiSart",
   "yerGostermeBedel", "yerGostermeHizmetBedeli", "ortaklikHizmetBedeli", "ortaklikCaymaBedeli", "ortaklikCezaiSart", "cariTutar",
 ];
@@ -344,21 +348,41 @@ function getTaksitler() {
   try { const a = JSON.parse(val("alimSatimTaksitler") || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; }
 }
 function setTaksitler(a) { setVal("alimSatimTaksitler", a.length ? JSON.stringify(a) : ""); }
+function isPlainKg(v) { return /^[\d.\s]*(kg)?\s*$/i.test(String(v || "").trim()); }
+function kgOf(v) { return isPlainKg(v) ? parseInt(digitsOnly(v) || "0", 10) || 0 : 0; }
+function formatKg(v) {
+  const s = String(v ?? "");
+  if (!isPlainKg(s)) return s;
+  const d = digitsOnly(s).replace(/^0+(?=\d)/, "");
+  return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " kg" : "";
+}
+function kgText(n) { return formatKg(String(Math.round(n))) + (n >= 1000 && n % 1000 === 0 ? ` (${n / 1000} ton)` : ""); }
+function isUrunRow(x) { return x && x.tur === "Urun"; }
+function urunAdi() { return trLower(val("ayniUrun").trim() || "kabuklu fındık"); }
 function odemeHesap() {
   const bedel = amountOf(val("alimSatimSatisBedeli")), kapora = amountOf(val("alimSatimKapora")), pesinat = amountOf(val("alimSatimPesinat"));
   const takas = val("alimSatimTakasKonusu").trim() ? amountOf(val("alimSatimTakasBedeli")) : 0;
-  const taksitler = getTaksitler().filter((x) => x && (x.tarih || x.tutar));
-  const vadeli = taksitler.reduce((t, x) => t + amountOf(x.tutar), 0);
-  return { bedel, kapora, pesinat, takas, vadeli, taksitler, fark: bedel - (kapora + pesinat + takas + vadeli), kalanVade: bedel - kapora - pesinat - takas };
+  const taksitler = getTaksitler().filter((x) => x && (x.tarih || x.tutar || x.miktar));
+  const vadeli = taksitler.filter((x) => !isUrunRow(x)).reduce((t, x) => t + amountOf(x.tutar), 0);
+  const urunKg = taksitler.filter(isUrunRow).reduce((t, x) => t + kgOf(x.miktar), 0);
+  const urunVar = taksitler.some(isUrunRow);
+  const fiyat = amountOf(val("ayniHesapFiyati"));
+  const urunTL = urunKg * fiyat;
+  const kalanVade = bedel - kapora - pesinat - takas;
+  return { bedel, kapora, pesinat, takas, vadeli, urunKg, urunVar, fiyat, urunTL, taksitler, kalanVade, farkBilinmiyor: urunVar && !fiyat, fark: bedel - (kapora + pesinat + takas + vadeli + urunTL) };
 }
 function isTarim() { return /Tarım/.test(val("alimSatimTasinmazTuru")); }
+function vadeliOzetText(h) {
+  return [h.vadeli ? money(h.vadeli) : "", h.urunKg ? `${kgText(h.urunKg)} ${urunAdi()}` : ""].filter(Boolean).join(" + ") || "0 TL";
+}
 function satisOdemeHtml() {
   const h = odemeHesap();
   const kapora = val("alimSatimKapora") ? `${val("alimSatimKapora")} (${val("alimSatimKaporaTuru")})` : "";
   const takas = val("alimSatimTakasKonusu").trim() ? val("alimSatimTakasKonusu").trim() + (val("alimSatimTakasBedeli") ? " — takas değeri " + val("alimSatimTakasBedeli") : "") : "";
-  let html = `<h2>Satış Bedeli ve Ödeme</h2><table>${row("Satış Bedeli", val("alimSatimSatisBedeli"))}${row("Kapora / Bağlanma Parası", kapora)}${val("alimSatimPesinat") ? row("Peşinat", val("alimSatimPesinat")) : ""}${takas ? row("Takas", takas) : ""}${h.taksitler.length ? row("Vadeli Ödemeler Toplamı", `${money(h.vadeli)} (${h.taksitler.length} vade, aşağıdaki plana göre)`) : val("alimSatimKalanOdeme") ? row("Kalan Ödeme", val("alimSatimKalanOdeme")) : ""}${val("alimSatimOdemePlani") ? row("Ödeme Açıklaması", val("alimSatimOdemePlani")) : ""}</table>`;
+  let html = `<h2>Satış Bedeli ve Ödeme</h2><table>${row("Satış Bedeli", val("alimSatimSatisBedeli"))}${row("Kapora / Bağlanma Parası", kapora)}${val("alimSatimPesinat") ? row("Peşinat", val("alimSatimPesinat")) : ""}${takas ? row("Takas", takas) : ""}${h.taksitler.length ? row("Vadeli Ödemeler", `${vadeliOzetText(h)} (${h.taksitler.length} vade, aşağıdaki plana göre)`) : val("alimSatimKalanOdeme") ? row("Kalan Ödeme", val("alimSatimKalanOdeme")) : ""}${val("alimSatimOdemePlani") ? row("Ödeme Açıklaması", val("alimSatimOdemePlani")) : ""}</table>`;
   if (h.taksitler.length) {
-    html += `<table class="planTable"><tr><th>No</th><th>Vade Tarihi</th><th>Tutar</th><th>Ödeme Şekli / Not</th></tr>${h.taksitler.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.tarih || "")}</td><td>${esc(x.tutar || "")}</td><td>${esc(x.not || "")}</td></tr>`).join("")}<tr><td></td><td><b>Toplam</b></td><td><b>${esc(money(h.vadeli))}</b></td><td></td></tr></table>`;
+    html += `<table class="planTable"><tr><th>No</th><th>Vade Tarihi</th><th>Ödeme</th><th>Not</th></tr>${h.taksitler.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.tarih || "")}</td><td>${isUrunRow(x) ? esc(`${kgText(kgOf(x.miktar))} ${urunAdi()} (%${val("ayniRandiman") || "50"} randıman)`) : esc(x.tutar || "")}</td><td>${esc(x.not || "")}</td></tr>`).join("")}<tr><td></td><td><b>Toplam</b></td><td><b>${esc(vadeliOzetText(h))}</b></td><td></td></tr></table>`;
+    if (h.urunVar) html += `<table>${row("Ürünle Ödeme", `${val("ayniUrun") || "Kabuklu fındık"}, %${val("ayniRandiman") || "50"} randıman esaslı`)}${h.fiyat ? row("Hesap Fiyatı", `${money(h.fiyat)}/kg (ürünle ödenen kısmın hesap değeri ${money(h.urunTL)})`) : ""}${row("Teslim Yeri", val("ayniTeslimYeri"))}${row("Kalite", val("ayniKalite"))}${row("Eksik Teslimde", val("ayniEksik"))}${row("TL'ye Çevirme Fiyatı", val("ayniFiyatKaynagi"))}</table>`;
   }
   if (h.taksitler.length || val("alimSatimTeminat")) {
     html += `<h2>Vade ve Teminat</h2><table>${h.taksitler.length ? row("Taksit Ödenmezse", val("alimSatimMuacceliyet")) + row("İhtar Sonrası Ödeme Süresi", val("alimSatimIhtarSuresi")) + row("Gecikme Faizi", val("alimSatimFaiz")) : ""}${row("Teminat", val("alimSatimTeminat") || "Alınmadı")}</table>`;
@@ -371,13 +395,29 @@ function satisOdemeHtml() {
   return html;
 }
 function sentence(t) { t = String(t || "").trim(); return t && !/[.!?]$/.test(t) ? t + "." : t; }
+function ayniHukumler(h, ihtar) {
+  const L = [], urun = urunAdi(), r = parseInt(val("ayniRandiman"), 10) || 50, ornek = r - 2;
+  L.push(`Satış bedelinin ödeme planında ürün olarak gösterilen kısmı ${urun} ile ayni olarak ödenir. Bu borç ürün cinsinden (kg) belirlenmiştir${h.fiyat ? `; ${money(h.fiyat)}/kg hesap fiyatı yalnızca bedelin hesaplanmasına esas alınmıştır` : ""}. Ürün fiyatlarındaki artış veya düşüş teslim edilecek miktarı değiştirmez.`);
+  L.push(`Miktarlar %${r} randıman esasına göredir. Teslim edilen ürünün randımanı farklıysa teslim miktarı randımanla orantılı olarak düzeltilir (örneğin %${ornek} randımanlı 1.000 kg ürün ${Math.round((1000 * ornek) / r)} kg sayılır). Randıman, teslimde taraflarca birlikte veya ticaret borsası / lisanslı depo analiziyle tespit edilir; analiz masrafı yarı yarıya karşılanır.`);
+  L.push(`Teslim edilecek ürün: ${sentence(val("ayniKalite") || "ticari kalitede")} Teslim yeri: ${sentence(val("ayniTeslimYeri") || "satıcının göstereceği yer")} Teslim her vade tarihine kadar yapılır; teslimde tartı fişi ve taraflarca imzalanan teslim tutanağı düzenlenir. Nakliye, çuval ve tartı giderleri alıcıya aittir.`);
+  L.push(`TL'ye çevirmede kullanılacak fiyat: ${sentence(val("ayniFiyatKaynagi") || "vade tarihindeki TMO ve tüccar alım fiyatlarının ortalaması")}`);
+  L.push("Hasadın don, kuraklık, dolu, hastalık veya benzeri nedenlerle düşük olması ürün borcunu ortadan kaldırmaz; eksik teslimde bir sonraki madde uygulanır.");
+  const e = val("ayniEksik"), sonVade = "Son vadede de teslim edilmeyen miktar, son vade tarihindeki fiyat üzerinden TL'ye çevrilerek " + ihtar + " içinde nakden ödenir.";
+  if (/^Eksik kısım TL/.test(e)) L.push(`Vadesinde teslim edilmeyen ürün miktarı, vade tarihindeki fiyat üzerinden TL'ye çevrilir ve vade tarihinden itibaren ${ihtar} içinde satıcıya nakden ödenir.`);
+  else if (/^Eksik kısım son vadeye/.test(e)) L.push(`Vadesinde teslim edilmeyen ürün miktarı son vadeye eklenir ve son vade tarihinde teslim edilir. ${sonVade}`);
+  else if (/^Alıcı seçer/.test(e)) L.push(`Vadesinde teslim edilmeyen ürün miktarı için alıcı, vade tarihinden itibaren 7 gün içinde satıcıya yapacağı yazılı bildirimle; eksik miktarı vade tarihindeki fiyat üzerinden TL'ye çevirip ${ihtar} içinde nakden ödemeyi veya son vadeye eklemeyi seçer. Bildirim yapılmazsa eksik miktar TL olarak ödenir. ${sonVade}`);
+  else L.push(`Vadesinde teslim edilmeyen ürün miktarı için satıcı, vade tarihinden itibaren 7 gün içinde alıcıya yapacağı yazılı bildirimle; eksik miktarın vade tarihindeki fiyat üzerinden TL'ye çevrilerek ${ihtar} içinde nakden ödenmesini veya son vadeye eklenmesini seçer. Bildirim yapılmazsa eksik miktar son vadeye eklenir. ${sonVade}`);
+  L.push("Bir vadede fazla teslim edilen ürün, sonraki vadenin miktarından düşülür.");
+  return L;
+}
 function satisOzelHukumler() {
   const h = odemeHesap(), L = [];
   const ihtar = val("alimSatimIhtarSuresi") || "15 gün";
   L.push("Kapora, peşinat ve takas değeri satış bedelinden mahsup edilir. Ödemelerin banka kanalıyla yapılması esastır; banka dekontu makbuz yerine geçer, elden yapılan ödemeler yalnızca alıcıya verilen imzalı makbuzla ispat edilir.");
   if (h.taksitler.length) {
-    L.push("Vadeli ödemeler, ödeme planında yazılı vade tarihlerinde ve tutarlarda satıcıya yapılır. Vade tarihi resmi tatile denk gelirse izleyen ilk iş günü vade sayılır.");
-    if (/tamamı muaccel/.test(val("alimSatimMuacceliyet"))) L.push(`Herhangi bir taksit vadesinde ödenmez ve satıcının yazılı ihtarına rağmen ${ihtar} içinde ödenmezse, kalan taksitlerin tamamı muaccel olur ve satıcı kalan bedelin tamamını isteyebilir.`);
+    L.push("Vadeli ödemeler, ödeme planında yazılı vade tarihlerinde, tutar ve miktarlarda satıcıya yapılır. Vade tarihi resmi tatile denk gelirse izleyen ilk iş günü vade sayılır.");
+    if (h.urunVar) ayniHukumler(h, ihtar).forEach((x) => L.push(x));
+    if (/tamamı muaccel/.test(val("alimSatimMuacceliyet"))) L.push(`Herhangi bir taksit${h.urunVar ? " (TL'ye çevrilen ürün bedelleri dahil)" : ""} vadesinde ödenmez ve satıcının yazılı ihtarına rağmen ${ihtar} içinde ödenmezse, kalan taksitlerin tamamı muaccel olur ve satıcı kalan bedelin tamamını isteyebilir.`);
     else L.push(`Vadesinde ödenmeyen taksit için satıcı yazılı ihtar gönderir; alıcı geciken taksiti ihtardan itibaren ${ihtar} içinde öder. Diğer taksitlerin vadesi değişmez.`);
     if (val("alimSatimFaiz").trim()) L.push(sentence(val("alimSatimFaiz")));
   }
@@ -556,6 +596,8 @@ function render() {
   updateEditState();
   if ($("kiraImzaDanismanField")) $("kiraImzaDanismanField").classList.toggle("hide", val("yetkiKiraImza") === "Verilmez");
   if ($("tarimFields")) $("tarimFields").classList.toggle("hide", !isTarim());
+  if ($("ayniFields")) $("ayniFields").classList.toggle("hide", !getTaksitler().some(isUrunRow));
+  if ($("tgMiktar")) $("tgMiktar").classList.toggle("hide", val("tgTur") !== "Urun");
   updateOdemeOzet();
 }
 let renderQueued = false;
@@ -594,7 +636,8 @@ function checkMissing(t) {
   }
   if (t === "alimSatim" || t === "satisVaadi") {
     const h = odemeHesap();
-    if (h.bedel && h.taksitler.length && h.fark !== 0) warns.push(`Ödemeler toplamı satış bedeline eşit değil (${h.fark > 0 ? money(h.fark) + " eksik" : money(-h.fark) + " fazla"})`);
+    if (h.farkBilinmiyor) warns.push("Ürünle ödemede hesap fiyatı (TL/kg) girilmedi; toplamın satış bedeline eşitliği kontrol edilemiyor");
+    else if (h.bedel && h.taksitler.length && h.fark !== 0) warns.push(`Ödemeler toplamı satış bedeline eşit değil (${h.fark > 0 ? money(h.fark) + " eksik" : money(-h.fark) + " fazla"})`);
     if (val("alimSatimTakasKonusu").trim() && !amountOf(val("alimSatimTakasBedeli"))) warns.push("Takas malının değeri yazılmamış");
     if (isTarim() && /Hisseli/.test(val("tarimHisse")) && !val("tarimHisseOrani").trim()) warns.push("Satılan hisse oranı yazılmamış");
     if (t === "satisVaadi" && !val("satisVaadiNoterTarihi").trim()) warns.push("Notere gidilecek son tarih yazılmamış");
@@ -645,8 +688,11 @@ function renderTaksitEditor() {
   const box = $("taksitEditor");
   if (!box) return;
   const arr = getTaksitler();
-  box.innerHTML = (arr.length ? '<div class="taksitHead"><span>Vade tarihi</span><span>Tutar</span><span>Ödeme şekli / not</span><span></span></div>' : '<div class="hint">Vadeli ödeme yok. Satır ekleyin veya kalan tutarı aşağıdan otomatik taksitlendirin.</div>')
-    + arr.map((x, i) => `<div class="taksitRow"><input data-ti="${i}" data-tk="tarih" value="${esc(x.tarih || "")}" placeholder="GG.AA.YYYY" /><input data-ti="${i}" data-tk="tutar" value="${esc(x.tutar || "")}" placeholder="Tutar" inputmode="decimal" class="moneyInputReady" /><input data-ti="${i}" data-tk="not" value="${esc(x.not || "")}" placeholder="Örn: Banka / hasat sonrası" /><button type="button" class="iconBtn" title="Satırı sil" data-tdel="${i}">✕</button></div>`).join("")
+  box.innerHTML = (arr.length ? '<div class="taksitHead"><span>Vade tarihi</span><span>Tür</span><span>Tutar / miktar</span><span>Not</span><span></span></div>' : '<div class="hint">Vadeli ödeme yok. Satır ekleyin veya kalan tutarı aşağıdan otomatik taksitlendirin.</div>')
+    + arr.map((x, i) => {
+      const u = isUrunRow(x);
+      return `<div class="taksitRow"><input class="trDate" data-ti="${i}" data-tk="tarih" value="${esc(x.tarih || "")}" placeholder="GG.AA.YYYY" /><select class="trTur" data-ti="${i}" data-tk="tur"><option value="TL"${u ? "" : " selected"}>TL</option><option value="Urun"${u ? " selected" : ""}>Fındık</option></select><input class="trVal moneyInputReady" data-ti="${i}" data-tk="${u ? "miktar" : "tutar"}" value="${esc(u ? x.miktar || "" : x.tutar || "")}" placeholder="${u ? "Miktar (kg)" : "Tutar (TL)"}" inputmode="numeric" /><input class="trNot" data-ti="${i}" data-tk="not" value="${esc(x.not || "")}" placeholder="Örn: Banka / hasat sonrası" /><button type="button" class="iconBtn trDel" title="Satırı sil" data-tdel="${i}">✕</button></div>`;
+    }).join("")
     + '<button type="button" class="linkBtn" onclick="addTaksit()">+ Vade satırı ekle</button>';
   updateOdemeOzet();
 }
@@ -656,10 +702,11 @@ function updateOdemeOzet() {
   const h = odemeHesap();
   if (!h.bedel) { el.innerHTML = ""; return; }
   const part = (k, v) => (v ? `<span>${k}: <b>${money(v)}</b></span>` : "");
-  const durum = h.fark === 0 ? "Toplam satış bedeline eşit ✓" : h.fark > 0 ? `Planlanmamış kalan: <b>${money(h.fark)}</b>` : `Fazla planlanan: <b>${money(-h.fark)}</b>`;
-  el.innerHTML = `${part("Kapora", h.kapora)}${part("Peşinat", h.pesinat)}${part("Takas", h.takas)}${part("Vadeli", h.vadeli)}<span class="${h.fark === 0 ? "ok" : "bad"}">${durum}</span>`;
+  const urun = h.urunKg ? `<span>Fındık: <b>${esc(kgText(h.urunKg))}</b>${h.fiyat ? " ≈ " + money(h.urunTL) : ""}</span>` : "";
+  const durum = h.farkBilinmiyor ? "Fındığın TL karşılığı için hesap fiyatı girin" : h.fark === 0 ? "Toplam satış bedeline eşit ✓" : h.fark > 0 ? `Planlanmamış kalan: <b>${money(h.fark)}</b>` : `Fazla planlanan: <b>${money(-h.fark)}</b>`;
+  el.innerHTML = `${part("Kapora", h.kapora)}${part("Peşinat", h.pesinat)}${part("Takas", h.takas)}${part("Vadeli TL", h.vadeli)}${urun}<span class="${h.fark === 0 && !h.farkBilinmiyor ? "ok" : "bad"}">${durum}</span>`;
 }
-function addTaksit() { const a = getTaksitler(); a.push({ tarih: "", tutar: "", not: "" }); setTaksitler(a); renderTaksitEditor(); render(); }
+function addTaksit() { const a = getTaksitler(); const last = a[a.length - 1]; a.push({ tarih: "", tur: last && last.tur === "Urun" ? "Urun" : "TL", tutar: "", miktar: "", not: "" }); setTaksitler(a); renderTaksitEditor(); render(); }
 function removeTaksit(i) { const a = getTaksitler(); a.splice(i, 1); setTaksitler(a); renderTaksitEditor(); render(); }
 function addMonths(d, n) {
   const r = new Date(d.getFullYear(), d.getMonth() + n, 1);
@@ -667,17 +714,26 @@ function addMonths(d, n) {
   return r;
 }
 function generateTaksitler() {
-  const n = parseInt(val("tgAdet"), 10), ilk = parseTrDate(val("tgIlk")), step = parseInt(val("tgAralik"), 10) || 1;
+  const n = parseInt(val("tgAdet"), 10), ilk = parseTrDate(val("tgIlk")), step = parseInt(val("tgAralik"), 10) || 1, urun = val("tgTur") === "Urun";
   const h = odemeHesap();
-  if (!h.bedel) { toast("Önce satış bedelini girin.", "warn"); return; }
-  if (!n || n < 1 || n > 120) { toast("Taksit sayısını girin (1-120).", "warn"); return; }
+  if (!n || n < 1 || n > 120) { toast("Vade sayısını girin (1-120).", "warn"); return; }
   if (!ilk) { toast("İlk vade tarihini GG.AA.YYYY olarak girin.", "warn"); return; }
-  if (h.kalanVade <= 0) { toast("Kapora, peşinat ve takas düşüldükten sonra taksitlendirilecek tutar kalmıyor.", "warn"); return; }
+  let perKg = 0, lastKg = 0;
+  if (urun) {
+    perKg = kgOf(val("tgMiktar"));
+    if (perKg) lastKg = perKg;
+    else if (h.fiyat && h.kalanVade > 0) { const totalKg = Math.round(h.kalanVade / h.fiyat); perKg = Math.floor(totalKg / n); lastKg = totalKg - perKg * (n - 1); }
+    else { toast("Vade başına kg yazın veya önce hesap fiyatını (TL/kg) girin.", "warn"); return; }
+  } else {
+    if (!h.bedel) { toast("Önce satış bedelini girin.", "warn"); return; }
+    if (h.kalanVade <= 0) { toast("Kapora, peşinat ve takas düşüldükten sonra taksitlendirilecek tutar kalmıyor.", "warn"); return; }
+  }
   if (getTaksitler().length && !confirm("Mevcut vade satırları silinip yeniden oluşturulsun mu?")) return;
   const base = Math.floor(h.kalanVade / n), a = [];
   for (let i = 0; i < n; i++) {
-    const tutar = i === n - 1 ? h.kalanVade - base * (n - 1) : base;
-    a.push({ tarih: addMonths(ilk, i * step).toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" }), tutar: formatTL(String(tutar)), not: "Banka havalesi" });
+    const tarih = addMonths(ilk, i * step).toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    if (urun) a.push({ tarih, tur: "Urun", miktar: formatKg(String(i === n - 1 ? lastKg : perKg)), tutar: "", not: "Hasat sonrası teslim" });
+    else a.push({ tarih, tur: "TL", tutar: formatTL(String(i === n - 1 ? h.kalanVade - base * (n - 1) : base)), miktar: "", not: "Banka havalesi" });
   }
   setTaksitler(a);
   renderTaksitEditor();
@@ -1647,7 +1703,7 @@ function bindEvents() {
     else if (e.target.dataset && e.target.dataset.ti !== undefined) {
       const a = getTaksitler(), i = +e.target.dataset.ti, k = e.target.dataset.tk;
       if (k === "tutar") reformatMoneyInput(e.target);
-      if (a[i]) { a[i][k] = e.target.value; setTaksitler(a); scheduleRender(); }
+      if (a[i] && k !== "tur") { a[i][k] = e.target.value; setTaksitler(a); scheduleRender(); }
     }
     else if (CONTRACT_FIELD_SET.has(id) && id !== "contractType") scheduleRender();
   });
@@ -1658,6 +1714,16 @@ function bindEvents() {
       if (formHasUserData() && !confirm("Belge türü değiştiğinde yeni boş form açılır. Mevcut bilgiler temizlensin mi?\n\n(Bilgileri korumak için önce Kaydet'e basın.)")) { e.target.value = lastType; return; }
       setContract(nt);
     } else if (id === "yetkiKiraImzaDanisman" && e.target.value === "__yeni") addDanismanFromPrompt();
+    else if (e.target.dataset && e.target.dataset.ti !== undefined) {
+      const a = getTaksitler(), i = +e.target.dataset.ti, k = e.target.dataset.tk;
+      if (!a[i]) return;
+      if (k === "miktar") e.target.value = formatKg(e.target.value);
+      a[i][k] = e.target.value;
+      setTaksitler(a);
+      if (k === "tur") renderTaksitEditor();
+      render();
+    }
+    else if (id === "tgTur") render();
     else if (id === "archiveType") renderSaved();
     else if (id === "cariTypeFilter" || id === "cariAgentFilter") renderCariList();
     else if (id === "importFile") { const f = e.target.files[0]; if (f) importJsonFile(f); e.target.value = ""; }

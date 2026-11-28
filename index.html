@@ -362,13 +362,30 @@
                 <div class="subTitle">Vadeli ödemeler</div>
                 <div id="taksitEditor"></div>
                 <div class="taksitGen">
-                  <input id="tgAdet" type="number" min="1" max="120" placeholder="Taksit sayısı" />
+                  <input id="tgAdet" type="number" min="1" max="120" placeholder="Vade sayısı" />
                   <input id="tgIlk" placeholder="İlk vade (GG.AA.YYYY)" />
                   <select id="tgAralik"><option value="1">Her ay</option><option value="2">2 ayda bir</option><option value="3">3 ayda bir</option><option value="6">6 ayda bir</option><option value="12">Yılda bir</option></select>
+                  <select id="tgTur"><option value="TL">TL olarak</option><option value="Urun">Fındık olarak</option></select>
+                  <input id="tgMiktar" class="hide" placeholder="Vade başına kg (örn 20000)" inputmode="numeric" />
                   <button type="button" class="btn ghost sm" onclick="generateTaksitler()">Kalanı taksitlendir</button>
                 </div>
-                <div class="hint">Örn. fındık bahçesinde ödemeyi hasat dönemlerine bağlamak için "Yılda bir" seçip ilk vadeyi Ağustos/Eylül sonu yazabilirsiniz.</div>
+                <div class="hint">Fındıkla ödemede "Fındık olarak" ve "Yılda bir" seçip ilk vadeyi hasat sonuna (örn. 15.10) yazın. Vade başına kg boş bırakılırsa kalan tutar, aşağıdaki hesap fiyatına bölünerek hesaplanır.</div>
                 <textarea id="alimSatimTaksitler" class="hide"></textarea>
+              </div>
+
+              <div id="ayniFields" class="subBox hide">
+                <div class="subTitle">Ürünle (fındık) ödeme şartları</div>
+                <div class="grid2">
+                  <div class="field"><label for="ayniUrun">Ürün</label><input id="ayniUrun" /></div>
+                  <div class="field"><label for="ayniRandiman">Esas randıman (%)</label><input id="ayniRandiman" inputmode="numeric" /></div>
+                </div>
+                <div class="grid2">
+                  <div class="field"><label for="ayniHesapFiyati">Hesap fiyatı (TL/kg)</label><input id="ayniHesapFiyati" placeholder="Örn: 250 TL" /></div>
+                  <div class="field"><label for="ayniTeslimYeri">Teslim yeri</label><input id="ayniTeslimYeri" /></div>
+                </div>
+                <div class="field"><label for="ayniKalite">Kalite şartı</label><input id="ayniKalite" /></div>
+                <div class="field"><label for="ayniEksik">Hasat yetmez, fındık eksik teslim edilirse</label><select id="ayniEksik"><option>Satıcı seçer: eksik kısım TL olarak ödenir veya son vadeye eklenir</option><option>Eksik kısım TL olarak ödenir</option><option>Eksik kısım son vadeye eklenir</option><option>Alıcı seçer: eksik kısım TL olarak ödenir veya son vadeye eklenir</option></select></div>
+                <div class="field"><label for="ayniFiyatKaynagi">TL'ye çevirmede kullanılacak fiyat</label><textarea id="ayniFiyatKaynagi" rows="2"></textarea></div>
               </div>
               <div id="odemeOzet" class="payBox"></div>
               <div class="field"><label for="alimSatimOdemePlani">Ödeme ile ilgili ek açıklama</label><textarea id="alimSatimOdemePlani" rows="2" placeholder="Örn: Peşinat tapu devrinde, vadeli ödemeler satıcının ... IBAN'ına"></textarea></div>
