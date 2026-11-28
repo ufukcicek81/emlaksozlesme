@@ -364,8 +364,8 @@
               <div class="field"><label for="yetkiKomisyonPaylasimi">Komisyon Paylaşımı</label><input id="yetkiKomisyonPaylasimi" /></div>
               <div class="detailGroup hide" data-contracts="yetkiKiralama">
                 <div class="grid2">
-                  <div class="field"><label for="yetkiKiraImza">Danışman kira sözleşmesini mal sahibi adına imzalasın mı?</label><select id="yetkiKiraImza"><option>Verilir</option><option>Verilmez</option></select></div>
-                  <div class="field"><label for="yetkiKiraImzaDanisman">İmza yetkili danışman</label><input id="yetkiKiraImzaDanisman" placeholder="Boşsa ofis yetkilisi yazılır" /></div>
+                  <div class="field"><label for="yetkiKiraImza">Kira sözleşmesini kim imzalayacak?</label><select id="yetkiKiraImza"><option value="Verilir">Danışman, mal sahibi adına imzalayacak</option><option value="Verilmez">Mal sahibi kendisi imzalayacak</option></select></div>
+                  <div class="field" id="kiraImzaDanismanField"><label for="yetkiKiraImzaDanisman">İmza yetkili danışman</label><select id="yetkiKiraImzaDanisman"></select></div>
                 </div>
               </div>
               <div class="field"><label for="yetkiPazarlama">Pazarlama / İlan Koşulları</label><textarea id="yetkiPazarlama" rows="3"></textarea></div>

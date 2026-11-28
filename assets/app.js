@@ -337,9 +337,55 @@ function yetkiMaddeleri(sale) {
 6. Cayma bedeli ve cezai şart yazılmışsa; iş sahibinin haklı sebep olmadan pazarlamayı durdurması, müşteriyi gizlemesi, işlemden vazgeçmesi veya bilgi saklaması halinde uygulanır. Bu bedellerde mevzuattaki hizmet bedeli sınırları saklıdır.
 7. Hizmet bedeli; ${sale ? "satışın gerçekleşmesi veya tarafların satış işleminde anlaşması" : "kiralama işleminin gerçekleşmesi veya kira sözleşmesinin imzalanması"} halinde muaccel olur.
 8. Yetki süresi sonunda taraflar yazılı olarak yenileme yapmadıkça yetki sona erer; ancak yetki süresinde gösterilen/ilişki kurulan müşteriyle yapılan işlemlerde hizmet bedeli hakkı saklıdır.
-${!sale && val("yetkiKiraImza") !== "Verilmez" ? kiraImzaYetkisiMaddesi() + "\n10" : "9"}. Taraflar tebligat adreslerinin formda yazılı adresler olduğunu, değişikliklerin yazılı bildirilmedikçe eski adrese yapılacak bildirimlerin geçerli olacağını kabul eder.`;
+${sale ? "9" : (val("yetkiKiraImza") === "Verilmez" ? kiraMalSahibiImzaMaddesi() : kiraImzaYetkisiMaddesi()) + "\n10"}. Taraflar tebligat adreslerinin formda yazılı adresler olduğunu, değişikliklerin yazılı bildirilmedikçe eski adrese yapılacak bildirimlerin geçerli olacağını kabul eder.`;
 }
-function kiraImzaDanismani() { return val("yetkiKiraImzaDanisman").trim() || val("ofisYetkili").trim(); }
+const DANISMAN_KEY = "emlakDanismanlar";
+let remoteDanismanlar = [];
+function danismanAdlari() {
+  const names = [];
+  const add = (n) => { n = String(n || "").trim(); if (n && !names.some((x) => trLower(x) === trLower(n))) names.push(n); };
+  add(currentUser?.ad);
+  add(val("ofisYetkili") || OFFICE_DEFAULTS.ofisYetkili);
+  remoteDanismanlar.forEach(add);
+  readJson(DANISMAN_KEY).forEach(add);
+  getDrafts().forEach((d) => { add(d.yetkiKiraImzaDanisman); add(d.olusturanAd); });
+  return names;
+}
+function fillDanismanOptions() {
+  const sel = $("yetkiKiraImzaDanisman");
+  if (!sel) return;
+  const cur = sel.value === "__yeni" ? "" : sel.value;
+  const names = danismanAdlari();
+  if (cur && !names.some((n) => n === cur)) names.push(cur);
+  sel.innerHTML = names.map((n) => `<option value="${esc(n)}">${esc(n)}</option>`).join("") + '<option value="__yeni">+ Listede yok, yeni danışman ekle…</option>';
+  sel.value = cur && names.includes(cur) ? cur : names[0] || "";
+}
+function addDanismanFromPrompt() {
+  const name = (prompt("Danışmanın adı soyadı:") || "").trim();
+  if (name) {
+    writeJson(DANISMAN_KEY, [name, ...readJson(DANISMAN_KEY).filter((x) => trLower(x) !== trLower(name))].slice(0, 50));
+    fillDanismanOptions();
+    setVal("yetkiKiraImzaDanisman", name);
+  } else fillDanismanOptions();
+  render();
+}
+// Danışman listesi kullanıcı hesaplarından alınır (okuma izni yoksa yerel liste yeterli).
+async function loadRemoteDanismanlar() {
+  try {
+    const { db, fs } = await firebaseDb();
+    const snap = await fs.getDocs(fs.collection(db, "kullanicilar"));
+    const arr = [];
+    snap.forEach((x) => { const u = x.data() || {}; if (u.aktif !== false && u.ad) arr.push(u.ad); });
+    remoteDanismanlar = arr.sort((a, b) => a.localeCompare(b, "tr"));
+    fillDanismanOptions();
+  } catch (e) { /* izin yoksa sessizce geç */ }
+}
+function kiraImzaDanismani() { const v = val("yetkiKiraImzaDanisman").trim(); return (v !== "__yeni" && v) || val("ofisYetkili").trim(); }
+function kiraMalSahibiImzaMaddesi() {
+  return `9. Kira sözleşmesinin imzalanması: İş sahibi, kira sözleşmesini bizzat imzalayacaktır; emlak işletmesine ve danışmanlarına iş sahibi adına kira sözleşmesi imzalama yetkisi verilmemiştir.
+Emlak işletmesi; bulduğu kiracı adayını ve teklif edilen kira şartlarını iş sahibine bildirir, kira sözleşmesini hazırlar, imza ve teslim sürecini organize eder. İş sahibi, kendisine bildirilen kiracı adayı hakkında makul süre içinde olumlu ya da olumsuz cevap vermeyi kabul eder.
+Kira sözleşmesinin iş sahibi tarafından bizzat imzalanması; emlak işletmesinin bulduğu, gösterdiği veya ilişki kurduğu kiracıyla yapılan kiralamada doğan hizmet bedeli hakkını ortadan kaldırmaz.`;
+}
 function kiraImzaYetkisiMaddesi() {
   const kim = kiraImzaDanismani();
   return `9. Kira sözleşmesini imzalama yetkisi: İş sahibi, emlak işletmesini ve işletme adına yetkili emlak danışmanını${kim ? " (" + kim + ")" : ""}; yukarıda bilgileri yazılı taşınmaz için yetki süresi içinde bulunan kiracıyla, formda yazılı ilan/hedef kira bedeli ve şartlarla kira sözleşmesini iş sahibi adına ve hesabına imzalamaya, kiracıyla kira şartlarını görüşmeye, kiralananı teslim etmeye ve teslim tutanağı düzenlemeye yetkili kılar. Bu yetkiyle imzalanan kira sözleşmesi iş sahibini bağlar; iş sahibi sözleşmeden doğan hak ve borçların kendisine ait olduğunu kabul eder.
@@ -348,7 +394,7 @@ Bu yetki, ayrıca yazılı olarak verilmedikçe kira bedeli ve depozitoyu iş sa
 }
 function renderYetki(type) {
   const sale = type === "yetkiSatis";
-  return `${commonHead(sale ? "Satış Yetkilendirme Sözleşmesi" : "Kiralama Yetkilendirme Sözleşmesi")}${partiesTable("Mülk Sahibi", "Emlak İşletmesi")}${propertyTable()}<h2>Yetki ve Pazarlama Şartları</h2><table>${row(sale ? "İlan / Hedef Satış Bedeli" : "İlan / Hedef Kira Bedeli", val("yetkiIlanBedeli"))}${row("Yetki Süresi", val("yetkiSuresi"))}${row("Yetki Türü", val("yetkiTuru"))}${row("Hizmet Bedeli / Komisyon", val("yetkiHizmetBedeli"))}${row("Komisyon Paylaşımı", val("yetkiKomisyonPaylasimi"))}${row("Cayma Bedeli", val("yetkiCaymaBedeli"))}${row("Cezai Şart", val("yetkiCezaiSart"))}${row("Pazarlama / İlan Koşulları", val("yetkiPazarlama"))}${sale ? "" : row("Kira Sözleşmesini İmzalama Yetkisi", val("yetkiKiraImza") === "Verilmez" ? "Verilmedi; kira sözleşmesini iş sahibi bizzat imzalar." : "Verildi" + (kiraImzaDanismani() ? " — Yetkili danışman: " + kiraImzaDanismani() : "") + " (bkz. madde 9)")}</table>${initials2("Mülk Sahibi", "Emlak İşletmesi")}<div class="articleTitle">${sale ? "SATIŞ" : "KİRALAMA"} YETKİ SÖZLEŞME MADDELERİ</div><div class="clauseList">${clauseHtml(yetkiMaddeleri(sale))}</div>${sectionIf("Yetki Ek Maddeleri", val("yetkiEkMaddeler"))}${legalWarning(type)}${signs2("Mülk Sahibi", "Emlak İşletmesi")}`;
+  return `${commonHead(sale ? "Satış Yetkilendirme Sözleşmesi" : "Kiralama Yetkilendirme Sözleşmesi")}${partiesTable("Mülk Sahibi", "Emlak İşletmesi")}${propertyTable()}<h2>Yetki ve Pazarlama Şartları</h2><table>${row(sale ? "İlan / Hedef Satış Bedeli" : "İlan / Hedef Kira Bedeli", val("yetkiIlanBedeli"))}${row("Yetki Süresi", val("yetkiSuresi"))}${row("Yetki Türü", val("yetkiTuru"))}${row("Hizmet Bedeli / Komisyon", val("yetkiHizmetBedeli"))}${row("Komisyon Paylaşımı", val("yetkiKomisyonPaylasimi"))}${row("Cayma Bedeli", val("yetkiCaymaBedeli"))}${row("Cezai Şart", val("yetkiCezaiSart"))}${row("Pazarlama / İlan Koşulları", val("yetkiPazarlama"))}${sale ? "" : row("Kira Sözleşmesini İmzalama Yetkisi", val("yetkiKiraImza") === "Verilmez" ? "Verilmedi; kira sözleşmesini mal sahibi kendisi imzalayacak (bkz. madde 9)" : "Verildi" + (kiraImzaDanismani() ? " — Yetkili danışman: " + kiraImzaDanismani() : "") + " (bkz. madde 9)")}</table>${initials2("Mülk Sahibi", "Emlak İşletmesi")}<div class="articleTitle">${sale ? "SATIŞ" : "KİRALAMA"} YETKİ SÖZLEŞME MADDELERİ</div><div class="clauseList">${clauseHtml(yetkiMaddeleri(sale))}</div>${sectionIf("Yetki Ek Maddeleri", val("yetkiEkMaddeler"))}${legalWarning(type)}${signs2("Mülk Sahibi", "Emlak İşletmesi")}`;
 }
 const yerGostermeMaddeleri = `1. Emlak işletmesi, yukarıda bilgileri yazılı taşınmazı müşteriye fiziki olarak, elektronik ortamda veya konum/ilan bilgisi paylaşımı yoluyla göstermiştir.
 2. Taşınmaz gösterme hizmeti karşılığında ayrıca yer gösterme ücreti alınmaz; hizmet bedeli ancak satış/kiralama işleminin gerçekleşmesi halinde formda yazılı şartlara ve mevzuat sınırlarına göre doğar.
@@ -404,6 +450,7 @@ function render() {
   checkMissing(t);
   updateFeeHints(t);
   updateEditState();
+  if ($("kiraImzaDanismanField")) $("kiraImzaDanismanField").classList.toggle("hide", val("yetkiKiraImza") === "Verilmez");
 }
 let renderQueued = false;
 function scheduleRender() {
@@ -477,7 +524,13 @@ function updateFeeHints(t) {
 let editingExistingNo = "";
 function setData(data) {
   data = { ...defaultData(normalizeType(data?.contractType || "kira")), ...migrateData(data) };
-  for (const id of CONTRACT_FIELDS) setVal(id, data[id]);
+  fillDanismanOptions();
+  for (const id of CONTRACT_FIELDS) {
+    const el = $(id), v = data[id] ?? "";
+    if (el && el.tagName === "SELECT" && v && ![...el.options].some((o) => o.value === v)) el.add(new Option(v, v), el.options.length - (id === "yetkiKiraImzaDanisman" ? 1 : 0));
+    setVal(id, v);
+  }
+  if (!val("yetkiKiraImzaDanisman") || val("yetkiKiraImzaDanisman") === "__yeni") fillDanismanOptions();
   normalizeMoneyFields();
   render();
   loadSignaturesToCanvas();
@@ -1354,6 +1407,7 @@ async function initAuthGate() {
         applyRoleVisibility();
         syncFirebaseToLocal(true).then(() => { if (!editingExistingNo) { setVal("sozlesmeNo", nextContractNo(val("contractType"))); render(); } });
         syncCariFirebaseToLocal(true);
+        loadRemoteDanismanlar();
       } catch (e) {
         console.warn("Profil yüklenemedi", e);
         showAuthError("Profil bilgisi alınamadı: " + (e.message || ""));
@@ -1433,7 +1487,8 @@ function bindEvents() {
       const nt = e.target.value;
       if (formHasUserData() && !confirm("Belge türü değiştiğinde yeni boş form açılır. Mevcut bilgiler temizlensin mi?\n\n(Bilgileri korumak için önce Kaydet'e basın.)")) { e.target.value = lastType; return; }
       setContract(nt);
-    } else if (id === "archiveType") renderSaved();
+    } else if (id === "yetkiKiraImzaDanisman" && e.target.value === "__yeni") addDanismanFromPrompt();
+    else if (id === "archiveType") renderSaved();
     else if (id === "cariTypeFilter" || id === "cariAgentFilter") renderCariList();
     else if (id === "importFile") { const f = e.target.files[0]; if (f) importJsonFile(f); e.target.value = ""; }
     else if (CONTRACT_FIELD_SET.has(id)) scheduleRender();
