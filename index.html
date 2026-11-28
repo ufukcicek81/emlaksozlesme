@@ -282,7 +282,25 @@
                 <div class="field"><label for="aidat">Aidat / Ortak Gider</label><input id="aidat" /></div>
                 <div class="field"><label for="artisOrani">Artış Oranı</label><input id="artisOrani" /></div>
               </div>
+              <div class="grid2">
+                <div class="field"><label for="kiraKullanimAmaci">Kullanım amacı</label><select id="kiraKullanimAmaci"><option>Konut</option><option>İşyeri</option><option>Konut ve işyeri</option></select></div>
+                <div class="field"><label for="kiraBirlikteOturan">Birlikte oturacak kişiler</label><input id="kiraBirlikteOturan" placeholder="Örn: Eşi ve 2 çocuğu" /></div>
+              </div>
               <div class="field"><label for="demirbaslar">Demirbaş / Teslim Durumu</label><textarea id="demirbaslar" rows="2"></textarea></div>
+              <div class="subBox">
+                <div class="subTitle">Müteselsil kefil (varsa)</div>
+                <div class="grid2">
+                  <div class="field"><label for="kefilAd">Kefil ad soyad</label><input id="kefilAd" autocomplete="off" /></div>
+                  <div class="field"><label for="kefilTc">Kefil T.C. No</label><input id="kefilTc" inputmode="numeric" maxlength="11" /></div>
+                </div>
+                <div class="grid2">
+                  <div class="field"><label for="kefilTel">Kefil telefon</label><input id="kefilTel" type="tel" /></div>
+                  <div class="field"><label for="kefilAzami">Azami kefalet tutarı</label><input id="kefilAzami" /></div>
+                </div>
+                <div class="field"><label for="kefilAdres">Kefil adres</label><textarea id="kefilAdres" rows="2"></textarea></div>
+                <div class="field"><label for="kefilMedeniHal">Kefilin medeni hali</label><select id="kefilMedeniHal"><option>Evli (eşin yazılı rızası gerekir)</option><option>Bekâr / dul / boşanmış</option></select></div>
+                <p class="hint">Kefalet; azami tutar, tarih ve "müteselsil kefil" ibaresi kefilin <b>kendi el yazısıyla</b> yazılmazsa geçersizdir (TBK 583). Kefil evliyse eşinin yazılı rızası imzadan önce veya imza anında alınmalıdır (TBK 584). Çıktıda bunlar için boş satırlar bulunur.</p>
+              </div>
               <div class="field"><label for="yetkiliMahkeme">Uyuşmazlık / Yetkili Mahkeme</label><input id="yetkiliMahkeme" /></div>
               <div class="field"><label for="kiraOzel">Özel Şartlar / Ek Maddeler</label><textarea id="kiraOzel" rows="4" placeholder="Boş bırakılırsa çıktıda görünmez."></textarea></div>
             </div>
@@ -304,26 +322,83 @@
             </div>
 
             <div class="detailGroup hide" data-contracts="alimSatim,satisVaadi">
-              <h3 class="secTitle first">Satış ve Kapora Şartları</h3>
+              <h3 class="secTitle first">Taşınmaz Türü</h3>
+              <div class="field"><label for="alimSatimTasinmazTuru">Satılan taşınmaz</label><select id="alimSatimTasinmazTuru"><option>Konut / işyeri</option><option>Arsa / arazi</option><option>Tarım arazisi / bahçe (fındık, zeytin vb.)</option></select></div>
+              <div id="tarimFields" class="subBox hide">
+                <div class="subTitle">Tarım arazisi / bahçe bilgileri</div>
+                <div class="grid2">
+                  <div class="field"><label for="tarimAlan">Alan</label><input id="tarimAlan" placeholder="Örn: 8.450 m² (yaklaşık 8,5 dönüm)" /></div>
+                  <div class="field"><label for="tarimAgac">Ağaç / ocak durumu</label><input id="tarimAgac" placeholder="Örn: 320 ocak fındık, ortalama 25 yaşında" /></div>
+                </div>
+                <div class="grid2">
+                  <div class="field"><label for="tarimHisse">Tapu durumu</label><select id="tarimHisse"><option>Tam (müstakil) tapu</option><option>Hisseli tapu</option></select></div>
+                  <div class="field"><label for="tarimHisseOrani">Satılan hisse</label><input id="tarimHisseOrani" placeholder="Örn: 1/3 hisse" /></div>
+                </div>
+                <div class="field"><label for="tarimHasat">Bu yılın ürünü / hasat hakkı</label><select id="tarimHasat"><option>Bu yılın ürünü hasat edildi; taşınmaz ürünsüz teslim edilir</option><option>Bu yılın ürünü satıcıya aittir; hasadı satıcı yapar, teslim hasattan sonradır</option><option>Bu yılın ürünü alıcıya aittir; teslimden sonraki bakım ve hasat alıcıya aittir</option><option>Ürün taraflarca ayrıca yazılı paylaşılacaktır</option></select></div>
+                <div class="field"><label for="tarimKayit">ÇKS / Fındık Kayıt Sistemi ve destekler</label><textarea id="tarimKayit" rows="3"></textarea></div>
+                <div class="field"><label for="tarimSuYol">Yol, su, sulama ve sınır durumu</label><input id="tarimSuYol" placeholder="Örn: Kadastro yoluna cepheli, sınırlar taşla belirli" /></div>
+              </div>
+
+              <h3 class="secTitle">Satış Bedeli ve Ödeme</h3>
               <div class="grid2">
                 <div class="field"><label for="alimSatimSatisBedeli">Satış Bedeli</label><input id="alimSatimSatisBedeli" /></div>
                 <div class="field"><label for="alimSatimKapora">Kapora / Bağlanma Parası</label><input id="alimSatimKapora" /></div>
               </div>
               <div class="grid2">
                 <div class="field"><label for="alimSatimKaporaTuru">Kapora Türü</label><select id="alimSatimKaporaTuru"><option>Bağlanma parası / pey akçesi</option><option>Cayma parası / pişmanlık akçesi</option><option>Taraflarca ayrıca yazılacak</option></select></div>
-                <div class="field"><label for="alimSatimCaymaBedeli">Cayma Bedeli</label><input id="alimSatimCaymaBedeli" placeholder="Cayan tarafın ödeyeceği bedel" /></div>
+                <div class="field"><label for="alimSatimPesinat">Peşinat (imzada / tapuda ödenecek)</label><input id="alimSatimPesinat" /></div>
+              </div>
+
+              <div class="subBox">
+                <div class="subTitle">Takas (varsa)</div>
+                <div class="field"><label for="alimSatimTakasKonusu">Takasa verilen mal</label><textarea id="alimSatimTakasKonusu" rows="2" placeholder="Örn: 34 ABC 123 plakalı 2019 model ... marka araç / ... köyü ... ada ... parsel tarla"></textarea></div>
+                <div class="grid2">
+                  <div class="field"><label for="alimSatimTakasBedeli">Takas değeri (bedelden düşülecek)</label><input id="alimSatimTakasBedeli" /></div>
+                  <div class="field"><label for="alimSatimTakasTeslim">Takas malının devir / teslim tarihi</label><input id="alimSatimTakasTeslim" placeholder="Örn: Tapu devriyle aynı gün" /></div>
+                </div>
+              </div>
+
+              <div class="subBox">
+                <div class="subTitle">Vadeli ödemeler</div>
+                <div id="taksitEditor"></div>
+                <div class="taksitGen">
+                  <input id="tgAdet" type="number" min="1" max="120" placeholder="Taksit sayısı" />
+                  <input id="tgIlk" placeholder="İlk vade (GG.AA.YYYY)" />
+                  <select id="tgAralik"><option value="1">Her ay</option><option value="2">2 ayda bir</option><option value="3">3 ayda bir</option><option value="6">6 ayda bir</option><option value="12">Yılda bir</option></select>
+                  <button type="button" class="btn ghost sm" onclick="generateTaksitler()">Kalanı taksitlendir</button>
+                </div>
+                <div class="hint">Örn. fındık bahçesinde ödemeyi hasat dönemlerine bağlamak için "Yılda bir" seçip ilk vadeyi Ağustos/Eylül sonu yazabilirsiniz.</div>
+                <textarea id="alimSatimTaksitler" class="hide"></textarea>
+              </div>
+              <div id="odemeOzet" class="payBox"></div>
+              <div class="field"><label for="alimSatimOdemePlani">Ödeme ile ilgili ek açıklama</label><textarea id="alimSatimOdemePlani" rows="2" placeholder="Örn: Peşinat tapu devrinde, vadeli ödemeler satıcının ... IBAN'ına"></textarea></div>
+              <input id="alimSatimKalanOdeme" class="hide" />
+
+              <h3 class="secTitle">Vade ve Teminat Şartları</h3>
+              <div class="grid2">
+                <div class="field"><label for="alimSatimMuacceliyet">Taksit ödenmezse</label><select id="alimSatimMuacceliyet"><option>Kalan borcun tamamı muaccel olur</option><option>Yalnızca geciken taksit istenir</option></select></div>
+                <div class="field"><label for="alimSatimIhtarSuresi">İhtardan sonra ödeme süresi</label><input id="alimSatimIhtarSuresi" /></div>
               </div>
               <div class="grid2">
-                <div class="field"><label for="alimSatimCezaiSart">Cezai Şart</label><input id="alimSatimCezaiSart" placeholder="Sözleşmeye aykırılık halinde" /></div>
-                <div class="field"><label for="alimSatimKalanOdeme">Kalan Ödeme</label><input id="alimSatimKalanOdeme" /></div>
+                <div class="field"><label for="alimSatimFaiz">Gecikme faizi</label><input id="alimSatimFaiz" /></div>
+                <div class="field"><label for="alimSatimTeminat">Teminat</label><input id="alimSatimTeminat" placeholder="Örn: Vadeli tutarlar kadar senet / satıcı lehine ipotek" /></div>
               </div>
-              <div class="field"><label for="alimSatimOdemePlani">Ödeme Planı</label><textarea id="alimSatimOdemePlani" rows="2"></textarea></div>
+              <div class="grid2">
+                <div class="field"><label for="alimSatimCaymaBedeli">Cayma Bedeli</label><input id="alimSatimCaymaBedeli" placeholder="Cayan tarafın ödeyeceği bedel" /></div>
+                <div class="field"><label for="alimSatimCezaiSart">Cezai Şart</label><input id="alimSatimCezaiSart" placeholder="Sözleşmeye aykırılık halinde" /></div>
+              </div>
+
+              <h3 class="secTitle">Tapu Devri ve Teslim</h3>
+              <div class="field"><label for="alimSatimDevirSekli">Tapu devri ne zaman?</label><select id="alimSatimDevirSekli"><option>Bedelin tamamı ödendikten sonra tapu devri yapılır</option><option>Tapu devri yapılır; kalan bedel için satıcı lehine ipotek konur</option><option>Tapu devri belirtilen tarihte yapılır; kalan bedel vadelerde ödenir</option></select></div>
               <div class="grid2">
                 <div class="field"><label for="alimSatimDevirTarihi">Tapu Devir Tarihi</label><input id="alimSatimDevirTarihi" placeholder="GG.AA.YYYY" /></div>
-                <div class="field"><label for="alimSatimMasrafPaylasimi">Tapu Harcı / Masraf Paylaşımı</label><input id="alimSatimMasrafPaylasimi" /></div>
+                <div class="field"><label for="alimSatimTeslimTarihi">Fiili teslim (zilyetlik) tarihi</label><input id="alimSatimTeslimTarihi" placeholder="GG.AA.YYYY" /></div>
               </div>
+              <div class="field"><label for="alimSatimMasrafPaylasimi">Tapu Harcı / Masraf Paylaşımı</label><input id="alimSatimMasrafPaylasimi" /></div>
               <div class="field"><label for="alimSatimTapuDurumu">İpotek / Haciz / Şerh / Kiracı Durumu</label><textarea id="alimSatimTapuDurumu" rows="2"></textarea></div>
               <div class="field"><label for="alimSatimTeslimDurumu">Teslim Durumu</label><textarea id="alimSatimTeslimDurumu" rows="2"></textarea></div>
+
+              <h3 class="secTitle">Hizmet Bedeli</h3>
               <div class="grid2">
                 <div class="field"><label for="alimSatimHizmetBedeli">Emlak Hizmet Bedeli</label><input id="alimSatimHizmetBedeli" /></div>
                 <div class="field"><label for="alimSatimKomisyonPaylasimi">Komisyon Paylaşımı</label><input id="alimSatimKomisyonPaylasimi" /></div>
@@ -335,11 +410,11 @@
             <div class="detailGroup hide" data-contracts="satisVaadi">
               <h3 class="secTitle">Satış Vaadi Özel Şartları</h3>
               <div class="grid2">
-                <div class="field"><label for="satisVaadiResmiSekil">Resmi Şekil / Noter Durumu</label><select id="satisVaadiResmiSekil"><option>Bilgilendirme yapıldı; resmi işlem ayrıca yapılacak</option><option>Noterde düzenleme şeklinde yapılacak</option><option>Taraflarca ayrıca kontrol edilecek</option></select></div>
+                <div class="field"><label for="satisVaadiResmiSekil">Resmi Şekil / Noter Durumu</label><select id="satisVaadiResmiSekil"><option>Noterde düzenleme şeklinde yapılacak</option><option>Bilgilendirme yapıldı; resmi işlem ayrıca yapılacak</option><option>Taraflarca ayrıca kontrol edilecek</option></select></div>
                 <div class="field"><label for="satisVaadiSerhDurumu">Tapuya Şerh Durumu</label><select id="satisVaadiSerhDurumu"><option>Şerh talep edilmeyecek</option><option>Taraf talep ederse şerh verilecek</option><option>Şerh masrafı alıcıya ait</option><option>Şerh masrafı taraflarca paylaşılacak</option></select></div>
               </div>
               <div class="grid2">
-                <div class="field"><label for="satisVaadiNoterTarihi">Resmi İşlem / Noter Tarihi</label><input id="satisVaadiNoterTarihi" placeholder="GG.AA.YYYY" /></div>
+                <div class="field"><label for="satisVaadiNoterTarihi">Notere gidilecek son tarih</label><input id="satisVaadiNoterTarihi" placeholder="GG.AA.YYYY" /></div>
                 <div class="field"><label for="satisVaadiMasrafPaylasimi">Şerh / Masraf Paylaşımı</label><input id="satisVaadiMasrafPaylasimi" placeholder="Örn: Alıcıya ait / ortak" /></div>
               </div>
               <div class="field"><label for="satisVaadiIfaSarti">Vaadin Yerine Getirilme Şartı</label><textarea id="satisVaadiIfaSarti" rows="2"></textarea></div>
@@ -386,6 +461,7 @@
                 <div class="field"><label for="yerGostermeHizmetBedeli">Hizmet Bedeli / Komisyon</label><input id="yerGostermeHizmetBedeli" /></div>
                 <div class="field"><label for="yerGostermeSekli">Gösterim Şekli</label><input id="yerGostermeSekli" placeholder="Fiziki / online / konum paylaşımı" /></div>
               </div>
+              <div class="field"><label for="yerGostermeDigerTasinmazlar">Aynı gün gösterilen diğer taşınmazlar</label><textarea id="yerGostermeDigerTasinmazlar" rows="3" placeholder="Her satıra bir taşınmaz: adres / ada-parsel / fiyat"></textarea></div>
               <div class="field"><label for="yerGostermeNot">Gösterim Notu</label><textarea id="yerGostermeNot" rows="2"></textarea></div>
               <div class="field"><label for="yerGostermeEkMaddeler">Ek Maddeler</label><textarea id="yerGostermeEkMaddeler" rows="3"></textarea></div>
             </div>

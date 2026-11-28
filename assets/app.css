@@ -63,6 +63,18 @@ select.auto{width:auto}
 .hint{font-size:12.5px;color:var(--muted);margin:2px 0 12px;line-height:1.45}
 .feeHint{font-size:12.5px;background:var(--accentSoft);color:var(--accentText);border:1px solid #fde58a;border-radius:var(--radiusSm);padding:9px 11px;margin:-2px 0 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .feeHint .linkBtn{color:var(--accentText)}
+.subBox{border:1px solid var(--line);border-radius:var(--radiusSm);background:var(--surface2);padding:12px 12px 2px;margin:0 0 12px}
+.subTitle{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px}
+.taksitHead,.taksitRow{display:grid;grid-template-columns:1fr 1fr 1.4fr 36px;gap:6px;align-items:center}
+.taksitHead{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.taksitRow{margin-bottom:6px}
+.taksitRow input{min-height:36px;padding:7px 9px;font-size:13.5px}
+.taksitGen{display:grid;grid-template-columns:1fr 1.3fr 1fr auto;gap:6px;margin:8px 0 4px}
+.taksitGen input,.taksitGen select{min-height:36px;padding:7px 9px;font-size:13px}
+.payBox{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;background:var(--surface);border:1px dashed var(--line2);border-radius:var(--radiusSm);padding:9px 11px;margin:0 0 12px}
+.payBox:empty{display:none}
+.payBox .ok{color:var(--ok);font-weight:600}
+.payBox .bad{color:var(--warn);font-weight:600}
 .formActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .fold{border:1px solid var(--line);border-radius:var(--radiusSm);padding:0 12px;margin:4px 0 6px;background:var(--surface2)}
 .fold summary{cursor:pointer;padding:11px 0;font-weight:600;font-size:13.5px;list-style:none;display:flex;gap:8px;align-items:center}
@@ -251,6 +263,12 @@ select.auto{width:auto}
 .initialBox .nm,.initialBox .hint{font-size:9px;color:#666}
 .doc .legal{font-size:9.5px;border-top:1px solid #888;margin-top:10px;padding-top:5px;line-height:1.3}
 .doc .legal b{font-family:Arial,Helvetica,sans-serif}
+.docSub{text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:10.5px;margin:-6px 0 8px;font-style:italic}
+.doc table.planTable th{width:auto;text-align:center}
+.doc table.planTable td:first-child{width:7%;text-align:center}
+.handBox{margin:6px 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:10.5px}
+.handLine{border-bottom:1px dotted #333;padding:12px 0 2px}
+.handLine span{background:#fff;padding-right:6px}
 .copyStamp{font-family:Arial,Helvetica,sans-serif;text-align:right;font-size:9.5px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
 .pageBreak{height:0;margin:26px -34px;border-top:2px dashed #c8ccd4}
 .pdfRender .pageBreak{display:none}
@@ -300,6 +318,10 @@ select.auto{width:auto}
   .card{padding:14px;border-radius:12px}
   .grid2,.grid3,.partyGrid{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr 1fr}
+  .taksitHead{display:none}
+  .taksitRow{grid-template-columns:1fr 1fr 36px}
+  .taksitRow input[data-tk="not"]{grid-column:1/3}
+  .taksitGen{grid-template-columns:1fr 1fr}
   .steps{top:calc(58px + env(safe-area-inset-top));font-size:12px}
   .stepTab{flex-direction:column;gap:3px;font-size:12px;padding:7px 4px}
   input,select,textarea{font-size:16px}
@@ -337,6 +359,6 @@ body:not([data-view="contract"]) .fab,body.previewOpen .fab{display:none!importa
   .printedSig{height:16mm!important}
   .printedSig img{max-height:16mm!important}
   .pageBreak{border:0!important;margin:0!important;break-before:page;page-break-before:always}
-  tr,.signs,.initials,.officeHead,.clauseList .cl{break-inside:avoid;page-break-inside:avoid}
+  tr,.signs,.initials,.officeHead,.handLine,.clauseList .cl{break-inside:avoid;page-break-inside:avoid}
   h2,.articleTitle{break-after:avoid;page-break-after:avoid}
 }

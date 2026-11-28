@@ -117,20 +117,27 @@ function defaultData(type = "kira") {
     tasinmazAdres: "", ilIlce: OFFICE_DEFAULTS.yer, mahalle: "", nitelik: "Konut / Daire", ada: "", parselBb: "", m2OdaKat: "", tapuTakyidat: "",
     aylikKira: "", depozito: "", kiraBaslangic: "", kiraBitis: "1 yıl", odemeGunu: "Her ayın 1-5 arası", odemeSekli: "Banka / IBAN",
     aidat: "Kiracıya ait", artisOrani: "Kanuni sınırlar içinde TÜFE (12 aylık ortalama) oranı", demirbaslar: "", yetkiliMahkeme: OFFICE_DEFAULTS.mahkeme, kiraOzel: "",
+    kiraKullanimAmaci: "Konut", kiraBirlikteOturan: "", kefilAd: "", kefilTc: "", kefilTel: "", kefilAdres: "", kefilAzami: "", kefilMedeniHal: "Evli (eşin yazılı rızası gerekir)",
     tahliyeKiraBaslangic: "", tahliyeTarihi: "", tahliyeDuzenlemeTarihi: trDate(), tahliyeYeri: OFFICE_DEFAULTS.yer,
     alimSatimSatisBedeli: "", alimSatimKapora: "", alimSatimKaporaTuru: "Bağlanma parası / pey akçesi", alimSatimCaymaBedeli: "", alimSatimCezaiSart: "",
     alimSatimKalanOdeme: "", alimSatimOdemePlani: "", alimSatimDevirTarihi: "", alimSatimMasrafPaylasimi: "Taraflarca ayrıca kararlaştırılır",
     alimSatimTapuDurumu: "Satıcı beyanına göre taşınmaz üzerinde satışa engel ipotek, haciz, şerh veya kısıtlama bulunmamaktadır. Varsa özel hükümlerde belirtilir.",
     alimSatimTeslimDurumu: "Tapu devrinde boş ve kullanıma elverişli teslim edilir.", alimSatimHizmetBedeli: "",
+    alimSatimTasinmazTuru: "Konut / işyeri", tarimAlan: "", tarimAgac: "", tarimHisse: "Tam (müstakil) tapu", tarimHisseOrani: "",
+    tarimHasat: "Bu yılın ürünü hasat edildi; taşınmaz ürünsüz teslim edilir", tarimSuYol: "",
+    tarimKayit: "Satıcı, tapu devrinden sonra taşınmazı Çiftçi Kayıt Sistemi (ÇKS) ve Fındık Kayıt Sistemi (FKS) kayıtlarından düşürmeyi ve alıcının kendi adına kayıt yaptırmasına engel olmamayı kabul eder. Devir tarihinden önceki döneme ait destek ödemeleri satıcıya, sonraki döneme ait olanlar alıcıya aittir.",
+    alimSatimPesinat: "", alimSatimTakasKonusu: "", alimSatimTakasBedeli: "", alimSatimTakasTeslim: "", alimSatimTaksitler: "",
+    alimSatimMuacceliyet: "Kalan borcun tamamı muaccel olur", alimSatimIhtarSuresi: "15 gün", alimSatimFaiz: "Vadesinde ödenmeyen tutara ödeme tarihine kadar yasal temerrüt faizi uygulanır",
+    alimSatimTeminat: "", alimSatimDevirSekli: "Bedelin tamamı ödendikten sonra tapu devri yapılır", alimSatimTeslimTarihi: "",
     alimSatimKomisyonPaylasimi: "Taraflarca aksi kararlaştırılmadıkça eşit paylaşılır.", alimSatimEkMaddeler: "",
-    satisVaadiResmiSekil: "Bilgilendirme yapıldı; resmi işlem ayrıca yapılacak", satisVaadiSerhDurumu: "Taraf talep ederse şerh verilecek",
+    satisVaadiResmiSekil: "Noterde düzenleme şeklinde yapılacak", satisVaadiSerhDurumu: "Taraf talep ederse şerh verilecek",
     satisVaadiNoterTarihi: "", satisVaadiMasrafPaylasimi: "Taraflarca ayrıca kararlaştırılır",
     satisVaadiIfaSarti: "Satış bedelinin tamamı ödendiğinde resmi satış/devri için taraflar ilgili kurumda işlem yapacaktır.", satisVaadiEkMaddeler: "",
     yetkiIlanBedeli: "", yetkiSuresi: "", yetkiTuru: "Münhasır yetki", yetkiHizmetBedeli: "", yetkiKomisyonPaylasimi: "", yetkiCaymaBedeli: "", yetkiCezaiSart: "",
     yetkiPazarlama: "İlan portalları, sosyal medya, fotoğraf/video, tabela, müşteri görüşmesi, yer gösterme ve tanıtım çalışmaları emlak işletmesi tarafından yürütülür.",
     yetkiEkMaddeler: "", yetkiKiraImza: "Verilir", yetkiKiraImzaDanisman: "",
     yerGostermeAmac: "Satın alma / kiralama", yerGostermeTarihi: trDate(), yerGostermeBedel: "", yerGostermeTakipSuresi: "6 ay", yerGostermeHizmetBedeli: "",
-    yerGostermeSekli: "Fiziki gösterim / online gösterim / konum paylaşımı", yerGostermeNot: "", yerGostermeEkMaddeler: "",
+    yerGostermeSekli: "Fiziki gösterim / online gösterim / konum paylaşımı", yerGostermeNot: "", yerGostermeDigerTasinmazlar: "", yerGostermeEkMaddeler: "",
     ortaklikHizmetBedeli: "", ortaklikOran: "", ortaklikCaymaBedeli: "", ortaklikCezaiSart: "",
     ortaklikGorevPaylasimi: "Portföy sahibi ve müşteri sahibi taraflarca belirlenir.", ortaklikNot: "", ortaklikEkMaddeler: "",
     sigParty1: "", sigParty2: "", sigWitness: "",
@@ -173,7 +180,7 @@ function setDrafts(arr) { writeJson(DRAFTS_KEY, arr.slice(0, 500)); }
 /* ---------- Tutar alanları ---------- */
 const MONEY_FIELDS = [
   "aylikKira", "depozito", "aidat", "qbBedel", "qbPazarlik", "qbAidat", "qbDepozito",
-  "alimSatimSatisBedeli", "alimSatimKapora", "alimSatimCaymaBedeli", "alimSatimCezaiSart", "alimSatimKalanOdeme", "alimSatimHizmetBedeli",
+  "alimSatimSatisBedeli", "alimSatimKapora", "alimSatimPesinat", "alimSatimTakasBedeli", "kefilAzami", "alimSatimCaymaBedeli", "alimSatimCezaiSart", "alimSatimKalanOdeme", "alimSatimHizmetBedeli",
   "yetkiIlanBedeli", "yetkiHizmetBedeli", "yetkiCaymaBedeli", "yetkiCezaiSart",
   "yerGostermeBedel", "yerGostermeHizmetBedeli", "ortaklikHizmetBedeli", "ortaklikCaymaBedeli", "ortaklikCezaiSart", "cariTutar",
 ];
@@ -240,6 +247,7 @@ function signDisplay(name, key) {
   if (name === "Emlak İşletmesi") return [val("ofisAdi") || OFFICE_DEFAULTS.ofisAdi, val("ofisYetkili")].filter(Boolean).join(" / ");
   if (key === "sigParty1") return val("party1Name");
   if (key === "sigParty2") return val("party2Name");
+  if (key === "sigWitness" && /Kefil/.test(name)) return val("kefilAd");
   return "";
 }
 function sig(name, key) {
@@ -287,18 +295,40 @@ function legalWarning(t) {
   if (["alimSatim", "satisVaadi", "yetkiSatis", "yetkiKiralama", "yerGosterme", "ortaklik"].includes(t)) lines.push("Emlak aracılık hizmet bedellerinde yürürlükteki mevzuattaki üst sınırlar ve tek hizmet bedeli ilkesi saklıdır.");
   if (["alimSatim", "satisVaadi", "yetkiSatis", "yetkiKiralama", "ortaklik"].includes(t)) lines.push("Kapora, cayma bedeli ve cezai şart alanları boş bırakılmışsa ilgili hüküm uygulanmaz; yazılı tutar ve şartlar esas alınır.");
   if (t === "alimSatim") lines.push("Tapu devri ilgili kurumlarda tamamlanmadan mülkiyet devri gerçekleşmiş sayılmaz.");
-  if (t === "satisVaadi") lines.push("Taşınmaz satış vaadi resmi şekle tabi olduğundan, bu çıktı ön hazırlık/taslak niteliğindedir; taraflar geçerlilik için resmi şekil şartını ayrıca kontrol etmelidir.");
+  if (t === "satisVaadi") lines.push("Taşınmaz satış vaadi sözleşmesi noterde düzenleme şeklinde yapılmadıkça geçerli değildir (TMK 706, TBK 237); bu belge noterde yapılacak resmi sözleşmeye esas ön protokoldür.");
+  if (t === "alimSatim") lines.push("Taşınmaz satışı tapu müdürlüğünde veya noterde resmi şekilde yapılmadıkça mülkiyeti geçirmez; bu belge tarafların ön anlaşmasını ve kapora ilişkisini düzenler.");
   lines.push(t === "tahliye" ? "Bu tahliye taahhütnamesi tek nüsha olarak hazırlanmış bağımsız belgedir." : "İşbu belge taraf sayısına göre nüsha halinde düzenlenir; imzalı nüshalar taraflarca saklanır.");
   return `<div class="legal"><b>Yasal Uyarı / Kontrol:</b> ${esc(lines.join(" "))}</div>`;
 }
+function kefilliMi() { return !!val("kefilAd").trim(); }
+function kiraOzelKosullar() {
+  const L = [];
+  L.push(`Kiralanan ${trLower(val("kiraKullanimAmaci") || "konut")} olarak kullanılmak amacıyla kiralanmıştır; kiracı kiralananı bu amaç dışında kullanamaz.${val("kiraBirlikteOturan").trim() ? " Kiralananda kiracıyla birlikte oturacak kişiler: " + val("kiraBirlikteOturan").trim() + "." : ""}`);
+  L.push(`Kira bedeli her ay peşin ödenir (ödeme günü: ${val("odemeGunu") || "her ayın ilk beş günü"}; ödeme şekli: ${val("odemeSekli") || "banka havalesi"}). Ödemelerin banka kanalıyla ve açıklamasına ilgili ay yazılarak yapılması esastır; elden ödemeler yazılı makbuz karşılığı yapılır.`);
+  if (val("depozito").trim()) L.push(`Kiracının ödediği ${val("depozito")} güvence bedeli (depozito) üç aylık kira bedelini aşamaz. Konut ve çatılı işyeri kiralarında güvence bedeli, kiraya verenin onayı olmadan çekilmemek üzere bir bankada vadeli tasarruf hesabına yatırılabilir; kira sona erdiğinde kiralananın hasarsız teslimi ve borç bulunmaması halinde iade edilir (TBK 342).`);
+  L.push(`Yenilenen kira yıllarında kira bedeli artışı: ${sentence(val("artisOrani") || "taraflarca kararlaştırılan oranda")} Konut ve çatılı işyeri kiralarında artış, bir önceki kira yılının on iki aylık TÜFE ortalamasını geçemez (TBK 344).`);
+  L.push(`Aidat, ısınma, elektrik, su, doğalgaz, internet ve benzeri yan giderler: ${sentence(val("aidat") || "kiracıya aittir")} Kiracı abonelikleri kendi adına yaptırır ve tahliyede kapatarak borçsuz teslim eder.`);
+  L.push("Kiracı kira bedelini veya yan giderleri ödemezse kiraya veren, en az otuz gün süre vererek yazılı ihtarda bulunabilir (TBK 315). Bir kira yılı içinde iki haklı ihtara sebep olunması tahliye sebebidir (TBK 352/2).");
+  L.push("Konut ve çatılı işyeri kiracısı, sözleşme süresinin bitiminden en az on beş gün önce bildirimde bulunmadıkça sözleşme aynı koşullarla bir yıl uzamış sayılır (TBK 347).");
+  L.push("Taraflar, tebligat adresi olarak kiracı için kiralananın, kiraya veren için formdaki adresin geçerli olduğunu kabul eder.");
+  return L.map((x, i) => `${i + 1}. ${x}`).join("\n");
+}
+function kefaletHtml() {
+  if (!kefilliMi()) return "";
+  const evli = /Evli/.test(val("kefilMedeniHal"));
+  return `<h2>Müteselsil Kefalet</h2><table>${row("Kefil Ad Soyad", val("kefilAd"))}${row("Kefil T.C. No", val("kefilTc"))}${row("Kefil Telefon", val("kefilTel"))}${row("Kefil Adres", val("kefilAdres"))}${row("Azami Kefalet Tutarı", val("kefilAzami"))}</table>`
+    + `<div class="clauseList">${clauseHtml("Kefil, kiracının bu sözleşmeden doğan kira bedeli, yan gider, tazminat ve diğer tüm borçlarından, aşağıda kendi el yazısıyla belirttiği azami tutara kadar kiracı ile birlikte müteselsil kefil sıfatıyla sorumlu olmayı kabul eder. Kefalet, kira sözleşmesinin uzaması halinde de azami tutarla sınırlı olarak devam eder.")}</div>`
+    + `<div class="handBox"><div class="handLine"><span>Azami tutar (kefilin el yazısıyla, rakam ve yazıyla):</span></div><div class="handLine"><span>Kefalet tarihi (kefilin el yazısıyla):</span></div><div class="handLine"><span>"Müteselsil kefilim" (kefilin el yazısıyla):</span></div>${evli ? '<div class="handLine"><span>Eşin rızası — "Eşimin kefil olmasına rıza gösteriyorum", ad soyad, tarih, imza:</span></div>' : ""}</div>`;
+}
 function renderKira() {
-  return `${commonHead("Kira Sözleşmesi")}${partiesTable("Kiraya Veren", "Kiracı")}${propertyTable()}<h2>Kira Şartları</h2><table>${row("Aylık Kira Bedeli", val("aylikKira"))}${row("Depozito", val("depozito"))}${row("Kira Başlangıç Tarihi", val("kiraBaslangic"))}${row("Kira Süresi / Bitiş", val("kiraBitis"))}${row("Ödeme Günü", val("odemeGunu"))}${row("Ödeme Şekli / IBAN", val("odemeSekli"))}${row("Aidat / Ortak Gider", val("aidat"))}${row("Artış Oranı", val("artisOrani"))}${row("Demirbaş / Teslim Durumu", val("demirbaslar"))}${row("Uyuşmazlık / Yetki", val("yetkiliMahkeme"))}</table>${initials("Kiraya Veren", "Kiracı")}<div class="articleTitle">GENEL KOŞULLAR</div><div class="clauseList">${clauseHtml(kiraKosullar)}</div>${sectionIf("Kira Özel Şartları / Ek Maddeler", val("kiraOzel"))}${legalWarning("kira")}${signs("Kiraya Veren", "Kiracı")}`;
+  const third = kefilliMi() ? "Müteselsil Kefil" : "Şahit / 3. İmza";
+  return `${commonHead("Kira Sözleşmesi")}${partiesTable("Kiraya Veren", "Kiracı")}${propertyTable()}<h2>Kira Şartları</h2><table>${row("Aylık Kira Bedeli", val("aylikKira"))}${row("Depozito (Güvence)", val("depozito"))}${row("Kira Başlangıç Tarihi", val("kiraBaslangic"))}${row("Kira Süresi / Bitiş", val("kiraBitis"))}${row("Kullanım Amacı", val("kiraKullanimAmaci"))}${row("Ödeme Günü", val("odemeGunu"))}${row("Ödeme Şekli / IBAN", val("odemeSekli"))}${row("Aidat / Ortak Gider", val("aidat"))}${row("Artış Oranı", val("artisOrani"))}${row("Demirbaş / Teslim Durumu", val("demirbaslar"))}${row("Uyuşmazlık / Yetki", val("yetkiliMahkeme"))}</table>${initials("Kiraya Veren", "Kiracı", third)}<div class="articleTitle">GENEL KOŞULLAR</div><div class="clauseList">${clauseHtml(kiraKosullar)}</div><div class="articleTitle">ÖZEL KOŞULLAR</div><div class="clauseList">${clauseHtml(kiraOzelKosullar())}</div>${sectionIf("Ek Maddeler", val("kiraOzel"))}${kefaletHtml()}${legalWarning("kira")}${signs("Kiraya Veren", "Kiracı", third)}`;
 }
 function renderTahliye() {
   const text = `Kiracısı olduğum yukarıda bilgileri yazılı taşınmazı, hiçbir ihtar ve ihbara gerek kalmaksızın, ${val("tahliyeTarihi") || "……/……/………"} tarihinde kayıtsız ve şartsız olarak tahliye ederek kiraya verene boş, sağlam ve kullanıma elverişli şekilde teslim etmeyi kabul ve taahhüt ederim.
 
 İşbu tahliye taahhütnamesi; kira sözleşmesinden bağımsız, serbest irade ile ve kira başlangıcından sonra/ayrıca düzenlenmiş bir taahhütname olarak imzalanmıştır. Kiracı, belirtilen tarihte taşınmazı tahliye etmemesi halinde kiraya verenin yasal icra ve dava yollarına başvurabileceğini kabul eder.`;
-  return `${commonHead("Tahliye Taahhütnamesi")}${partiesTable("Kiraya Veren", "Kiracı")}${propertyTable()}<div class="articleTitle">TAHLİYE TAAHHÜDÜ</div><div class="clauseList">${clauseHtml(text)}</div><h2>Taahhüt Bilgileri</h2><table>${row("Kira Başlangıç Tarihi", val("tahliyeKiraBaslangic") || val("kiraBaslangic"))}${row("Taahhüt Edilen Tahliye Tarihi", val("tahliyeTarihi"))}${row("Taahhütname Düzenleme Tarihi", val("tahliyeDuzenlemeTarihi"))}${row("Düzenleme Yeri", val("tahliyeYeri"))}</table>${initials("Kiraya Veren", "Kiracı")}${legalWarning("tahliye")}${signs("Kiraya Veren", "Kiracı")}`;
+  return `${commonHead("Tahliye Taahhütnamesi")}${partiesTable("Kiraya Veren", "Kiracı")}${propertyTable()}<div class="articleTitle">TAHLİYE TAAHHÜDÜ</div><div class="clauseList">${clauseHtml(text)}</div><h2>Taahhüt Bilgileri</h2><table>${row("Kira Başlangıç Tarihi", val("tahliyeKiraBaslangic") || val("kiraBaslangic"))}${row("Taahhüt Edilen Tahliye Tarihi", val("tahliyeTarihi"))}${row("Taahhütname Düzenleme Tarihi", val("tahliyeDuzenlemeTarihi"))}${row("Düzenleme Yeri", val("tahliyeYeri"))}</table><div class="handBox"><div class="handLine"><span>Tahliye tarihi (kiracının el yazısıyla):</span></div></div>${initials("Kiraya Veren", "Kiracı")}${legalWarning("tahliye")}${signs("Kiraya Veren", "Kiracı")}`;
 }
 const alimSatimMaddeleri = `1. Satıcı, yukarıda bilgileri yazılı taşınmazı formda belirtilen satış bedeli ve şartlarla alıcıya satmayı; alıcı da bu şartlarla satın almayı kabul eder.
 2. Alıcı tarafından verilen kapora/bağlanma parası sözleşmenin kurulduğuna delil niteliğindedir. Kapora türü açıkça cayma parası olarak seçilmişse, cayan taraf için yazılı cayma bedeli hükümleri uygulanır.
@@ -306,27 +336,101 @@ const alimSatimMaddeleri = `1. Satıcı, yukarıda bilgileri yazılı taşınmaz
 4. Cezai şart yazılmışsa, tapuya gelmemek, ödeme planına uymamak, taşınmazı kararlaştırılan şekilde teslim etmemek, takyidatı gizlemek veya belge ibrazından kaçınmak gibi sözleşmeye aykırılıklarda cezai şart uygulanır.
 5. Satıcı; taşınmazın tapu kaydı, imar/kullanım durumu, ipotek, haciz, şerh, kira, aidat, vergi ve fiili kullanım durumuna ilişkin bilgileri doğru beyan ettiğini kabul eder.
 6. Alıcı, taşınmazı görerek ve mevcut fiili/tapusal durumunu inceleyerek işbu sözleşmeyi imzaladığını kabul eder. Gizli ayıp ve hile halleri saklıdır.
-7. Satış bedelinin ödeme şekli ve kalan ödeme planı formda yazılıdır. Ödemelerin banka kanalıyla yapılması ve dekontların saklanması esastır.
+7. Satış bedelinin ödeme şekli, varsa takas ve vadeli ödeme planı yukarıda yazılıdır; bunlara ilişkin özel hükümler aşağıda ayrıca düzenlenmiştir.
 8. Tapu harcı, döner sermaye, vergi, ekspertiz, kredi ve diğer masrafların paylaşımı formda yazılı şekilde uygulanır; boşsa taraflar tapu öncesinde ayrıca yazılı kararlaştırır.
 9. Emlak işletmesi tarafından tarafların bir araya getirilmesi, pazarlık ve belge hazırlık süreçlerinin yürütülmesi halinde hizmet bedeli doğar. Tarafların emlak işletmesini bertaraf ederek işlem yapması hizmet bedeli sorumluluğunu ortadan kaldırmaz.
 10. Uyuşmazlıklarda dava şartı arabuluculuk ve görevli mahkeme kuralları saklı kalmak kaydıyla formda yazılı mahkeme ve icra daireleri yetkilidir.`;
-function renderAlimSatim() {
-  return `${commonHead("Taşınmaz Alım Satım / Kapora Sözleşmesi")}${partiesTable("Satıcı", "Alıcı")}${propertyTable()}<h2>Satış ve Kapora Şartları</h2><table>${row("Satış Bedeli", val("alimSatimSatisBedeli"))}${row("Kapora / Bağlanma Parası", val("alimSatimKapora"))}${row("Kapora Türü", val("alimSatimKaporaTuru"))}${row("Cayma Bedeli", val("alimSatimCaymaBedeli"))}${row("Cezai Şart", val("alimSatimCezaiSart"))}${row("Kalan Ödeme", val("alimSatimKalanOdeme"))}${row("Ödeme Planı", val("alimSatimOdemePlani"))}${row("Tapu Devir Tarihi", val("alimSatimDevirTarihi"))}${row("Tapu Harcı / Masraf Paylaşımı", val("alimSatimMasrafPaylasimi"))}${row("İpotek / Haciz / Şerh / Kiracı Durumu", val("alimSatimTapuDurumu"))}${row("Teslim Durumu", val("alimSatimTeslimDurumu"))}${row("Emlak Hizmet Bedeli", val("alimSatimHizmetBedeli"))}${row("Komisyon Paylaşımı", val("alimSatimKomisyonPaylasimi"))}</table>${initials("Satıcı", "Alıcı")}<div class="articleTitle">ALIM SATIM / KAPORA SÖZLEŞME MADDELERİ</div><div class="clauseList">${clauseHtml(alimSatimMaddeleri)}</div>${sectionIf("Alım Satım Ek Maddeleri", val("alimSatimEkMaddeler"))}${legalWarning("alimSatim")}${signs("Satıcı", "Alıcı")}`;
+function getTaksitler() {
+  try { const a = JSON.parse(val("alimSatimTaksitler") || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; }
 }
-const satisVaadiMaddeleri = `1. Satış vaadinde bulunan taraf, yukarıda bilgileri yazılı taşınmazı formda belirtilen bedel, ödeme planı ve şartlarla satış vaadini kabul eden tarafa devretmeyi; karşı taraf da bedeli ödemeyi ve resmi devir işlemlerine katılmayı kabul eder.
-2. Taraflar, taşınmaz satış vaadi sözleşmelerinde resmi şekil şartının önemini bildiklerini; bu belgenin emlak ofisi ön hazırlık/taslak ve taraf iradesini düzenleme amacı taşıdığını kabul eder. Geçerlilik ve icra edilebilirlik için resmi şekil şartı ve tapu işlemleri ayrıca kontrol edilir.
-3. Satış bedeli, kapora/bağlanma parası, kalan ödeme, ödeme planı ve resmi işlem tarihi formda yazılıdır. Ödemelerin banka kanalıyla yapılması ve dekontların saklanması esastır.
+function setTaksitler(a) { setVal("alimSatimTaksitler", a.length ? JSON.stringify(a) : ""); }
+function odemeHesap() {
+  const bedel = amountOf(val("alimSatimSatisBedeli")), kapora = amountOf(val("alimSatimKapora")), pesinat = amountOf(val("alimSatimPesinat"));
+  const takas = val("alimSatimTakasKonusu").trim() ? amountOf(val("alimSatimTakasBedeli")) : 0;
+  const taksitler = getTaksitler().filter((x) => x && (x.tarih || x.tutar));
+  const vadeli = taksitler.reduce((t, x) => t + amountOf(x.tutar), 0);
+  return { bedel, kapora, pesinat, takas, vadeli, taksitler, fark: bedel - (kapora + pesinat + takas + vadeli), kalanVade: bedel - kapora - pesinat - takas };
+}
+function isTarim() { return /Tarım/.test(val("alimSatimTasinmazTuru")); }
+function satisOdemeHtml() {
+  const h = odemeHesap();
+  const kapora = val("alimSatimKapora") ? `${val("alimSatimKapora")} (${val("alimSatimKaporaTuru")})` : "";
+  const takas = val("alimSatimTakasKonusu").trim() ? val("alimSatimTakasKonusu").trim() + (val("alimSatimTakasBedeli") ? " — takas değeri " + val("alimSatimTakasBedeli") : "") : "";
+  let html = `<h2>Satış Bedeli ve Ödeme</h2><table>${row("Satış Bedeli", val("alimSatimSatisBedeli"))}${row("Kapora / Bağlanma Parası", kapora)}${val("alimSatimPesinat") ? row("Peşinat", val("alimSatimPesinat")) : ""}${takas ? row("Takas", takas) : ""}${h.taksitler.length ? row("Vadeli Ödemeler Toplamı", `${money(h.vadeli)} (${h.taksitler.length} vade, aşağıdaki plana göre)`) : val("alimSatimKalanOdeme") ? row("Kalan Ödeme", val("alimSatimKalanOdeme")) : ""}${val("alimSatimOdemePlani") ? row("Ödeme Açıklaması", val("alimSatimOdemePlani")) : ""}</table>`;
+  if (h.taksitler.length) {
+    html += `<table class="planTable"><tr><th>No</th><th>Vade Tarihi</th><th>Tutar</th><th>Ödeme Şekli / Not</th></tr>${h.taksitler.map((x, i) => `<tr><td>${i + 1}</td><td>${esc(x.tarih || "")}</td><td>${esc(x.tutar || "")}</td><td>${esc(x.not || "")}</td></tr>`).join("")}<tr><td></td><td><b>Toplam</b></td><td><b>${esc(money(h.vadeli))}</b></td><td></td></tr></table>`;
+  }
+  if (h.taksitler.length || val("alimSatimTeminat")) {
+    html += `<h2>Vade ve Teminat</h2><table>${h.taksitler.length ? row("Taksit Ödenmezse", val("alimSatimMuacceliyet")) + row("İhtar Sonrası Ödeme Süresi", val("alimSatimIhtarSuresi")) + row("Gecikme Faizi", val("alimSatimFaiz")) : ""}${row("Teminat", val("alimSatimTeminat") || "Alınmadı")}</table>`;
+  }
+  html += `<h2>Tapu Devri ve Teslim</h2><table>${row("Tapu Devri", val("alimSatimDevirSekli"))}${row("Tapu Devir Tarihi", val("alimSatimDevirTarihi"))}${row("Fiili Teslim Tarihi", val("alimSatimTeslimTarihi"))}${row("Tapu Harcı / Masraf Paylaşımı", val("alimSatimMasrafPaylasimi"))}${row("İpotek / Haciz / Şerh / Kiracı Durumu", val("alimSatimTapuDurumu"))}${row("Teslim Durumu", val("alimSatimTeslimDurumu"))}</table>`;
+  if (isTarim()) {
+    const hisse = val("tarimHisse") + (/Hisseli/.test(val("tarimHisse")) && val("tarimHisseOrani") ? " — satılan pay: " + val("tarimHisseOrani") : "");
+    html += `<h2>Tarım Arazisi / Bahçe Bilgileri</h2><table>${row("Alan", val("tarimAlan"))}${row("Ağaç / Ocak Durumu", val("tarimAgac"))}${row("Tapu Durumu", hisse)}${row("Ürün / Hasat", val("tarimHasat"))}${row("Yol, Su ve Sınır", val("tarimSuYol"))}</table>`;
+  }
+  return html;
+}
+function sentence(t) { t = String(t || "").trim(); return t && !/[.!?]$/.test(t) ? t + "." : t; }
+function satisOzelHukumler() {
+  const h = odemeHesap(), L = [];
+  const ihtar = val("alimSatimIhtarSuresi") || "15 gün";
+  L.push("Kapora, peşinat ve takas değeri satış bedelinden mahsup edilir. Ödemelerin banka kanalıyla yapılması esastır; banka dekontu makbuz yerine geçer, elden yapılan ödemeler yalnızca alıcıya verilen imzalı makbuzla ispat edilir.");
+  if (h.taksitler.length) {
+    L.push("Vadeli ödemeler, ödeme planında yazılı vade tarihlerinde ve tutarlarda satıcıya yapılır. Vade tarihi resmi tatile denk gelirse izleyen ilk iş günü vade sayılır.");
+    if (/tamamı muaccel/.test(val("alimSatimMuacceliyet"))) L.push(`Herhangi bir taksit vadesinde ödenmez ve satıcının yazılı ihtarına rağmen ${ihtar} içinde ödenmezse, kalan taksitlerin tamamı muaccel olur ve satıcı kalan bedelin tamamını isteyebilir.`);
+    else L.push(`Vadesinde ödenmeyen taksit için satıcı yazılı ihtar gönderir; alıcı geciken taksiti ihtardan itibaren ${ihtar} içinde öder. Diğer taksitlerin vadesi değişmez.`);
+    if (val("alimSatimFaiz").trim()) L.push(sentence(val("alimSatimFaiz")));
+  }
+  if (val("alimSatimTeminat").trim()) L.push(`Ödenmemiş bedelin teminatı: ${val("alimSatimTeminat").trim()}. Borç tamamen ödendiğinde teminat iade edilir; ipotek varsa satıcı tarafından gecikmeksizin kaldırılır (fek edilir).`);
+  const devir = val("alimSatimDevirSekli"), tarih = val("alimSatimDevirTarihi");
+  if (/ipotek/.test(devir)) L.push(`Tapu devri ${tarih ? tarih + " tarihinde" : "kararlaştırılan tarihte"} yapılır; ödenmemiş kalan bedel için tapu devriyle aynı anda taşınmaz üzerinde satıcı lehine ipotek tesis edilir. İpotek masrafları aksi yazılmadıkça alıcıya aittir.`);
+  else if (/belirtilen tarihte/.test(devir)) L.push(`Tapu devri ${tarih ? tarih + " tarihinde" : "kararlaştırılan tarihte"} yapılır; kalan bedel ödeme planındaki vadelerde ödenir. Satıcı, kalan bedel için${val("alimSatimTeminat").trim() ? " yukarıdaki teminat dışında" : ""} ayrıca güvence almadan devir yapmanın riskini bildiğini kabul eder.`);
+  else L.push(`Tapu devri, satış bedelinin tamamı ödendikten sonra ${tarih ? "en geç " + tarih + " tarihinde" : "son ödemeden itibaren en geç 15 gün içinde"} yapılır. Satıcı, son ödemeyi takiben tapuda hazır bulunmayı ve devri yapmayı taahhüt eder.`);
+  const teslimZamani = val("alimSatimTeslimTarihi") ? val("alimSatimTeslimTarihi") + " tarihinde" : isTarim() && /satıcıya aittir/.test(val("tarimHasat")) ? "satıcının bu yılki hasadı tamamlamasından sonra" : "tapu devrinde";
+  L.push(`Taşınmazın fiili teslimi ${teslimZamani} yapılır. Teslim tarihine kadar doğan emlak vergisi, aidat, elektrik, su ve benzeri borçlar satıcıya, sonrası alıcıya aittir.`);
+  if (val("alimSatimTakasKonusu").trim()) {
+    const tk = val("alimSatimTakasKonusu").trim();
+    L.push(`Takas: Alıcı, satış bedelinin ${val("alimSatimTakasBedeli") || "taraflarca belirlenen"} tutarındaki kısmına mahsuben "${tk}" malını satıcıya devreder. Takas malının değeri taraflarca bu tutar olarak kabul edilmiştir; sonradan değer farkı talep edilemez.`);
+    L.push(`Takas malının devir ve teslim zamanı: ${sentence(val("alimSatimTakasTeslim") || "tapu devri ile aynı gün")} Takas malı araç ise noterde, taşınmaz ise tapuda resmi devir yapılır; devir masrafları aksi yazılmadıkça devralan tarafa aittir.`);
+    L.push("Alıcı, takas malı üzerinde rehin, haciz, ipotek, şerh, kredi, vergi veya trafik cezası borcu ve gizli ayıp bulunmadığını beyan eder. Aksi çıkarsa bu borç ve ayıpların bedeli alıcı tarafından ayrıca nakden ödenir.");
+    L.push(`Takas malı süresinde devredilmez veya devri hukuken mümkün olmazsa alıcı, takas değerini satıcının yazılı talebinden itibaren ${ihtar} içinde nakden ödemekle yükümlüdür.`);
+  }
+  L.push("Taraflar, resmi satış işleminde satış bedelinin gerçek bedel üzerinden beyan edileceğini; eksik beyandan doğacak vergi, ceza ve sorumluluğun beyanda bulunan tarafa ait olacağını bildiklerini kabul eder.");
+  return L.map((x, i) => `${i + 1}. ${x}`).join("\n");
+}
+function tarimHukumleri() {
+  const L = [];
+  L.push("Taşınmaz tarım arazisi niteliğindedir. Taraflar; 5403 sayılı Toprak Koruma ve Arazi Kullanımı Kanunu uyarınca tarım arazilerinin Bakanlıkça belirlenen asgari büyüklüklerin altında ifraz edilemeyeceğini, hisselendirilemeyeceğini ve pay/paydaş sayısının artırılamayacağını; gereken hallerde satış için İl/İlçe Tarım ve Orman Müdürlüğünün uygunluk yazısının alınacağını bildiklerini kabul eder. Mevzuat engeli nedeniyle resmi satış yapılamazsa taraflar aldıklarını karşılıklı olarak iade eder; bu halde cayma bedeli ve cezai şart uygulanmaz.");
+  L.push(`Satıcı; arazinin ${val("tarimAlan") || "tapu kaydında yazılı alanda"} olduğunu${val("tarimAgac") ? " ve ağaç/ocak durumunun " + val("tarimAgac") + " olduğunu" : ""} beyan eder. Satış götürü (toptan) bedel üzerinden yapılmıştır; tapu alanı esastır, ağaç sayısındaki küçük farklar bedeli etkilemez.`);
+  L.push(`Ürün ve hasat: ${sentence(val("tarimHasat"))} Ürün hakkı kimde ise hasada kadarki bakım, gübreleme, ilaçlama ve hasat giderleri de ona aittir.`);
+  if (val("tarimKayit").trim()) L.push(sentence(val("tarimKayit")));
+  if (/Hisseli/.test(val("tarimHisse"))) L.push(`Taşınmaz hisseli olup satışa konu pay ${val("tarimHisseOrani") || "tapuda yazılı paydır"}. Taraflar, diğer paydaşların yasal önalım (şufa) hakkı bulunduğunu (TMK 732 vd.) bildiklerini; önalım hakkı kullanılırsa bu sözleşmenin kendiliğinden sona ereceğini, satıcının aldığı bedelleri derhal iade edeceğini ve bu halde cayma bedeli ile cezai şartın uygulanmayacağını kabul eder.`);
+  if (val("tarimSuYol").trim()) L.push(`Yol, su ve sınır durumu: ${sentence(val("tarimSuYol"))} Satıcı, komşu parsellerle bildiği bir sınır, yol veya su uyuşmazlığı bulunmadığını beyan eder.`);
+  return L.map((x, i) => `${i + 1}. ${x}`).join("\n");
+}
+function satisEkBolumler() {
+  return `<div class="articleTitle">ÖDEME, TAKAS, DEVİR VE TESLİME İLİŞKİN ÖZEL HÜKÜMLER</div><div class="clauseList">${clauseHtml(satisOzelHukumler())}</div>${isTarim() ? `<div class="articleTitle">TARIM ARAZİSİNE İLİŞKİN HÜKÜMLER</div><div class="clauseList">${clauseHtml(tarimHukumleri())}</div>` : ""}`;
+}
+function renderAlimSatim() {
+  return `${commonHead("Taşınmaz Alım Satım / Kapora Sözleşmesi")}${partiesTable("Satıcı", "Alıcı")}${propertyTable()}${satisOdemeHtml()}<h2>Cayma, Cezai Şart ve Hizmet Bedeli</h2><table>${row("Cayma Bedeli", val("alimSatimCaymaBedeli"))}${row("Cezai Şart", val("alimSatimCezaiSart"))}${row("Emlak Hizmet Bedeli", val("alimSatimHizmetBedeli"))}${row("Komisyon Paylaşımı", val("alimSatimKomisyonPaylasimi"))}</table>${initials("Satıcı", "Alıcı")}<div class="articleTitle">ALIM SATIM / KAPORA SÖZLEŞME MADDELERİ</div><div class="clauseList">${clauseHtml(alimSatimMaddeleri)}</div>${satisEkBolumler()}${sectionIf("Alım Satım Ek Maddeleri", val("alimSatimEkMaddeler"))}${legalWarning("alimSatim")}${signs("Satıcı", "Alıcı")}`;
+}
+function satisVaadiMaddeleri() {
+  const noter = val("satisVaadiNoterTarihi");
+  return `1. Satış vaadinde bulunan taraf, yukarıda bilgileri yazılı taşınmazı formda belirtilen bedel, ödeme planı ve şartlarla satış vaadini kabul eden tarafa devretmeyi; karşı taraf da bedeli ödemeyi ve resmi devir işlemlerine katılmayı kabul eder.
+2. Taraflar, taşınmaz satış vaadi sözleşmesinin noterde düzenleme şeklinde yapılmadıkça geçerli olmadığını (TMK 706, TBK 237, Noterlik Kanunu 60 ve 89) bildiklerini; işbu belgenin, ${noter ? "en geç " + noter + " tarihinde" : "taraflarca kararlaştırılan tarihte"} noterde düzenlenecek resmi satış vaadi sözleşmesine esas ön protokol olduğunu ve belirtilen tarihte notere giderek resmi sözleşmeyi bu belgedeki şartlarla imzalamayı taahhüt ettiklerini kabul eder. Resmi sözleşme yapılamazsa taraflar birbirlerinden aldıklarını iade eder.
+3. Satış bedeli, kapora, peşinat, varsa takas ve vadeli ödeme planı yukarıda yazılıdır; ödemeye, takasa, devir ve teslime ilişkin özel hükümler aşağıda ayrıca düzenlenmiştir.
 4. Kapora türü açıkça cayma parası olarak seçilmişse, haklı sebep olmaksızın işlemden dönen taraf için formda yazılı cayma bedeli uygulanır. Cayma bedeli boş bırakılmışsa bu hüküm uygulanmaz.
 5. Cezai şart yazılmışsa; resmi işlem gününde hazır bulunmamak, ödeme planına uymamak, takyidat veya hukuki engel gizlemek, gerekli belgeyi vermemek, taşınmazı kararlaştırılan şekilde teslim etmemek gibi aykırılıklarda uygulanır.
 6. Satış vaadinde bulunan taraf; taşınmazın tapu kaydı, malikliği, hisse durumu, imar/yapı kullanma durumu, ipotek, haciz, şerh, kira, aidat, vergi ve fiili kullanım durumuna ilişkin bilgileri doğru beyan ettiğini kabul eder.
 7. Satış vaadini kabul eden taraf, taşınmazı görerek ve mevcut tapusal/fiili durumunu inceleyerek işlem yaptığını kabul eder. Gizli ayıp, hile, sahte beyan ve üçüncü kişi hakları saklıdır.
 8. Tapu harcı, noter/şerh masrafı, döner sermaye, vergi, ekspertiz, kredi ve benzeri giderlerin kim tarafından karşılanacağı formda yazılıdır; boşsa taraflar resmi işlem öncesinde ayrıca yazılı kararlaştırır.
-9. Taraflardan biri satış vaadinin tapuya şerhini talep ederse, şerh masrafı ve işlemleri formda belirtilen şekilde karşılanır. Şerh verilmesi veya verilmemesi tarafların yasal haklarını ortadan kaldırmaz.
+9. Taraflardan biri satış vaadinin tapuya şerhini talep ederse, şerh masrafı ve işlemleri formda belirtilen şekilde karşılanır. Şerh, tapu kütüğüne kaydedildiği tarihten itibaren beş yıl süreyle etkilidir (TMK 1009). Şerh verilmesi veya verilmemesi tarafların yasal haklarını ortadan kaldırmaz.
 10. Emlak işletmesi tarafından tarafların bir araya getirilmesi, pazarlık, portföy, ilan, belge hazırlığı ve takip işlemlerinin yürütülmesi halinde hizmet bedeli doğar. Tarafların emlak işletmesini bertaraf ederek işlem yapması hizmet bedeli sorumluluğunu ortadan kaldırmaz.
 11. Taraflar, tebligat adreslerinin formda yazılı adresler olduğunu; adres değişiklikleri yazılı bildirilmedikçe eski adrese yapılan bildirimlerin geçerli sayılacağını kabul eder.
 12. Uyuşmazlıklarda dava şartı arabuluculuk, görevli mahkeme ve icra hükümleri saklı kalmak kaydıyla formda yazılı mahkeme ve icra daireleri yetkilidir.`;
+}
 function renderSatisVaadi() {
-  return `${commonHead("Taşınmaz Satış Vaadi Sözleşmesi")}${partiesTable("Satış Vaadinde Bulunan", "Satış Vaadini Kabul Eden")}${propertyTable()}<h2>Satış Vaadi ve Ödeme Şartları</h2><table>${row("Satış Bedeli", val("alimSatimSatisBedeli"))}${row("Kapora / Bağlanma Parası", val("alimSatimKapora"))}${row("Kapora Türü", val("alimSatimKaporaTuru"))}${row("Cayma Bedeli", val("alimSatimCaymaBedeli"))}${row("Cezai Şart", val("alimSatimCezaiSart"))}${row("Kalan Ödeme", val("alimSatimKalanOdeme"))}${row("Ödeme Planı", val("alimSatimOdemePlani"))}${row("Resmi İşlem / Devir Tarihi", val("alimSatimDevirTarihi"))}${row("Resmi Şekil / Noter Durumu", val("satisVaadiResmiSekil"))}${row("Tapuya Şerh Durumu", val("satisVaadiSerhDurumu"))}${row("Resmi İşlem / Noter Tarihi", val("satisVaadiNoterTarihi"))}${row("Tapu / Noter / Şerh Masraf Paylaşımı", val("satisVaadiMasrafPaylasimi") || val("alimSatimMasrafPaylasimi"))}${row("İpotek / Haciz / Şerh / Kiracı Durumu", val("alimSatimTapuDurumu"))}${row("Teslim Durumu", val("alimSatimTeslimDurumu"))}${row("Vaadin Yerine Getirilme Şartı", val("satisVaadiIfaSarti"))}${row("Emlak Hizmet Bedeli", val("alimSatimHizmetBedeli"))}${row("Komisyon Paylaşımı", val("alimSatimKomisyonPaylasimi"))}</table>${initials("Satış Vaadinde Bulunan", "Satış Vaadini Kabul Eden")}<div class="articleTitle">SATIŞ VAADİ SÖZLEŞME MADDELERİ</div><div class="clauseList">${clauseHtml(satisVaadiMaddeleri)}</div>${sectionIf("Satış Vaadi Ek Maddeleri", val("satisVaadiEkMaddeler"))}${legalWarning("satisVaadi")}${signs("Satış Vaadinde Bulunan", "Satış Vaadini Kabul Eden")}`;
+  return `${commonHead("Taşınmaz Satış Vaadi Sözleşmesi")}<div class="docSub">Noterde düzenleme şeklinde yapılacak resmi satış vaadi sözleşmesine esas ön protokol</div>${partiesTable("Satış Vaadinde Bulunan", "Satış Vaadini Kabul Eden")}${propertyTable()}${satisOdemeHtml()}<h2>Resmi Şekil, Şerh, Cayma ve Hizmet Bedeli</h2><table>${row("Resmi Şekil / Noter", val("satisVaadiResmiSekil"))}${row("Notere Gidilecek Son Tarih", val("satisVaadiNoterTarihi"))}${row("Tapuya Şerh", val("satisVaadiSerhDurumu"))}${row("Noter / Şerh Masraf Paylaşımı", val("satisVaadiMasrafPaylasimi"))}${row("Vaadin Yerine Getirilme Şartı", val("satisVaadiIfaSarti"))}${row("Cayma Bedeli", val("alimSatimCaymaBedeli"))}${row("Cezai Şart", val("alimSatimCezaiSart"))}${row("Emlak Hizmet Bedeli", val("alimSatimHizmetBedeli"))}${row("Komisyon Paylaşımı", val("alimSatimKomisyonPaylasimi"))}</table>${initials("Satış Vaadinde Bulunan", "Satış Vaadini Kabul Eden")}<div class="articleTitle">SATIŞ VAADİ SÖZLEŞME MADDELERİ</div><div class="clauseList">${clauseHtml(satisVaadiMaddeleri())}</div>${satisEkBolumler()}${sectionIf("Satış Vaadi Ek Maddeleri", val("satisVaadiEkMaddeler"))}${legalWarning("satisVaadi")}${signs("Satış Vaadinde Bulunan", "Satış Vaadini Kabul Eden")}`;
 }
 function yetkiMaddeleri(sale) {
   return `1. İş sahibi, yukarıda bilgileri yazılı taşınmazın ${sale ? "satış" : "kiralama"} pazarlaması için emlak işletmesini işbu sözleşmede yazılı süre ve şartlarla yetkilendirir.
@@ -405,7 +509,7 @@ const yerGostermeMaddeleri = `1. Emlak işletmesi, yukarıda bilgileri yazılı 
 7. Hizmet bedeli oranı/tutarı formda yazılıdır; boş bırakılmışsa mevzuattaki üst sınırlar aşılmamak üzere tarafların ayrıca imzaladığı aracılık/yetki hükümleri esas alınır.
 8. Taraflar, bu belgenin taşınmazın gösterildiğini ve müşteri-portföy bağlantısını ispat için düzenlendiğini kabul eder.`;
 function renderYerGosterme() {
-  return `${commonHead("Taşınmaz Yer Gösterme Belgesi")}${partiesTable("Emlak İşletmesi", "Müşteri")}${propertyTable()}<h2>Gösterim Bilgileri</h2><table>${row("Gösterim Amacı", val("yerGostermeAmac"))}${row("Gösterim Tarihi / Saati", val("yerGostermeTarihi"))}${row("İlan / Satış / Kira Bedeli", val("yerGostermeBedel"))}${row("Takip Süresi", val("yerGostermeTakipSuresi"))}${row("Hizmet Bedeli / Komisyon", val("yerGostermeHizmetBedeli"))}${row("Gösterim Şekli", val("yerGostermeSekli"))}${row("Gösterim Notu", val("yerGostermeNot"))}</table>${initials2("Emlak İşletmesi", "Müşteri")}<div class="articleTitle">YER GÖSTERME MADDELERİ</div><div class="clauseList">${clauseHtml(yerGostermeMaddeleri)}</div>${sectionIf("Yer Gösterme Ek Maddeleri", val("yerGostermeEkMaddeler"))}${legalWarning("yerGosterme")}${signs2("Emlak İşletmesi", "Müşteri")}`;
+  return `${commonHead("Taşınmaz Yer Gösterme Belgesi")}${partiesTable("Emlak İşletmesi", "Müşteri")}${propertyTable()}<h2>Gösterim Bilgileri</h2><table>${row("Gösterim Amacı", val("yerGostermeAmac"))}${row("Gösterim Tarihi / Saati", val("yerGostermeTarihi"))}${row("İlan / Satış / Kira Bedeli", val("yerGostermeBedel"))}${row("Takip Süresi", val("yerGostermeTakipSuresi"))}${row("Hizmet Bedeli / Komisyon", val("yerGostermeHizmetBedeli"))}${row("Gösterim Şekli", val("yerGostermeSekli"))}${row("Gösterim Notu", val("yerGostermeNot"))}${val("yerGostermeDigerTasinmazlar").trim() ? row("Aynı Gün Gösterilen Diğer Taşınmazlar", val("yerGostermeDigerTasinmazlar").trim()) : ""}</table>${initials2("Emlak İşletmesi", "Müşteri")}<div class="articleTitle">YER GÖSTERME MADDELERİ</div><div class="clauseList">${clauseHtml(yerGostermeMaddeleri)}</div>${sectionIf("Yer Gösterme Ek Maddeleri", val("yerGostermeEkMaddeler"))}${legalWarning("yerGosterme")}${signs2("Emlak İşletmesi", "Müşteri")}`;
 }
 const ortaklikMaddeleri = `1. Taraflar, yukarıda bilgileri yazılı taşınmaz/müşteri/iş için hizmet ortaklığı ve komisyon paylaşımı yapmak üzere anlaşmıştır.
 2. Portföy sahibi ofis; taşınmaz bilgileri, mal sahibi irtibatı, yetki durumu ve portföy doğruluğundan, müşteri sahibi ofis ise müşteri bilgileri, talep ve ödeme yeterliliği konusunda bildiği bilgileri paylaşmaktan sorumludur.
@@ -451,6 +555,8 @@ function render() {
   updateFeeHints(t);
   updateEditState();
   if ($("kiraImzaDanismanField")) $("kiraImzaDanismanField").classList.toggle("hide", val("yetkiKiraImza") === "Verilmez");
+  if ($("tarimFields")) $("tarimFields").classList.toggle("hide", !isTarim());
+  updateOdemeOzet();
 }
 let renderQueued = false;
 function scheduleRender() {
@@ -486,6 +592,20 @@ function checkMissing(t) {
     if (kb && dz && dz <= kb) warns.push("Tahliye taahhüdü kira başlangıcıyla aynı gün veya önce düzenlenmiş; Yargıtay uygulamasına göre geçersiz sayılabilir");
     if (dz && th && th <= dz) warns.push("Tahliye tarihi, taahhütname tarihinden sonra olmalı");
   }
+  if (t === "alimSatim" || t === "satisVaadi") {
+    const h = odemeHesap();
+    if (h.bedel && h.taksitler.length && h.fark !== 0) warns.push(`Ödemeler toplamı satış bedeline eşit değil (${h.fark > 0 ? money(h.fark) + " eksik" : money(-h.fark) + " fazla"})`);
+    if (val("alimSatimTakasKonusu").trim() && !amountOf(val("alimSatimTakasBedeli"))) warns.push("Takas malının değeri yazılmamış");
+    if (isTarim() && /Hisseli/.test(val("tarimHisse")) && !val("tarimHisseOrani").trim()) warns.push("Satılan hisse oranı yazılmamış");
+    if (t === "satisVaadi" && !val("satisVaadiNoterTarihi").trim()) warns.push("Notere gidilecek son tarih yazılmamış");
+  }
+  if (t === "kira") {
+    const kira = amountOf(val("aylikKira")), dep = amountOf(val("depozito"));
+    if (kira && dep > kira * 3) warns.push("Depozito üç aylık kirayı aşıyor (TBK 342)");
+    if (kefilliMi() && !amountOf(val("kefilAzami"))) warns.push("Kefilin azami sorumluluk tutarı yazılmamış (TBK 583)");
+    const kv = digitsOnly(val("kefilTc"));
+    if (kv.length === 11 && !isValidTC(kv)) warns.push("Kefil T.C. kimlik numarası geçersiz görünüyor");
+  }
   let html = "";
   if (miss.length) html += `<div class="issues err"><b>Eksik:</b> ${esc(miss.join(", "))}</div>`;
   if (warns.length) html += `<div class="issues warn"><b>Kontrol:</b> ${esc(warns.join(" • "))}</div>`;
@@ -520,6 +640,50 @@ function updateFeeHints(t) {
   }
 }
 
+/* ---------- Vadeli ödeme planı düzenleyicisi ---------- */
+function renderTaksitEditor() {
+  const box = $("taksitEditor");
+  if (!box) return;
+  const arr = getTaksitler();
+  box.innerHTML = (arr.length ? '<div class="taksitHead"><span>Vade tarihi</span><span>Tutar</span><span>Ödeme şekli / not</span><span></span></div>' : '<div class="hint">Vadeli ödeme yok. Satır ekleyin veya kalan tutarı aşağıdan otomatik taksitlendirin.</div>')
+    + arr.map((x, i) => `<div class="taksitRow"><input data-ti="${i}" data-tk="tarih" value="${esc(x.tarih || "")}" placeholder="GG.AA.YYYY" /><input data-ti="${i}" data-tk="tutar" value="${esc(x.tutar || "")}" placeholder="Tutar" inputmode="decimal" class="moneyInputReady" /><input data-ti="${i}" data-tk="not" value="${esc(x.not || "")}" placeholder="Örn: Banka / hasat sonrası" /><button type="button" class="iconBtn" title="Satırı sil" data-tdel="${i}">✕</button></div>`).join("")
+    + '<button type="button" class="linkBtn" onclick="addTaksit()">+ Vade satırı ekle</button>';
+  updateOdemeOzet();
+}
+function updateOdemeOzet() {
+  const el = $("odemeOzet");
+  if (!el) return;
+  const h = odemeHesap();
+  if (!h.bedel) { el.innerHTML = ""; return; }
+  const part = (k, v) => (v ? `<span>${k}: <b>${money(v)}</b></span>` : "");
+  const durum = h.fark === 0 ? "Toplam satış bedeline eşit ✓" : h.fark > 0 ? `Planlanmamış kalan: <b>${money(h.fark)}</b>` : `Fazla planlanan: <b>${money(-h.fark)}</b>`;
+  el.innerHTML = `${part("Kapora", h.kapora)}${part("Peşinat", h.pesinat)}${part("Takas", h.takas)}${part("Vadeli", h.vadeli)}<span class="${h.fark === 0 ? "ok" : "bad"}">${durum}</span>`;
+}
+function addTaksit() { const a = getTaksitler(); a.push({ tarih: "", tutar: "", not: "" }); setTaksitler(a); renderTaksitEditor(); render(); }
+function removeTaksit(i) { const a = getTaksitler(); a.splice(i, 1); setTaksitler(a); renderTaksitEditor(); render(); }
+function addMonths(d, n) {
+  const r = new Date(d.getFullYear(), d.getMonth() + n, 1);
+  r.setDate(Math.min(d.getDate(), new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate()));
+  return r;
+}
+function generateTaksitler() {
+  const n = parseInt(val("tgAdet"), 10), ilk = parseTrDate(val("tgIlk")), step = parseInt(val("tgAralik"), 10) || 1;
+  const h = odemeHesap();
+  if (!h.bedel) { toast("Önce satış bedelini girin.", "warn"); return; }
+  if (!n || n < 1 || n > 120) { toast("Taksit sayısını girin (1-120).", "warn"); return; }
+  if (!ilk) { toast("İlk vade tarihini GG.AA.YYYY olarak girin.", "warn"); return; }
+  if (h.kalanVade <= 0) { toast("Kapora, peşinat ve takas düşüldükten sonra taksitlendirilecek tutar kalmıyor.", "warn"); return; }
+  if (getTaksitler().length && !confirm("Mevcut vade satırları silinip yeniden oluşturulsun mu?")) return;
+  const base = Math.floor(h.kalanVade / n), a = [];
+  for (let i = 0; i < n; i++) {
+    const tutar = i === n - 1 ? h.kalanVade - base * (n - 1) : base;
+    a.push({ tarih: addMonths(ilk, i * step).toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" }), tutar: formatTL(String(tutar)), not: "Banka havalesi" });
+  }
+  setTaksitler(a);
+  renderTaksitEditor();
+  render();
+}
+
 /* ---------- Form durumu ---------- */
 let editingExistingNo = "";
 function setData(data) {
@@ -532,6 +696,7 @@ function setData(data) {
   }
   if (!val("yetkiKiraImzaDanisman") || val("yetkiKiraImzaDanisman") === "__yeni") fillDanismanOptions();
   normalizeMoneyFields();
+  renderTaksitEditor();
   render();
   loadSignaturesToCanvas();
 }
@@ -1116,7 +1281,7 @@ async function buildPdfBlob() {
     for (const el of wrap.querySelectorAll(".copy")) {
       const top = el.getBoundingClientRect().top;
       const totalH = el.getBoundingClientRect().height;
-      const cuts = [...new Set([...el.querySelectorAll("tr,.cl,.gap,h1,h2,.articleTitle,.initials,.legal,.signs,.officeHead,.meta,table,.clauseList")].map((n) => Math.round(n.getBoundingClientRect().bottom - top)))].sort((a, b) => a - b);
+      const cuts = [...new Set([...el.querySelectorAll("tr,.cl,.gap,h1,h2,.articleTitle,.initials,.legal,.handLine,.docSub,.signs,.officeHead,.meta,table,.clauseList")].map((n) => Math.round(n.getBoundingClientRect().bottom - top)))].sort((a, b) => a - b);
       const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: 1000, logging: false });
       const k = canvas.width / el.getBoundingClientRect().width;
       let start = 0;
@@ -1479,6 +1644,11 @@ function bindEvents() {
     if (id === "archiveSearch") renderSaved();
     else if (id === "quickSearch") renderQuickList();
     else if (id === "cariSearch") renderCariList();
+    else if (e.target.dataset && e.target.dataset.ti !== undefined) {
+      const a = getTaksitler(), i = +e.target.dataset.ti, k = e.target.dataset.tk;
+      if (k === "tutar") reformatMoneyInput(e.target);
+      if (a[i]) { a[i][k] = e.target.value; setTaksitler(a); scheduleRender(); }
+    }
     else if (CONTRACT_FIELD_SET.has(id) && id !== "contractType") scheduleRender();
   });
   document.addEventListener("change", (e) => {
@@ -1494,6 +1664,8 @@ function bindEvents() {
     else if (CONTRACT_FIELD_SET.has(id)) scheduleRender();
   });
   document.addEventListener("click", (e) => {
+    const td = e.target.closest("[data-tdel]");
+    if (td) { removeTaksit(+td.dataset.tdel); return; }
     const fee = e.target.closest("[data-fee-target]");
     if (fee) { setVal(fee.dataset.feeTarget, formatTL(fee.dataset.feeValue) + " + KDV"); render(); return; }
     const b = e.target.closest("[data-act]");
